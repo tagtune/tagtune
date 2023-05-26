@@ -1,5 +1,6 @@
 package com.ll.tagtune.boundedContext.member.entity;
 
+import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.baseEntity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,5 +41,9 @@ public class Member extends BaseEntity {
 
     public boolean isAdmin() {
         return "admin".equals(username);
+    }
+
+    public String getImageUrl() {
+        return AppConfig.getArtistUrl() + profileImage;
     }
 }

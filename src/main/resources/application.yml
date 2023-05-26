@@ -28,3 +28,5 @@ logging:
 custom:
   site:
     baseUrl: http://localhost
+  image:
+    artistUrl: https://i.cdn.com
