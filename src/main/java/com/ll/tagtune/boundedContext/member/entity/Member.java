@@ -22,6 +22,9 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String username;
     private String password;
+    private Integer age;
+    private Gender gender;
+    private String profileImage;
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
