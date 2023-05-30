@@ -21,8 +21,12 @@ public class QMember extends EntityPathBase<Member> {
 
     public final com.ll.tagtune.base.baseEntity.QBaseEntity _super = new com.ll.tagtune.base.baseEntity.QBaseEntity(this);
 
+    public final NumberPath<Integer> age = createNumber("age", Integer.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
+
+    public final EnumPath<Gender> gender = createEnum("gender", Gender.class);
 
     //inherited
     public final NumberPath<Long> id = _super.id;
@@ -31,6 +35,8 @@ public class QMember extends EntityPathBase<Member> {
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
     public final StringPath password = createString("password");
+
+    public final StringPath profileImage = createString("profileImage");
 
     public final StringPath username = createString("username");
 
