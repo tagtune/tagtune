@@ -27,6 +27,8 @@ public class NotProd {
                         .rangeClosed(1, 10)
                         .mapToObj(i -> memberService.join("user%d".formatted(i), "1234").getData())
                         .toArray(Member[]::new);
+
+                memberService.join("admin", "1234");
             }
         };
     }
