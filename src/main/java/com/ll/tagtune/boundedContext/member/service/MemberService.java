@@ -31,6 +31,8 @@ public class MemberService {
         Member member = Member
                 .builder()
                 .username(username)
+                .password(password)
+                .profileImage(username)
                 .password(passwordEncoder.encode(password))
                 .build();
 
