@@ -47,6 +47,9 @@ dependencies {
 
     // Spotify API
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
+
+    // Json Parser
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.1'
 }
 
 tasks.named('test') {
