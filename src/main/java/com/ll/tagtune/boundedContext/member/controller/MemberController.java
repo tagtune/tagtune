@@ -24,9 +24,4 @@ public class MemberController {
         return "usr/member/loginForm";
     }
 
-
-    @PostMapping("/logout") // 로그인 폼, 로그인 폼 처리는 스프링 시큐리티가 구현, 폼 처리시에 CustomUserDetailsService 가 사용됨
-    public void logOut() {
-    }
-
 }
