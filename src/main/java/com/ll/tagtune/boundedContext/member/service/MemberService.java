@@ -29,6 +29,7 @@ public class MemberService {
                 .builder()
                 .username(username)
                 .password(password)
+                .profileImage(username)
                 .build();
 
         memberRepository.save(member);
