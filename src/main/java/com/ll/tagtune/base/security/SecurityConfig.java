@@ -33,9 +33,9 @@ public class SecurityConfig {
                 .logout(
                         logout -> logout
                                 .logoutUrl("/usr/member/logout")
-                                .logoutSuccessUrl("/usr/member/login") // 로그아웃 후 이동할 URL
-                                .invalidateHttpSession(true) // 로그아웃 시 세션 무효화
-                                .deleteCookies("JSESSIONID") // 로그아웃 시 삭제할 쿠키 설정
+//                                .logoutSuccessUrl("/usr/member/login") // 로그아웃 후 이동할 URL
+//                                .invalidateHttpSession(true) // 로그아웃 시 세션 무효화
+//                                .deleteCookies("JSESSIONID") // 로그아웃 시 삭제할 쿠키 설정
                 );
 
         return http.build();
