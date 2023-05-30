@@ -5,7 +5,6 @@ import jakarta.persistence.Converter;
 
 @Converter
 public class GenderConvertor implements AttributeConverter<Gender, Integer> {
-
     @Override
     public Integer convertToDatabaseColumn(Gender attribute) {
         return attribute.getCode();
