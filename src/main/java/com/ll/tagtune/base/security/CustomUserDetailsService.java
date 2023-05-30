@@ -1,6 +1,5 @@
 package com.ll.tagtune.base.security;
 
-
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
