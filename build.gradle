@@ -44,8 +44,17 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    // Spotify API
+    implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
 }
