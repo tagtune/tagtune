@@ -1,21 +1,21 @@
 package com.ll.tagtune.boundedContext.music.entity;
 
-import com.ll.tagtune.base.baseEntity.BaseEntity;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
-@SuperBuilder
-@ToString(callSuper = true)
-public class Music extends BaseEntity {
+@AllArgsConstructor
+@ToString
+public class Music {
+    @Id
+    private String spotifyId;
     @ManyToOne
     private Artist artist;
     @ManyToOne
