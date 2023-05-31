@@ -12,6 +12,8 @@ public class AppConfig {
     private static String spotifyClientId;
     @Getter
     private static String spotifyClientSecret;
+    @Getter
+    private static String lastfmClientId;
 
     @Value("${custom.image.artistUrl}")
     public void setArtistUrl(String artistUrl) {
@@ -26,5 +28,10 @@ public class AppConfig {
     @Value("${custom.spotify.client-secret}")
     public void setSpotifyClientSecret(String spotifyClientSecret) {
         AppConfig.spotifyClientSecret = spotifyClientSecret;
+    }
+
+    @Value("${custom.lastfm.clientId}")
+    public void setLastfmClientId(String lastfmClientId) {
+        AppConfig.lastfmClientId = lastfmClientId;
     }
 }
