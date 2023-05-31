@@ -2,6 +2,7 @@ package com.ll.tagtune.boundedContext.member.controller;
 
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
+import com.ll.tagtune.boundedContext.member.entity.Gender;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -54,6 +55,7 @@ public class MemberController {
         // 아래 링크로 리다이렉트(302, 이동) 하고 그 페이지에서 메세지 보여줘
         return rq.redirectWithMsg("/usr/member/login", joinRs);
     }
+
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login") // 로그인 폼, 로그인 폼 처리는 스프링 시큐리티가 구현, 폼 처리시에 CustomUserDetailsService 가 사용됨
     public String showLogin() {
@@ -64,5 +66,34 @@ public class MemberController {
     @GetMapping("/me") // 로그인 한 나의 정보 보여주는 페이지
     public String showMe(Model model) {
         return "usr/member/me";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/personalForm")
+    public String showConnectByApi() {
+        return "usr/member/personalForm";
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class PersonalForm {
+        @NotBlank
+        @Size(min = 1, max = 1)
+        private final Gender gender;
+        @NotBlank
+        @Size(min = 1, max = 1)
+        private final Integer age;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/personalForm")
+    public String connect(@Valid PersonalForm personalForm) {
+        RsData<Member> rsData = memberService.connect(rq.getMember(), personalForm.getGender(), personalForm.getAge());
+
+        if (rsData.isFail()) {
+            return rq.historyBack(rsData);
+        }
+
+        return rq.redirectWithMsg("/usr/member/me", "추가 정보가 입력되었습니다.");
     }
 }
