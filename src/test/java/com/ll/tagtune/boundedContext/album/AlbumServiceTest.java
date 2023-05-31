@@ -1,6 +1,7 @@
 package com.ll.tagtune.boundedContext.album;
 
 import com.ll.tagtune.boundedContext.album.entity.Album;
+import com.ll.tagtune.boundedContext.album.repository.AlbumRepository;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -21,6 +22,9 @@ class AlbumServiceTest {
     @Autowired
     private AlbumService albumService;
 
+    @Autowired
+    private AlbumRepository albumRepository;
+
     @Test
     @DisplayName("Album Create test")
     void t001() throws Exception {
@@ -30,4 +34,22 @@ class AlbumServiceTest {
         Album album = albumService.createAlbum(AlbumName, image).getData();
         assertThat(album.getName()).isEqualTo(AlbumName);
     }
+
+    @Test
+    @DisplayName("Album Delete test")
+    void t002() throws Exception {
+        final String albumName = "cheolSoo";
+        final String image = "null";
+
+        albumService.createAlbum(albumName, image);
+        long albumCountBefore = albumRepository.count();
+        System.out.println(albumCountBefore);
+        assertThat(albumCountBefore).isEqualTo(1);
+
+        albumService.deleteAlbum(albumName);
+        long albumCountAfter = albumRepository.count();
+        System.out.println(albumCountAfter);
+        assertThat(albumCountAfter).isEqualTo(0);
+    }
+
 }
