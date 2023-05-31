@@ -30,21 +30,14 @@ public class MemberController {
         return "usr/member/join";
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class JoinForm {
-        @NotBlank
-        @Size(min = 4, max = 30)
-        private final String username;
-        @NotBlank
-        @Size(min = 4, max = 30)
-        private final String password;
+        public record JoinForm(@NotBlank @Size(min = 4, max = 30) String username,
+                               @NotBlank @Size(min = 4, max = 30) String password) {
     }
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm) {
-        RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword());
+        RsData<Member> joinRs = memberService.join(joinForm.username(), joinForm.password());
 
         if (joinRs.isFail()) {
             // 뒤로가기 하고 거기서 메세지 보여줘
