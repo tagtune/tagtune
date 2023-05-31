@@ -35,6 +35,17 @@
 
                     <div class="mt-4">
                         <div>
+                            <i class="fa-solid fa-person-half-dress"></i>
+                            연령대
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge badge-primary"
+                                  th:utext="${@rq.member.getAge()} + 대"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div>
                             <i class="fa-regular fa-clock"></i>
                             가입
                         </div>

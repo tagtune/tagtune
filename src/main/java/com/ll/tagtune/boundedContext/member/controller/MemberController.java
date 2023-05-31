@@ -6,8 +6,7 @@ import com.ll.tagtune.boundedContext.member.entity.Gender;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +69,7 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/personalForm")
-    public String showConnectByApi() {
+    public String showPersonalForm() {
         return "usr/member/personalForm";
     }
 
@@ -79,21 +78,25 @@ public class MemberController {
     public static class PersonalForm {
         @NotBlank
         @Size(min = 1, max = 1)
-        private final Gender gender;
-        @NotBlank
-        @Size(min = 1, max = 1)
+        private final String gender;
+        @NotNull
+        @Min(1)
+        @Max(50)
         private final Integer age;
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/personalForm")
-    public String connect(@Valid PersonalForm personalForm) {
-        RsData<Member> rsData = memberService.connect(rq.getMember(), personalForm.getGender(), personalForm.getAge());
+    public String showPersonalForm(@Valid PersonalForm personalForm) {
+        RsData<Member> updateRsData;
 
-        if (rsData.isFail()) {
-            return rq.historyBack(rsData);
+        if (personalForm.getGender().equals("W")) {
+            updateRsData = memberService.updateInfo(rq.getMember(), Gender.FEMALE.getValue(), personalForm.getAge());
+        } else updateRsData = memberService.updateInfo(rq.getMember(), Gender.MALE.getValue(), personalForm.getAge());
+        if (updateRsData.isFail()) {
+            return rq.historyBack(updateRsData);
         }
 
-        return rq.redirectWithMsg("/usr/member/me", "추가 정보가 입력되었습니다.");
+        return rq.redirectWithMsg("/usr/member/me", updateRsData);
     }
 }

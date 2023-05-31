@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,8 +24,10 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String username;
     private String password;
+    @Setter
     private Integer age;
-    private Gender gender;
+    @Setter
+    private String gender;
     private String profileImage;
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {

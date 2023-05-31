@@ -41,23 +41,22 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
+        return RsData.of("S-1", "회원가입이 완료되었습니다.\n 로그인 후 이용해주세요", member);
     }
 
-    // member : 현재 로그인한 회원
-    // username : 입력한 본인 인스타 username
-    // gender : 입력한 본인의 성별
-    public RsData<Member> connect(Member member, Gender gender, Integer age) {
+    public RsData<Member> updateInfo(Member member, String gender, Integer age) {
+        if (!member.equals(rq.getMember())) {
+            return RsData.of("F-1", "실패");
+        }
+
         updateGenderAndAge(member, gender, age);
 
-        return RsData.of("S-1", "성공");
+        return RsData.of("S-1", "추가 정보가 등록되었습니다.");
     }
-    public void updateGenderAndAge(Member member, Gender gender, Integer age) {
-        Member
-                .builder()
-                .gender(gender)
-                .age(age)
-                .build();
+
+    public void updateGenderAndAge(Member member, String gender, Integer age) {
+        member.setGender(gender);
+        member.setAge(age);
 
         memberRepository.save(member); // 여기서 실제로 UPDATE 쿼리 발생
     }
