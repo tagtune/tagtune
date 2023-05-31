@@ -2,7 +2,6 @@ package com.ll.tagtune.boundedContext.member.service;
 
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
-import com.ll.tagtune.boundedContext.member.entity.Gender;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

@@ -79,7 +79,6 @@ public class MemberController {
         @NotBlank
         @Size(min = 1, max = 1)
         private final String gender;
-        @NotNull
         @Min(1)
         @Max(50)
         private final Integer age;
