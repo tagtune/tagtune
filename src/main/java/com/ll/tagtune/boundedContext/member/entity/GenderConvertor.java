@@ -4,6 +4,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter
+
 public class GenderConvertor implements AttributeConverter<Gender, String> {
 
     @Override

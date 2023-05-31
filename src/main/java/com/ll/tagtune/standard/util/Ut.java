@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Map;
 
 public class Ut {
@@ -25,9 +26,20 @@ public class Ut {
                 throw new RuntimeException(e);
             }
         }
-    }
 
-    ;
+        public static Map toMap(String rawJson) {
+            // ObjectMapper 인스턴스 생성
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            // JSON 파싱
+            try {
+                return objectMapper.readValue(rawJson, Map.class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return Collections.emptyMap();
+            }
+        }
+    }
 
     public static class time {
         public static String diffFormat1Human(LocalDateTime time1, LocalDateTime time2) {
