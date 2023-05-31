@@ -18,7 +18,7 @@
 
           <li th:if="${@rq.login}"><a href="/usr/member/me"><i class="fa-solid fa-user"></i> 내 정보</a></li>
 
-          <li th:if="${@rq.login}"><a href="/usr/home/personalForm"><i class="fa-solid fa-address-card"></i></i> 추가정보 입력</a></li>
+          <li th:if="${@rq.login}"><a href="/usr/member/personalForm"><i class="fa-solid fa-address-card"></i></i> 추가정보 입력</a></li>
 
           <div th:if="${@rq.login}" class="divider"></div>
 
@@ -44,7 +44,7 @@
       <a href="/" class="btn btn-ghost normal-case text-xl">
                 <span class="hidden min-[341px]:inline">
                     tag
-                    <i class="fa-solid fa-heart text-red-300"></i>
+                    <i class="fa-solid fa-music text-red-300"></i>
                     tune
                 </span>
         <span class="min-[341px]:hidden">gg</span>
@@ -52,7 +52,7 @@
       </a>
     </div>
     <div class="navbar-end">
-      <a href="/usr/member/pop" class="btn btn-ghost gap-1" th:if="${@rq.login}">
+      <a href="/usr/member/me/tagView" class="btn btn-ghost gap-1" th:if="${@rq.login}">
         <i class="fa-solid fa-chart-line"></i>
       </a>
       <a href="/usr/notification/list" class="btn btn-ghost btn-circle" th:if="${@rq.login}">
