@@ -1,12 +1,10 @@
 package com.ll.tagtune.base.spotify;
 
+import com.ll.tagtune.base.api.RequestTemplate;
 import com.ll.tagtune.boundedContext.music.entity.Music;
 import com.ll.tagtune.standard.util.Ut;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -14,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MusicSearch {
+public class SearchEndpoint {
     private static final String DEFAULT_MARKET = "KR";
     private static final String DEFAULT_TYPE = "track";
     private static final int DEFAULT_LIMIT = 5;
@@ -27,25 +25,18 @@ public class MusicSearch {
      */
     private String search(String query) {
         final String accessToken = CreateToken.getAccessToken();
-        RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Host", "api.spotify.com");
         headers.add("Content-type", "application/json");
-        String body = "";
 
-        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> responseEntity = rest
-                .exchange(
-                        "https://api.spotify.com/v1/search?&q=" + query
-                                + "&type=" + DEFAULT_TYPE
-                                + "&market=" + DEFAULT_MARKET
-                                + "&limit=" + DEFAULT_LIMIT,
-                        HttpMethod.GET,
-                        requestEntity,
-                        String.class
-                );
-        return responseEntity.getBody();
+        String body = "";
+        String url = "https://api.spotify.com/v1/search?&q=" + query
+                + "&type=" + DEFAULT_TYPE
+                + "&market=" + DEFAULT_MARKET
+                + "&limit=" + DEFAULT_LIMIT;
+
+        return RequestTemplate.request(HttpMethod.GET, headers, body, url);
     }
 
     /**

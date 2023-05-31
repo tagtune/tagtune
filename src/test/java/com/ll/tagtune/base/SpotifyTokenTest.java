@@ -1,7 +1,7 @@
 package com.ll.tagtune.base;
 
 import com.ll.tagtune.base.spotify.CreateToken;
-import com.ll.tagtune.base.spotify.MusicSearch;
+import com.ll.tagtune.base.spotify.SearchEndpoint;
 import com.ll.tagtune.boundedContext.music.entity.Music;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class SpotifyTokenTest {
     @Test
     @DisplayName("Spotify Search Parse")
     void t002() throws Exception {
-        MusicSearch musicSearch = new MusicSearch();
+        SearchEndpoint musicSearch = new SearchEndpoint();
         List<Music> out = musicSearch.getSearchResult("IU");
         System.out.println(out);
         assertThat(out).isNotEmpty();
