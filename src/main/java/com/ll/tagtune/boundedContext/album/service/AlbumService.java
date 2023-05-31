@@ -16,9 +16,6 @@ import java.util.Optional;
 public class AlbumService {
 
     private final AlbumRepository albumRepository;
-    public Optional<Album> findByAlbumname(String name) {
-        return albumRepository.findByAlbumname(name);
-    }
 
     public RsData<Album> createAlbum(String name, String image) {
 
@@ -35,6 +32,18 @@ public class AlbumService {
         return RsData.of("S-1", "앨범생성이 완료되었습니다.", album);
     }
 
+    public RsData<Album> deleteAlbum(String name) {
+        Optional<Album> albumOptional = albumRepository.findByname(name);
+
+        if (albumOptional.isPresent()) {
+            Album album = albumOptional.get();
+            albumRepository.delete(album);
+
+            return RsData.of("S-2", "앨범이 삭제되었습니다.");
+        } else {
+            return RsData.of("F-1", "해당하는 앨범이 없습니다.");
+        }
+    }
 
 
 }
