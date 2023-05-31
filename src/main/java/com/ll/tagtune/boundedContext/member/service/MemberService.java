@@ -2,6 +2,7 @@ package com.ll.tagtune.boundedContext.member.service;
 
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
+import com.ll.tagtune.boundedContext.member.entity.Gender;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class MemberService {
         return RsData.of("S-1", "회원가입이 완료되었습니다.\n 로그인 후 이용해주세요", member);
     }
 
-    public RsData<Member> updateInfo(Member member, String gender, Integer age) {
+    public RsData<Member> updateInfo(Member member, Gender gender, Integer age) {
         if (!member.equals(rq.getMember())) {
             return RsData.of("F-1", "실패");
         }
@@ -53,7 +54,7 @@ public class MemberService {
         return RsData.of("S-1", "추가 정보가 등록되었습니다.");
     }
 
-    public void updateGenderAndAge(Member member, String gender, Integer age) {
+    public void updateGenderAndAge(Member member, Gender gender, Integer age) {
         member.setGender(gender);
         member.setAge(age);
 

@@ -27,7 +27,7 @@ public class Member extends BaseEntity {
     @Setter
     private Integer age;
     @Setter
-    private String gender;
+    private Gender gender;
     private String profileImage;
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {

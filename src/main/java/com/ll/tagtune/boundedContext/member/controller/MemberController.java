@@ -30,8 +30,8 @@ public class MemberController {
         return "usr/member/join";
     }
 
-        public record JoinForm(@NotBlank @Size(min = 4, max = 30) String username,
-                               @NotBlank @Size(min = 4, max = 30) String password) {
+    public record JoinForm(@NotBlank @Size(min = 4, max = 30) String username,
+                           @NotBlank @Size(min = 4, max = 30) String password) {
     }
 
     @PreAuthorize("isAnonymous()")
@@ -66,25 +66,13 @@ public class MemberController {
         return "usr/member/personalForm";
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class PersonalForm {
-        @NotBlank
-        @Size(min = 1, max = 1)
-        private final String gender;
-        @Min(1)
-        @Max(50)
-        private final Integer age;
+    public record PersonalForm(@NotBlank @Size(min = 1, max = 1) String gender, @Min(1) @Max(50) Integer age) {
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/personalForm")
     public String showPersonalForm(@Valid PersonalForm personalForm) {
-        RsData<Member> updateRsData;
-
-        if (personalForm.getGender().equals("W")) {
-            updateRsData = memberService.updateInfo(rq.getMember(), Gender.FEMALE.getValue(), personalForm.getAge());
-        } else updateRsData = memberService.updateInfo(rq.getMember(), Gender.MALE.getValue(), personalForm.getAge());
+        RsData<Member> updateRsData = memberService.updateInfo(rq.getMember(), Gender.findByCode(personalForm.gender()), personalForm.age());
         if (updateRsData.isFail()) {
             return rq.historyBack(updateRsData);
         }
