@@ -32,8 +32,8 @@ public class AlbumService {
         return RsData.of("S-1", "앨범생성이 완료되었습니다.", album);
     }
 
-    public RsData<Album> deleteAlbum(String name) {
-        Optional<Album> albumOptional = albumRepository.findByname(name);
+    public RsData<Album> deleteAlbum(Long id) {
+        Optional<Album> albumOptional = albumRepository.findByid(id);
 
         if (albumOptional.isPresent()) {
             Album album = albumOptional.get();
@@ -45,5 +45,9 @@ public class AlbumService {
         }
     }
 
+    public Long albumCount()
+    {
+        return albumRepository.count();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.ll.tagtune.boundedContext.album;
 
+import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.repository.AlbumRepository;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
@@ -22,9 +23,6 @@ class AlbumServiceTest {
     @Autowired
     private AlbumService albumService;
 
-    @Autowired
-    private AlbumRepository albumRepository;
-
     @Test
     @DisplayName("Album Create test")
     void t001() throws Exception {
@@ -38,18 +36,27 @@ class AlbumServiceTest {
     @Test
     @DisplayName("Album Delete test")
     void t002() throws Exception {
-        final String albumName = "cheolSoo";
-        final String image = "null";
+        RsData<Album> rsData = albumService.deleteAlbum(1L);
+        assertThat(rsData.getResultCode()).isEqualTo("S-2");
+    }
 
-        albumService.createAlbum(albumName, image);
-        long albumCountBefore = albumRepository.count();
-        System.out.println(albumCountBefore);
-        assertThat(albumCountBefore).isEqualTo(1);
+    @Test
+    @DisplayName("Album Delete test2")
+    void t003() throws Exception {
+        RsData<Album> rsData = albumService.deleteAlbum(100L);
+        assertThat(rsData.getResultCode()).isEqualTo("F-1");
+    }
 
-        albumService.deleteAlbum(albumName);
-        long albumCountAfter = albumRepository.count();
-        System.out.println(albumCountAfter);
-        assertThat(albumCountAfter).isEqualTo(0);
+    @Test
+    @DisplayName("Album Delete test3")
+    void t004() throws Exception {
+
+        long albumCountBefore = albumService.albumCount();
+        albumService.deleteAlbum(1L);
+        long albumCountAfter = albumService.albumCount();
+        assertThat(albumCountAfter).isEqualTo(albumCountBefore-1);
     }
 
 }
+
+
