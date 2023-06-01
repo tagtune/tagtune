@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,17 +27,13 @@ class AlbumServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        Album[] albums = IntStream
-                .rangeClosed(1, 10)
-                .mapToObj(i -> albumService.createAlbum("Album%d".formatted(i), "1234").getData())
-                .toArray(Album[]::new);
+        Album[] albums = IntStream.rangeClosed(1, 10).mapToObj(i -> albumService.createAlbum("Album%d".formatted(i), "1234").getData()).toArray(Album[]::new);
     }
 
 //    @AfterEach
 //    void afterEach() {
 //        albumRepository.deleteAll();
 //    }
-
 
     @Test
     @DisplayName("Album Create test")
@@ -64,14 +61,21 @@ class AlbumServiceTest {
     }
 
     @Test
-    @DisplayName("Album Delete test3")
+    @DisplayName("findAllByalbumName")
     void t004() throws Exception {
-        long albumCountBefore = albumService.albumCount();
-        assertThat(albumService.deleteAlbum(1L).isSuccess()).isTrue();
-        long albumCountAfter = albumService.albumCount();
-        assertThat(albumCountAfter).isEqualTo(albumCountBefore - 1);
+        List<Album> albums = albumService.findAllByName("album1");
+        assertThat(albums).isNotEmpty();
+        for (Album album : albums) {
+            assertThat(album.getName()).isEqualTo("album1");
+        }
     }
 
+    @Test
+    @DisplayName("findById")
+    void t005() throws Exception {
+        final Long targetId = 1L;
+        assertThat(albumService.findById(targetId).get().getId()).isEqualTo(targetId);
+    }
 }
 
 
