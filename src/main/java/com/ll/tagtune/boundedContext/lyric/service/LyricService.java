@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class LyricService {
 
@@ -26,7 +26,7 @@ public class LyricService {
 
         Optional<Lyric> findLyric = lyricRepository.findById(id);
 
-        if (!findLyric.isPresent()) {
+        if (findLyric.isEmpty()) {
             return RsData.of("F-1", "해당되는 id의 가사가 없습니다.");
         }
 
@@ -45,8 +45,8 @@ public class LyricService {
         }
 
         Lyric lyric = Lyric.builder()
-                .createDate(LocalDateTime.now())
-                .modifyDate(LocalDateTime.now())
+                .createDate(null)
+                .modifyDate(null)
                 .content(content)
                 .build();
 
@@ -78,8 +78,6 @@ public class LyricService {
                 .modifyDate(LocalDateTime.now())
                 .content(content)
                 .build();
-
-        lyricRepository.save(newLyric);
 
         return RsData.of("S-1", "성공적으로 수정되었습니다!", newLyric);
 
