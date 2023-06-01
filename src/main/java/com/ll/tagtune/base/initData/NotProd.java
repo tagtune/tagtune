@@ -2,7 +2,7 @@ package com.ll.tagtune.base.initData;
 
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
-import com.ll.tagtune.boundedContext.music.service.MusicService;
+import com.ll.tagtune.boundedContext.track.service.TrackService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ public class NotProd {
     @Bean
     CommandLineRunner initData(
             MemberService memberService,
-            MusicService musicService
+            TrackService trackService
     ) {
         return new CommandLineRunner() {
             @Override
