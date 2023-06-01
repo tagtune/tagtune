@@ -23,7 +23,7 @@ public class AlbumService {
     public Optional<Album> findById(Long id) {
         return albumRepository.findById(id);
     }
-
+  
     public RsData<Album> createAlbum(String name, String image) {
         Album album = Album
                 .builder()

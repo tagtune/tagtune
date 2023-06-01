@@ -27,7 +27,10 @@ class AlbumServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        Album[] albums = IntStream.rangeClosed(1, 10).mapToObj(i -> albumService.createAlbum("Album%d".formatted(i), "1234").getData()).toArray(Album[]::new);
+        Album[] albums = IntStream
+                .rangeClosed(1, 10)
+                .mapToObj(i -> albumService.createAlbum("Album%d".formatted(i), "1234").getData())
+                .toArray(Album[]::new);
     }
 
 //    @AfterEach
@@ -77,5 +80,3 @@ class AlbumServiceTest {
         assertThat(albumService.findById(targetId).get().getId()).isEqualTo(targetId);
     }
 }
-
-
