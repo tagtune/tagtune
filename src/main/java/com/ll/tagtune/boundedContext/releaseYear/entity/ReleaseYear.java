@@ -1,4 +1,4 @@
-package com.ll.tagtune.boundedContext.ReleaseYear.entity;
+package com.ll.tagtune.boundedContext.releaseYear.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
