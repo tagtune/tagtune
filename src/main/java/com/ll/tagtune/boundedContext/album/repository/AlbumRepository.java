@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface AlbumRepository extends JpaRepository<Album, Long> {
     Optional<Album> findByid(Long id);
 
+    void deleteByid(Long id);
+
 }
