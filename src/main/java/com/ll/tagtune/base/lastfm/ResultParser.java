@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResultParser {
     /**
@@ -56,7 +55,7 @@ public class ResultParser {
      *
      * @param trackName
      * @param artistName
-     * @return List<Tag> Tag 목록을 가져옵니다
+     * @return List<Tag> Tag 목록
      */
     public static List<Tag> getTrackTags(String trackName, String artistName) {
         Map result = SearchEndpoint.getTrackTopTags(trackName, artistName);
@@ -67,14 +66,15 @@ public class ResultParser {
                 .map(s -> Tag.builder()
                         .tagName(s.get("name"))
                         .build()
-                ).collect(Collectors.toList());
+                )
+                .collect(Collectors.toList());
     }
 
     /**
      * Tag 의 상위 Track 목록을 리턴합니다
      *
      * @param tagName
-     * @return Track
+     * @return List<Track> Track 목록
      */
     public static List<Track> getTrackFromTag(String tagName) {
         Map result = SearchEndpoint.getTracksFromTag(tagName);
