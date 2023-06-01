@@ -1,15 +1,16 @@
 package com.ll.tagtune.base.lastfm;
 
+import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import static com.ll.tagtune.base.lastfm.SearchEndpoint.getTrackInfo;
-import static com.ll.tagtune.base.lastfm.SearchEndpoint.searchTrack;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResultParser {
@@ -17,10 +18,10 @@ public class ResultParser {
      * 검색 결과를 Track 으로 파싱하여 리턴합니다
      *
      * @param query 검색어
-     * @return List<Track>
+     * @return List<Track> 트랙 목록
      */
     public static List<Track> searchTracks(String query) {
-        Map obj = searchTrack(query);
+        Map obj = SearchEndpoint.searchTrack(query);
         Map results = (Map) obj.get("results");
         LinkedHashMap trackMatches = (LinkedHashMap) results.get("trackmatches");
         List<LinkedHashMap<String, String>> rawTracks = (List<LinkedHashMap<String, String>>) trackMatches.get("track");
@@ -34,17 +35,57 @@ public class ResultParser {
     }
 
     /**
-     * 검색 결과를 Track 으로 파싱하여 리턴합니다
-     * <p>
-     * {track={name=IU, url=https://www.last.fm/music/Blueming/_/IU, duration=0, streamable={#text=0, fulltrack=0}, listeners=16, playcount=39, artist={name=Blueming, url=https://www.last.fm/music/Blueming}, toptags={tag=[]}}}
+     * Track 의 세부정보를 리턴합니다
      *
-     * @return List<Track>
+     * @param trackName
+     * @param artistName
+     * @return Track
      */
     public static Track getTrack(String trackName, String artistName) {
-        Map rawTrack = getTrackInfo(trackName, artistName);
+        Map result = SearchEndpoint.getTrackInfo(trackName, artistName);
+        Map rawTrack = (Map) result.get("track");
+
         return Track.builder()
                 .title((String) rawTrack.get("name"))
-                .artist((String) rawTrack.get("artist"))
+                .artist(((LinkedHashMap<String, String>) rawTrack.get("artist")).get("name"))
                 .build();
+    }
+
+    /**
+     * Track 의 상위 Tag 목록을 리턴합니다
+     *
+     * @param trackName
+     * @param artistName
+     * @return List<Tag> Tag 목록을 가져옵니다
+     */
+    public static List<Tag> getTrackTags(String trackName, String artistName) {
+        Map result = SearchEndpoint.getTrackTopTags(trackName, artistName);
+        Map topTags = (Map) result.get("toptags");
+        List<LinkedHashMap<String, String>> rawTags = (List<LinkedHashMap<String, String>>) topTags.get("tag");
+
+        return rawTags.stream()
+                .map(s -> Tag.builder()
+                        .tagName(s.get("name"))
+                        .build()
+                ).collect(Collectors.toList());
+    }
+
+    /**
+     * Tag 의 상위 Track 목록을 리턴합니다
+     *
+     * @param tagName
+     * @return Track
+     */
+    public static List<Track> getTrackFromTag(String tagName) {
+        Map result = SearchEndpoint.getTracksFromTag(tagName);
+        Map tracks = (Map) result.get("tracks");
+        List<LinkedHashMap> rawTracks = (ArrayList) tracks.get("track");
+
+        return rawTracks.stream()
+                .map(m -> Track.builder()
+                        .title((String) m.get("name"))
+                        .artist(((Map<String, String>) m.get("artist")).get("name"))
+                        .build())
+                .toList();
     }
 }
