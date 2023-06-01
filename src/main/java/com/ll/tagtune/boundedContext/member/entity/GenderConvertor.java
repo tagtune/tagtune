@@ -4,14 +4,16 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter
-public class GenderConvertor implements AttributeConverter<Gender, Integer> {
+
+public class GenderConvertor implements AttributeConverter<Gender, String> {
+
     @Override
-    public Integer convertToDatabaseColumn(Gender attribute) {
+    public String convertToDatabaseColumn(Gender attribute) {
         return attribute.getCode();
     }
 
     @Override
-    public Gender convertToEntityAttribute(Integer dbData) {
+    public Gender convertToEntityAttribute(String dbData) {
         return Gender.findByCode(dbData);
     }
 }
