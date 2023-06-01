@@ -45,7 +45,7 @@ public class MemberService {
     }
 
     public RsData<Member> updateInfo(Member member, Gender gender, Integer age) {
-        if (!member.equals(rq.getMember())) {
+        if (!member.getId().equals(rq.getMember().getId())) {
             return RsData.of("F-1", "실패");
         }
 
