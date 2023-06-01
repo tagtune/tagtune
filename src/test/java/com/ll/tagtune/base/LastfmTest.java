@@ -1,10 +1,13 @@
 package com.ll.tagtune.base;
 
+import com.ll.tagtune.base.lastfm.ResultParser;
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
+import com.ll.tagtune.boundedContext.track.entity.Track;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,9 +17,9 @@ class LastfmTest {
     @Test
     @DisplayName("Search Test")
     void t001() throws Exception {
-        Map result = SearchEndpoint.searchTrack("IU");
-        System.out.println(result);
+        List<Track> result = ResultParser.searchTracks("IU");
         assertThat(result).isNotEmpty();
+        result.forEach(System.out::println);
     }
 
     @Test

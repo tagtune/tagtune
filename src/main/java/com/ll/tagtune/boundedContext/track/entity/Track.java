@@ -17,9 +17,8 @@ public class Track {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String spotifyId;
+    private String artist;
     //    @ManyToOne
-//    private Artist artist;
-//    @ManyToOne
 //    private Album album;
     private Integer trackNumber;
     private String title;
