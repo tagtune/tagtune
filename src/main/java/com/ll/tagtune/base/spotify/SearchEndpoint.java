@@ -2,7 +2,6 @@ package com.ll.tagtune.base.spotify;
 
 import com.ll.tagtune.base.api.RequestTemplate;
 import com.ll.tagtune.boundedContext.music.entity.Music;
-import com.ll.tagtune.standard.util.Ut;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
@@ -14,7 +13,7 @@ import java.util.Map;
 
 public class SearchEndpoint {
     private static final String DEFAULT_MARKET = "KR";
-    private static final String DEFAULT_TYPE = "track";
+    private static final SpotifyType DEFAULT_TYPE = SpotifyType.TRACK;
     private static final int DEFAULT_LIMIT = 5;
 
     /**
@@ -23,7 +22,7 @@ public class SearchEndpoint {
      * @param query 검색할 문자열
      * @return 검색 결과 Json String
      */
-    private String search(String query) {
+    private Map search(String query) {
         final String accessToken = CreateToken.getAccessToken();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -32,11 +31,11 @@ public class SearchEndpoint {
 
         String body = "";
         String url = "https://api.spotify.com/v1/search?&q=" + query
-                + "&type=" + DEFAULT_TYPE
+                + "&type=" + DEFAULT_TYPE.getValue()
                 + "&market=" + DEFAULT_MARKET
                 + "&limit=" + DEFAULT_LIMIT;
 
-        return RequestTemplate.request(HttpMethod.GET, headers, body, url);
+        return RequestTemplate.requestMapping(HttpMethod.GET, headers, body, url);
     }
 
     /**
@@ -46,9 +45,8 @@ public class SearchEndpoint {
      * @return List<Music> 검색 결과 Music 리스트
      */
     public List<Music> getSearchResult(String query) {
-        final String searchJsonResult = search(query);
-        Map<String, LinkedHashMap> map = Ut.json.toMap(searchJsonResult);
-        Map<String, ArrayList> tracks = map.get("tracks");
+        Map<String, LinkedHashMap> map = search(query);
+        Map<String, ArrayList> tracks = map.get(DEFAULT_TYPE.getValue());
         List<LinkedHashMap> items = tracks.get("items");
 
 //        파싱방법
