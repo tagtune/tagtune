@@ -1,6 +1,6 @@
 package com.ll.tagtune.base.spotify;
 
-import com.ll.tagtune.boundedContext.music.entity.Music;
+import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.standard.util.Ut;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MusicSearch {
+public class TrackSearch {
     private static final String DEFAULT_MARKET = "KR";
     private static final String DEFAULT_TYPE = "track";
     private static final int DEFAULT_LIMIT = 5;
@@ -49,12 +49,12 @@ public class MusicSearch {
     }
 
     /**
-     * 스포티파이 검색 결과 문자열을 파싱하여 Music 리스트를 생성하여 리턴합니다.
+     * 스포티파이 검색 결과 문자열을 파싱하여 Track 리스트를 생성하여 리턴합니다.
      *
      * @param query 검색할 문자열
-     * @return List<Music> 검색 결과 Music 리스트
+     * @return List<Track> 검색 결과 Track 리스트
      */
-    public List<Music> getSearchResult(String query) {
+    public List<Track> getSearchResult(String query) {
         final String searchJsonResult = search(query);
         Map<String, LinkedHashMap> map = Ut.json.toMap(searchJsonResult);
         Map<String, ArrayList> tracks = map.get("tracks");
@@ -66,7 +66,7 @@ public class MusicSearch {
 //            System.out.printf("%d: \n", idx++);
 //            System.out.println(el.get("id"));
 //            System.out.println(el.get("name"));
-//            Music tmp = Music
+//            Track tmp = Track
 //                    .builder()
 //                    .spotifyId((String) el.get("id"))
 //                    .title((String) el.get("name"))
@@ -75,7 +75,7 @@ public class MusicSearch {
 //            System.out.println();
 //        }
         return items.stream()
-                .map(m -> Music.builder()
+                .map(m -> Track.builder()
                         .spotifyId((String) m.get("id"))
                         .title((String) m.get("name"))
                         .build()

@@ -1,4 +1,4 @@
-package com.ll.tagtune.boundedContext.year.entity;
+package com.ll.tagtune.boundedContext.releaseYear.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @ToString
-public class Year {
+public class ReleaseYear {
     @Id
     @Column(nullable = false, unique = true)
     private Integer yearValue;
