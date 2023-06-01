@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,6 +15,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AlbumService {
     private final AlbumRepository albumRepository;
+
+    public List<Album> findAllByName(String name) {
+        return albumRepository.findAllByName(name);
+    }
+
+    public Optional<Album> findById(Long id) {
+        return albumRepository.findById(id);
+    }
 
     public RsData<Album> createAlbum(String name, String image) {
         Album album = Album
@@ -35,9 +44,4 @@ public class AlbumService {
 
         return RsData.of("S-1", "앨범삭제가 완료되었습니다.");
     }
-
-    public Long albumCount() {
-        return albumRepository.count();
-    }
-
 }
