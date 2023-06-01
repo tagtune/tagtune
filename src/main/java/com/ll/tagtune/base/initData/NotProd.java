@@ -1,5 +1,6 @@
 package com.ll.tagtune.base.initData;
 
+import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
