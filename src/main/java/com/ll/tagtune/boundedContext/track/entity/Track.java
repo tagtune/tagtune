@@ -19,5 +19,6 @@ public class Track {
 //    private Album album;
     private Integer trackNumber;
     private String title;
-    private Integer year;
+//    @ManyToOne
+//    private ReleaseYear releaseYear;
 }
