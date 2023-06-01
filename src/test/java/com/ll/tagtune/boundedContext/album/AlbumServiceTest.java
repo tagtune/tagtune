@@ -64,19 +64,21 @@ class AlbumServiceTest {
     }
 
     @Test
-    @DisplayName("findAllByalbumName")
+    @DisplayName("find All Album By Name")
     void t004() throws Exception {
-        List<Album> albums = albumService.findAllByName("album1");
+        final String tgtAlbum = "Album1";
+        List<Album> albums = albumService.findAllByName(tgtAlbum);
         assertThat(albums).isNotEmpty();
         for (Album album : albums) {
-            assertThat(album.getName()).isEqualTo("album1");
+            assertThat(album.getName()).isEqualTo(tgtAlbum);
         }
     }
 
     @Test
-    @DisplayName("findById")
+    @DisplayName("find Album By Id")
     void t005() throws Exception {
         final Long targetId = 1L;
-        assertThat(albumService.findById(targetId).get().getId()).isEqualTo(targetId);
+        Album anyAlbum = albumRepository.findAll().stream().findFirst().orElseThrow();
+        assertThat(albumService.findById(anyAlbum.getId()).get().getName()).isEqualTo(anyAlbum.getName());
     }
 }
