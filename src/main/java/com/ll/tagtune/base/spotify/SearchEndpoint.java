@@ -46,7 +46,7 @@ public class SearchEndpoint {
      */
     public List<Music> getSearchResult(String query) {
         Map<String, LinkedHashMap> map = search(query);
-        Map<String, ArrayList> tracks = map.get(DEFAULT_TYPE.getValue());
+        Map<String, ArrayList> tracks = map.get("tracks");
         List<LinkedHashMap> items = tracks.get("items");
 
 //        파싱방법
