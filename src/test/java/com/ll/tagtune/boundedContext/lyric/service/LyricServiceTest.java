@@ -33,7 +33,7 @@ class LyricServiceTest {
      * */
 
     @BeforeEach
-    void t000() throws Exception {
+    void beforeEach() {
         for (int i = 0; i < 2; i++) {
             lyricService.saveLyric(("%d__ sing~~~~").formatted(i));
         }
@@ -87,6 +87,7 @@ class LyricServiceTest {
 
         assertThat(lyricRsData.getResultCode()).isEqualTo("F-1");
     }
+
 
 
 
