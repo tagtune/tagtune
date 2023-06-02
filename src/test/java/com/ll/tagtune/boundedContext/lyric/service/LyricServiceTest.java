@@ -103,7 +103,22 @@ class LyricServiceTest {
         assertThat(lyricRsData.getResultCode()).isEqualTo("F-1");
     }
 
+    @Test
+    @DisplayName("lyric delete test")
+    void t006() throws Exception {
 
+        List<Lyric> lyrics = lyricRepository.findAll();
+        Lyric lyric = lyrics.get(1);
+
+        RsData<Lyric> originLyricRsData = lyricService.showLyric(lyric.getId());
+
+        assertThat(originLyricRsData.getMsg()).isEqualTo("성공적으로 조회되었습니다!");
+
+        lyricService.deleteLyric(lyric.getId());
+        RsData<Lyric> lyricRsData = lyricService.showLyric(lyric.getId());
+
+        assertThat(lyricRsData.getMsg()).isEqualTo("해당되는 id의 가사가 없습니다.");
+    }
 
 
 }
