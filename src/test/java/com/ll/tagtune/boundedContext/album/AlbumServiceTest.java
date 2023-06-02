@@ -29,7 +29,7 @@ class AlbumServiceTest {
     void beforeEach() {
         Album[] albums = IntStream
                 .rangeClosed(1, 10)
-                .mapToObj(i -> albumService.createAlbum("Album%d".formatted(i), "1234").getData())
+                .mapToObj(i -> albumService.createAlbum("Album%d".formatted(i), "1234"))
                 .toArray(Album[]::new);
     }
 
@@ -44,14 +44,14 @@ class AlbumServiceTest {
         final String AlbumName = "cheolSoo";
         final String image = "null";
 
-        Album album = albumService.createAlbum(AlbumName, image).getData();
+        Album album = albumService.createAlbum(AlbumName, image);
         assertThat(album.getName()).isEqualTo(AlbumName);
     }
 
     @Test
     @DisplayName("Album Delete test")
     void t002() throws Exception {
-        Long albumId = albumService.createAlbum("AlbumName", "image").getData().getId();
+        Long albumId = albumService.createAlbum("AlbumName", "image").getId();
         RsData<Album> rsData = albumService.deleteAlbum(albumId);
         assertThat(rsData.isSuccess()).isTrue();
     }
