@@ -1,0 +1,270 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
+
+<head>
+    <title>태그 게시판</title>
+</head>
+
+<body>
+<main class="flex flex-grow items-center justify-center" layout:fragment="main">
+    <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
+        <div class="flex max-w-2xl w-full my-4">
+            <div class="flex justify-between flex-grow">
+                <div class="px-4 flex flex-grow">
+                    <div class="form-control flex flex-grow">
+                        <div><i class="fa-solid fa-magnifying-glass"></i>
+                            원하는 태그를 검색해보세요
+                        </div>
+                        <div class="mt-4 flex">
+                            <label class="flex flex-grow">
+                                <input autofocus class="input input-bordered flex flex-grow" name="username"
+                                       onchange="$(this).keyup();"
+                                       onkeyup="$(this).prev().children(':last-child').text(this.value.trim());"
+                                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                                       placeholder="원하는 태그를 입력하세요"
+                                       type="text"/>
+                                <script>
+                                    // input : 태그가 input 인 녀석 선택
+                                    // input[name="username"] 태그가 input 이고 name 속성의 값이 username 인 녀석을 선택
+                                    // input[name="username"]:last : 태그가 input 이고 name 속성의 값이 username 인 녀석들 중에서 꼴등 한명 선택
+                                    // .keyup(); : 강제로 keyup 이벤트 트리거(이벤트를 강제로 발동시킨다.)
+                                    $(`input[name="username"]:last`).keyup();
+                                </script>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown flex flex-col px-4">
+                    <div class="flex justify-end">
+                        <label class="width:300 btn btn-ghost btn-circle" tabindex="0">
+                            <div class="flex"><i class="fa-solid fa-arrow-down"></i>
+                                &nbsp;&nbsp;인기태그
+                            </div>
+                        </label>
+                        <ul class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-40"
+                            tabindex="0">
+                            <li>가장 인기있는 태그</li>
+                            <div class="divider"></div>
+                            <li><a href="#">1. 아이유</a></li>
+                            <li><a href="#">2. 아이브</a></li>
+                            <li><a href="#">3. 스윙스</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-2xl w-full mt-4 px-4">
+            <div>
+                <h1 class="mb-4">
+                    <i class="fa-solid fa-list"></i>
+                    전체 태그목록
+                </h1>
+            </div>
+            <div>
+                <div>
+                    <div>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이유</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이브</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>임영웅</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>뜨거운 여름밤은 가고 남은 건 볼품없지만</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>사랑하긴 했었나요 스쳐가는 인연이었나요 짧지않은 우리 함께했던 시간들이 자꾸 내 마음을 가둬두네</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>Bruno Mars</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>Maroon 5</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>Just the Way You Are</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이유</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이브</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>임영웅</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이유</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이브</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>임영웅</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이유</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이브</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>임영웅</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이유</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이브</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>임영웅</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이유</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>아이브</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>임영웅</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                        <a class="badge badge-primary mx-1 my-2" href="#">
+                            <span>가수이름</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
