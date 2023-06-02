@@ -1,18 +1,18 @@
 package com.ll.tagtune.boundedContext.artist.entity;
 
-import com.ll.tagtune.base.baseEntity.BaseEntity;
-import jakarta.persistence.Entity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@SuperBuilder
-@ToString(callSuper = true)
-public class Artist extends BaseEntity {
+@AllArgsConstructor
+@Builder
+@ToString
+public class Artist {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
     private String artistName;
-    private String image;
 }
