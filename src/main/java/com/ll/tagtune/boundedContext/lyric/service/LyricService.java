@@ -70,7 +70,7 @@ public class LyricService {
         }
 
         Optional<Lyric> lyric = lyricRepository.findById(id);
-        if(!lyric.isPresent()){
+        if(lyric.isEmpty()){
             return RsData.of("F-2", "해당되는 id의 가사가 없습니다.");
         }
 
@@ -83,7 +83,17 @@ public class LyricService {
 
     }
 
-    //삭제 메서드도 만들어야 하나?!
+    public RsData<Lyric> deleteLyric(Long id){
 
+        Optional<Lyric> lyric = lyricRepository.findById(id);
+        if(lyric.isEmpty()){
+            return RsData.of("F-1", "해당되는 id의 가사가 없습니다.");
+        }
+
+        lyricRepository.deleteById(id);
+
+        return RsData.of("S-1", "성공적으로 삭제되었습니다!");
+
+    }
 
 }
