@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class SearchEndpoint {
     private static final String DEFAULT_MARKET = "KR";
     private static final SpotifyType DEFAULT_TYPE = SpotifyType.TRACK;
@@ -65,7 +64,6 @@ public class SearchEndpoint {
 //        }
         return items.stream()
                 .map(t -> Track.builder()
-                        .spotifyId((String) t.get("id"))
                         .title((String) t.get("name"))
                         .build()
                 )

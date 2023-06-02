@@ -1,17 +1,22 @@
 package com.ll.tagtune.boundedContext.tag.entity;
 
-import com.ll.tagtune.base.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@SuperBuilder
-@ToString(callSuper = true)
-public class Tag extends BaseEntity {
+@AllArgsConstructor
+@Builder
+@ToString
+public class Tag {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String tagName;
+    @Builder.Default
+    private Long popularity = 0L;
 }
