@@ -29,7 +29,7 @@ class ArtistServiceTest {
                 .artistName("김릘잏게")
                 .build();
         assertThat(artistService.findByArtistName(artistDTO.getArtistName())).isEmpty();
-        final Artist artist = artistService.create(artistDTO.getArtistName());
+        final Artist artist = artistService.createArtist(artistDTO.getArtistName());
         assertThat(artist.getArtistName()).isEqualTo(artistDTO.getArtistName());
     }
 }
