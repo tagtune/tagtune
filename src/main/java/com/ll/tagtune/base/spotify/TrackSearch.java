@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class TrackSearch {
     private static final String DEFAULT_MARKET = "KR";
     private static final String DEFAULT_TYPE = "track";
@@ -76,7 +75,6 @@ public class TrackSearch {
 //        }
         return items.stream()
                 .map(m -> Track.builder()
-                        .spotifyId((String) m.get("id"))
                         .title((String) m.get("name"))
                         .build()
                 )
