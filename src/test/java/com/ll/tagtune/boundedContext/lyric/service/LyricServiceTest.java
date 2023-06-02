@@ -51,12 +51,18 @@ class LyricServiceTest {
 
 
     @Test
-    @DisplayName("lyric modify test1")
+    @DisplayName("lyric modify test")
     void t002() throws Exception {
         final String content = "sing a song~~~";
 
-        RsData<Lyric> lyricRsdata = lyricService.modifyLyric(2L, content);
+        List<Lyric> lyrics = lyricRepository.findAll();
+        Lyric lyric = lyrics.get(1);
+        LocalDateTime originCreateDate = lyric.getCreateDate();
 
+        RsData<Lyric> lyricRsdata = lyricService.modifyLyric(lyric.getId(), content);
+
+        //createDate 수정 전,후가 같은지 확인
+        assertThat(originCreateDate).isEqualTo(lyricRsdata.getData().getCreateDate());
         assertThat(lyricRsdata.getData().getContent()).isEqualTo("sing a song~~~");
     }
 
