@@ -3,16 +3,19 @@ package com.ll.tagtune.boundedContext.lyric.service;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.lyric.entity.Lyric;
 import com.ll.tagtune.boundedContext.lyric.repository.LyricRepository;
-import com.ll.tagtune.boundedContext.member.entity.Member;
-import com.ll.tagtune.boundedContext.member.service.MemberService;
+
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 
 
 @SpringBootTest
@@ -23,6 +26,9 @@ class LyricServiceTest {
 
     @Autowired
     private LyricService lyricService;
+
+    @Autowired
+    LyricRepository lyricRepository;
 
 
     /**
@@ -38,6 +44,7 @@ class LyricServiceTest {
             lyricService.saveLyric(("%d__ sing~~~~").formatted(i));
         }
     }
+
 
     @Test
     @DisplayName("lyric save test")
@@ -79,8 +86,10 @@ class LyricServiceTest {
     @Test
     @DisplayName("lyric showLyric test1")
     void t004() throws Exception {
+        List<Lyric> lyrics = lyricRepository.findAll();
+        Lyric lyric = lyrics.get(0);
 
-        RsData<Lyric> lyricRsData = lyricService.showLyric(1L);
+        RsData<Lyric> lyricRsData = lyricService.showLyric(lyric.getId());
 
         assertThat(lyricRsData.getData().getContent()).isEqualTo("0__ sing~~~~");
     }
