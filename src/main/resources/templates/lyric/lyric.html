@@ -1,0 +1,205 @@
+<html layout:decorate="~{lyric/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>가사 상세 데모 페이지</title>
+</head>
+
+<body>
+
+<main layout:fragment="main" class="flex-grow flex items-center justify-center">
+    <script>
+        function Lyric__submit(form) {
+
+            form.submit(); // 폼 발송
+        }
+    </script>
+
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-solid fa-address-card"></i>
+            나훈아 - 테스형
+        </h1>
+
+        <form class="flex flex-col gap-6" method="POST" th:action onsubmit="PersonalForm__submit(this); return false;">
+            <div id="lyrics" class= "flex items-center justify-center">
+                <div id="lyric_ko" class="w-1/2 mr-5">
+                    <div class="mx-auto overflow-y-auto h-64">
+                        안녕하세요
+                        흔하디 흔한 이별 노래에
+                        가사나 적어볼까 하다가
+                        널 다시 기억에서 꺼내
+                        수없이 많을 것만 같았던
+                        말은 하나도 나오질 않네
+                        이 밤이 더 깊어질 때까지
+                        그 어떤 말로도 채워지지 못할
+                        하얗기만 한 여긴
+                        너로 가득해
+                        It's you
+                        아무 말 없는 저 달도
+                        손끝에 닿는 바람도
+                        아마 널 닮아있는 것 같고
+                        이런 말 하다 보면 왠지
+                        마음이 번져가는 게 나 괜히 좀
+                        그래서 또 썼다 지웠다가
+                        어디로 흘러가는지 몰라
+                        부르는 이 노래
+                        It's gotta be something real
+                        말라가는 내 기억 중 널 꺼내
+                        But it means nothing to me right now
+                        생각이 나는 건 맞아
+                        얘기가 자꾸만 샐까
+                        깊어가는 밤
+                        그 어떤 말로도 채워지지 못해
+                        하얗기만 한 여긴
+                        너로 가득해
+                        It's you
+                        아무 말 없는 저 달도
+                        손끝에 닿는 바람도
+                        아마 널 닮아있는 것 같고
+                        이런 말 하다 보면 왠지
+                        마음이 번져가는 게 나 괜히 좀
+                        그래서 또 썼다 지웠다가
+                        그래서 또 썼다 지웠다가
+                        흔하디 흔한 이별 노래에
+                        가사나 적어볼까 하다가
+                        널 다시 기억에서 꺼내
+                        수없이 많을 것만 같았던
+                        말은 하나도 나오질 않네
+                        이 밤이 더 깊어질 때까지
+                        그 어떤 말로도 채워지지 못할
+                        하얗기만 한 여긴
+                        너로 가득해
+                        It's you
+                        아무 말 없는 저 달도
+                        손끝에 닿는 바람도
+                        아마 널 닮아있는 것 같고
+                        이런 말 하다 보면 왠지
+                        마음이 번져가는 게 나 괜히 좀
+                        그래서 또 썼다 지웠다가
+                        어디로 흘러가는지 몰라
+                        부르는 이 노래
+                        It's gotta be something real
+                        말라가는 내 기억 중 널 꺼내
+                        But it means nothing to me right now
+                        생각이 나는 건 맞아
+                        얘기가 자꾸만 샐까
+                        깊어가는 밤
+                        그 어떤 말로도 채워지지 못해
+                        하얗기만 한 여긴
+                        너로 가득해
+                        It's you
+                        아무 말 없는 저 달도
+                        손끝에 닿는 바람도
+                        아마 널 닮아있는 것 같고
+                        이런 말 하다 보면 왠지
+                        마음이 번져가는 게 나 괜히 좀
+                        그래서 또 썼다 지웠다가
+                        그래서 또 썼다 지웠다가
+                        흔하디 흔한 이별 노래에
+                        가사나 적어볼까 하다가
+                        널 다시 기억에서 꺼내
+                        수없이 많을 것만 같았던
+                        말은 하나도 나오질 않네
+                        이 밤이 더 깊어질 때까지
+                        그 어떤 말로도 채워지지 못할
+                        하얗기만 한 여긴
+                        너로 가득해
+                        It's you
+                        아무 말 없는 저 달도
+                        손끝에 닿는 바람도
+                        아마 널 닮아있는 것 같고
+                        이런 말 하다 보면 왠지
+                        마음이 번져가는 게 나 괜히 좀
+                        그래서 또 썼다 지웠다가
+                        어디로 흘러가는지 몰라
+                        부르는 이 노래
+                        It's gotta be something real
+                        말라가는 내 기억 중 널 꺼내
+                        But it means nothing to me right now
+                        생각이 나는 건 맞아
+                        얘기가 자꾸만 샐까
+                        깊어가는 밤
+                        그 어떤 말로도 채워지지 못해
+                        하얗기만 한 여긴
+                        너로 가득해
+                        It's you
+                        아무 말 없는 저 달도
+                        손끝에 닿는 바람도
+                        아마 널 닮아있는 것 같고
+                        이런 말 하다 보면 왠지
+                        마음이 번져가는 게 나 괜히 좀
+                        그래서 또 썼다 지웠다가
+                        그래서 또 썼다 지웠다가
+
+                    </div>
+
+                    <div class="w-1/2">
+                        <div >
+                            <button id="btn_ko"
+                                    class="btn btn-block btn-outline gap-1 mt-10 mr-4">
+                                <i class="fa-solid fa-address-card text-[color:#E1306C]"></i>
+                                <span>한글 가사 수정</span>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="lyric_en" class="w-1/2 ">
+                    <div class="mx-auto overflow-y-auto h-64 ml-5">
+                        흔하디 흔한 이별 노래에
+                        가사나 적어볼까 하다가
+                        널 다시 기억에서 꺼내
+                        수없이 많을 것만 같았던
+                        말은 하나도 나오질 않네
+                        이 밤이 더 깊어질 때까지
+                        그 어떤 말로도 채워지지 못할
+                        하얗기만 한 여긴
+                        너로 가득해
+                        It's you
+                        아무 말 없는 저 달도
+                        손끝에 닿는 바람도
+                        아마 널 닮아있는 것 같고
+                        이런 말 하다 보면 왠지
+                        마음이 번져가는 게 나 괜히 좀
+                        그래서 또 썼다 지웠다가
+                        어디로 흘러가는지 몰라
+                        부르는 이 노래
+                        It's gotta be something real
+                        말라가는 내 기억 중 널 꺼내
+                        But it means nothing to me right now
+                        생각이 나는 건 맞아
+                        얘기가 자꾸만 샐까
+                        깊어가는 밤
+                        그 어떤 말로도 채워지지 못해
+                        하얗기만 한 여긴
+                        너로 가득해
+                        It's you
+                        아무 말 없는 저 달도
+                        손끝에 닿는 바람도
+                        아마 널 닮아있는 것 같고
+                        이런 말 하다 보면 왠지
+                        마음이 번져가는 게 나 괜히 좀
+                        그래서 또 썼다 지웠다가
+                        그래서 또 썼다 지웠다가
+
+                    </div>
+
+                    <div class="w-1/2">
+                        <div>
+                            <button id="btn-en"
+                                    class="btn btn-block btn-outline gap-1 mt-10 ml-4">
+                                <i class="fa-solid fa-address-card text-[color:#E1306C]"></i>
+                                <span>영어 가사 수정</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+
+</html>
