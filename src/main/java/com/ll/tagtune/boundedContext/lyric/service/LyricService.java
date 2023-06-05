@@ -41,8 +41,6 @@ public class LyricService {
         }
 
         Lyric lyric = Lyric.builder()
-                .createDate(null)
-                .modifyDate(null)
                 .content(content)
                 .build();
 
@@ -55,13 +53,14 @@ public class LyricService {
      * 가사 수정 기능
      * */
     public RsData<Lyric> modifyLyric(Long id, String content){
-        if (content == null) {
-            return RsData.of("F-1", "수정하려는 내용이 잘못된 값입니다.");
-        }
 
         Optional<Lyric> lyric = lyricRepository.findById(id);
         if(lyric.isEmpty()){
-            return RsData.of("F-2", "해당되는 id의 가사가 없습니다.");
+            return RsData.of("F-1", "해당되는 id의 가사가 없습니다.");
+        }
+
+        if (content == null) {
+            return RsData.of("F-2", "수정하려는 내용이 잘못된 값입니다.");
         }
 
         Lyric newLyric = lyric.get().toBuilder()
