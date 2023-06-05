@@ -23,7 +23,8 @@
 
                     <div th:if="${@rq.login}" class="divider"></div>
 
-                    <li th:if="${@rq.login}"><a href="/category/tag"><i class="fa-solid fa-folder-open"></i> 태그 게시판</a>
+                    <li th:if="${@rq.login}"><a href="/usr/category/tagBoard"><i class="fa-solid fa-folder-open"></i> 태그
+                        게시판</a>
                     </li>
 
                     <li th:if="${@rq.login}"><a href="/playlist"><i class="fa-solid fa-music"></i> 플레이리스트</a></li>
@@ -42,6 +43,10 @@
                     </li>
                 </ul>
             </div>
+            <a class="btn btn-ghost normal-case text-xl" href="/usr/member/me">
+                <i class="fa-solid fa-user">&nbsp;</i>
+                <div th:if="${@rq.login}" th:utext="${@rq.member.getProfileImage()}"></div>
+            </a>
         </div>
         <div class="navbar-center">
             <a href="/" class="btn btn-ghost normal-case text-xl">
