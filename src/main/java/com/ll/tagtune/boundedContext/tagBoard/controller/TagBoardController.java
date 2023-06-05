@@ -19,4 +19,10 @@ public class TagBoardController {
         return "usr/category/tagBoard";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/tag")
+    public String showTag() {
+        return "usr/category/tag";
+    }
+
 }

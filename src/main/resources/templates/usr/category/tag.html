@@ -1,10 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>태그 게시판</title>
 </head>
 <body>
-
+<main class="flex flex-grow items-center justify-center" layout:fragment="main">
+    <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
+        <h1 class="mb-4">
+            <font size=6>"태그" 게시판</font>
+        </h1>
+        <!-- Comments section-->
+        <section class="mb-5 max-w-2xl w-full">
+            <div class="card bg-light">
+                <!-- Comment form-->
+                <form class="flex flex-col flex-grow mb-4"><textarea class="form-control" placeholder="댓글을 남겨보세요"
+                                                                     rows="3"></textarea>
+                    <input dir="ltr" style="float:left;" type="submit" value="답변등록">
+                </form>
+                <!-- Comment with nested comments-->
+                <div class="flex mb-4">
+                    <!-- Parent comment-->
+                    <div class="flex-shrink-0"><img alt="..."
+                                                    class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
+                    </div>
+                    <div class="flex flex-col ms-5 max-w-2xl w-full">
+                        <div class="fw-bold">작성자</div>
+                        <div class="flex max-w-2xl w-full">
+                            댓글 어쩌구저쩌구 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구
+                        </div>
+                        <!-- Child comment 1-->
+                        <div class="flex mt-4">
+                            <div class="flex-shrink-0"><img alt="..."
+                                                            class="rounded-circle"
+                                                            src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/></div>
+                            <div class="ms-5 max-w-2xl w-full">
+                                <div class="fw-bold">작성자</div>
+                                답글 저쩌구어쩌구
+                            </div>
+                        </div>
+                        <!-- Child comment 2-->
+                        <div class="flex mt-4">
+                            <div class="flex-shrink-0"><img alt="..."
+                                                            class="rounded-circle"
+                                                            src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/></div>
+                            <div class="ms-5 max-w-2xl w-full">
+                                <div class="fw-bold">작성자</div>
+                                답글입니다답글입니다답글입니다답글입니다답글입니다답글입니다답글입니다 답글입니다답글입니다답글입니다답글입니다답글입니다답글입니다답글입니다
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single comment-->
+                <div class="flex">
+                    <div class="flex-shrink-0"><img alt="..."
+                                                    class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
+                    </div>
+                    <div class="ms-5 max-w-2xl w-full">
+                        <div class="fw-bold">작성자</div>
+                        댓글인데요
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
 </body>
 </html>
