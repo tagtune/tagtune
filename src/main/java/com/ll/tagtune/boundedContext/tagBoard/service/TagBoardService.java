@@ -15,7 +15,7 @@ public class TagBoardService {
     private final TagBoardRepository tagBoardRepository;
 
     @Transactional(readOnly = true)
-    public Optional<TagBoard> findByTagBoardName(String tagBoardName) {
-        return tagBoardRepository.findByTagBoardName(tagBoardName);
+    public Optional<TagBoard> findByTagBoard(String tagBoard) {
+        return tagBoardRepository.findByTagBoard(tagBoard);
     }
 }

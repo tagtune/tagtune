@@ -13,5 +13,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString(callSuper = true)
 public class TagBoard extends Tag {
-    private String tagBoardName;
+    private String tagBoard;
 }
