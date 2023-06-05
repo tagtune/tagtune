@@ -81,7 +81,7 @@ public class SearchEndpoint {
         String body = "";
         String url = BASE_URL + "track.search"
                 + setTrack(title)
-                + setTrack(artist);
+                + setArtist(artist);
 
 
         return getResponse(HttpMethod.GET, body, url);
@@ -97,8 +97,8 @@ public class SearchEndpoint {
     public static Map getTrackInfo(String trackName, String artistName) {
         String body = "";
         String url = BASE_URL + "track.getInfo"
-                + setArtist(artistName)
-                + setTrack(trackName);
+                + setTrack(trackName)
+                + setArtist(artistName);
 
         return getResponse(HttpMethod.GET, body, url);
     }
@@ -113,8 +113,8 @@ public class SearchEndpoint {
     public static Map getTrackTopTags(String trackName, String artistName) {
         String body = "";
         String url = BASE_URL + "track.gettoptags"
-                + setArtist(artistName)
-                + setTrack(trackName);
+                + setTrack(trackName)
+                + setArtist(artistName);
 
         return getResponse(HttpMethod.GET, body, url);
     }
