@@ -54,6 +54,5 @@ class TrackServiceTest {
 
         Track track = trackService.getTrackInfo(rsTrack.getData());
         assertThat(track.getAlbum().getName()).isNotNull();
-        System.out.println(track.getAlbum().getName());
     }
 }
