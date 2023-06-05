@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 
-    Optional<Playlist> findByid(Long id);
+    Optional<Playlist> findById(Long id);
 
     List<Playlist> findAllByMember_id(Long memberId);
 }

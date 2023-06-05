@@ -40,7 +40,7 @@ public class PlaylistService {
     }
 
     public RsData<Playlist> deletePlaylist(final Long id) {
-        Optional<Playlist> playlistOptional = playlistRepository.findByid(id);
+        Optional<Playlist> playlistOptional = playlistRepository.findById(id);
 
         if (playlistOptional.isEmpty()) return RsData.of("F-1", "해당하는 플레이리스트가 없습니다.");
         playlistRepository.delete(playlistOptional.get());
