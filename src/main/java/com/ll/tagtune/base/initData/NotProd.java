@@ -1,8 +1,8 @@
 package com.ll.tagtune.base.initData;
 
-import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
+import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +30,14 @@ public class NotProd {
                         .toArray(Member[]::new);
 
                 memberService.join("admin", "1234");
+
+                Track[] tracks = {
+                        trackService.searchTrackFromApi("IU", "blueming").getData(),
+                        trackService.searchTrackFromApi("나훈아", "테스형").getData(),
+                        trackService.searchTrackFromApi("Believe").getData(),
+                        trackService.searchTrackFromApi("Believer", "Imagine Dragons").getData()
+                };
+
             }
         };
     }

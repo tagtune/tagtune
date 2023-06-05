@@ -1,10 +1,12 @@
 package com.ll.tagtune.boundedContext.track.service;
 
+import com.ll.tagtune.base.lastfm.ResultParser;
+import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
-import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
+import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepository;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepositoryImpl;
@@ -33,6 +35,17 @@ public class TrackService {
         return trackRepository.findByTitleAndArtist_ArtistName(title, artistName);
     }
 
+    public Track createTrack(String title, Artist artist) {
+        Track track = Track.builder()
+                .title(title)
+                .artist(artist)
+                .build();
+
+        trackRepository.save(track);
+
+        return track;
+    }
+
     public Track createTrack(String title, Artist artist, Album album) {
         Track track = Track.builder()
                 .title(title)
@@ -45,14 +58,29 @@ public class TrackService {
         return track;
     }
 
-    public Track getOrCreateTrackByDTO(TrackInfoDTO trackInfoDTO) {
+    public RsData<Track> searchTrackFromApi(String title, String artistName) {
+        TrackSearchDTO trackDto = ResultParser.searchTracks(title, artistName).stream().findFirst().orElse(null);
+
+        if (trackDto == null) return RsData.of("F-1", "검색 결과가 없습니다.");
+
+        return RsData.successOf(getOrCreateTrackByDTO(trackDto));
+    }
+
+    public RsData<Track> searchTrackFromApi(String title) {
+        TrackSearchDTO trackDto = ResultParser.searchTracks(title).stream().findFirst().orElse(null);
+
+        if (trackDto == null) return RsData.of("F-1", "검색 결과가 없습니다.");
+
+        return RsData.successOf(getOrCreateTrackByDTO(trackDto));
+    }
+
+    public Track getOrCreateTrackByDTO(TrackSearchDTO trackSearchDTO) {
         return getTrackByTitleAndArtist(
-                trackInfoDTO.getTitle(),
-                trackInfoDTO.getArtistDTO().getArtistName()
+                trackSearchDTO.getTitle(),
+                trackSearchDTO.getArtistDTO().getArtistName()
         ).orElseGet(() -> createTrack(
-                trackInfoDTO.getTitle(),
-                artistService.getOrCreateArtistByDTO(trackInfoDTO.getArtistDTO()),
-                albumService.getOrCreateAlbumDTO(trackInfoDTO.getAlbumDTO())
+                trackSearchDTO.getTitle(),
+                artistService.getOrCreateArtistByDTO(trackSearchDTO.getArtistDTO())
         ));
     }
 }
