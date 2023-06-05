@@ -1,6 +1,6 @@
-package com.ll.tagtune.boundedContext.tagBoard.entity;
+package com.ll.tagtune.boundedContext.tagComment.entity;
 
-import com.ll.tagtune.boundedContext.tag.entity.Tag;
+import com.ll.tagtune.base.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @ToString(callSuper = true)
-public class TagBoard extends Tag {
-    private String tagBoardName;
+public class TagComment extends BaseEntity {
+    private String content;
+    private boolean removeStatus;
 }
