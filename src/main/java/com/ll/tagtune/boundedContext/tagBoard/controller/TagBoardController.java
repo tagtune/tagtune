@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("usr/category")
 @RequiredArgsConstructor
 public class TagBoardController {
-    private TagBoardService tagBoardService;
+    private final TagBoardService tagBoardService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/tagBoard")
