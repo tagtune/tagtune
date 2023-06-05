@@ -43,6 +43,34 @@ public class ResultParser {
     }
 
     /**
+     * 검색 결과를 TrackSearchDTO 으로 파싱하여 리턴합니다
+     *
+     * @param title
+     * @param artist
+     * @return List<TrackSearchDTO> 트랙 목록
+     */
+    public static List<TrackSearchDTO> searchTracks(String title, String artist) {
+        Map obj = SearchEndpoint.searchTrack(title, artist);
+        Map results = (Map) obj.get("results");
+        LinkedHashMap trackMatches = (LinkedHashMap) results.get("trackmatches");
+        List<LinkedHashMap<String, String>> rawTracks = (List<LinkedHashMap<String, String>>) trackMatches.get("track");
+        List<TrackSearchDTO> tracks = new ArrayList<>();
+        for (LinkedHashMap<String, String> rawTrack : rawTracks) {
+            String resTitle = rawTrack.get("name");
+            ArtistDTO resArtist = ArtistDTO.builder()
+                    .artistName(rawTrack.get("artist"))
+                    .build();
+
+            tracks.add(TrackSearchDTO.builder()
+                    .title(resTitle)
+                    .artistDTO(resArtist)
+                    .build());
+        }
+
+        return tracks;
+    }
+
+    /**
      * Track 의 세부정보를 리턴합니다
      *
      * @param trackName
