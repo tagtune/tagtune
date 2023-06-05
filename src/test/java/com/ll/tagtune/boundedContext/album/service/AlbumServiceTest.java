@@ -1,4 +1,4 @@
-package com.ll.tagtune.boundedContext.album;
+package com.ll.tagtune.boundedContext.album.service;
 
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
