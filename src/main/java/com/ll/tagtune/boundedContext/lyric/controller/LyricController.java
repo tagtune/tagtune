@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/lyric")
 public class LyricController {
-    @GetMapping
+    @GetMapping("/")
     public String lyric(HttpSession session) {
         return "/lyric/lyric";
     }
