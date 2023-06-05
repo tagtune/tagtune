@@ -42,8 +42,9 @@
                     </li>
                 </ul>
             </div>
-            <a href="/usr/member/me">
-                <div th:utext="${@rq.member.getProfileImage()}"></div>
+            <a class="btn btn-ghost normal-case text-xl" href="/usr/member/me">
+                <i class="fa-solid fa-user">&nbsp;</i>
+                <div th:if="${@rq.login}" th:utext="${@rq.member.getProfileImage()}"></div>
             </a>
         </div>
         <div class="navbar-center">
