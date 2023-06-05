@@ -27,6 +27,7 @@ class TrackServiceTest {
         final String tgtTitle = "Jean";
         RsData<Track> rsTrack = trackService.searchTrackFromApi(tgtTitle);
         assertThat(rsTrack.isSuccess()).isTrue();
+
         assertThat(rsTrack.getData().getTitle()).contains(tgtTitle);
     }
 
