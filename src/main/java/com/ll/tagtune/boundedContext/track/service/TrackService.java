@@ -6,15 +6,19 @@ import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
+import com.ll.tagtune.boundedContext.tag.entity.Tag;
+import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
+import com.ll.tagtune.boundedContext.track.entity.TrackTag;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepository;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,7 +27,9 @@ import java.util.Optional;
 public class TrackService {
     private final ArtistService artistService;
     private final AlbumService albumService;
+    private final TagService tagService;
     private final TrackRepository trackRepository;
+    private final TrackTagService trackTagService;
     private final TrackRepositoryImpl trackRepositoryImpl;
 
     @Transactional(readOnly = true)
@@ -104,7 +110,7 @@ public class TrackService {
      * 유저가 title 을 알고있을 때 Track 을 리턴하는 메소드입니다.
      *
      * @param title
-     * @return
+     * @return RsData Track
      */
     public RsData<Track> searchTrackFromApi(final String title) {
         TrackSearchDTO trackDto = ResultParser.searchTracks(title).stream().findFirst().orElse(null);
@@ -130,6 +136,13 @@ public class TrackService {
         Optional<Album> oAlbum = albumService.findByNameAndArtistId(trackDto.getAlbumDTO().getName(), artist.getId());
         Album album = oAlbum
                 .orElseGet(() -> albumService.createAlbum(trackDto.getAlbumDTO().getName(), artist.getArtistName()));
+
+        List<String> trackTags = track.getTags().stream().map(TrackTag::getTag).map(Tag::getTagName).toList();
+        trackDto.getTags().stream()
+                .map(rawTag -> tagService.getOrCreateTag(rawTag.getTagName()))
+                .filter(tag -> !trackTags.contains(tag.getTagName()))
+                .forEach(tag -> track.getTags().add(trackTagService.connect(track, tag))
+                );
 
         return updateTrack(track, artist, album);
     }

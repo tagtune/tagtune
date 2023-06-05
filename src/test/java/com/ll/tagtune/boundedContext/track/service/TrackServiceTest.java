@@ -2,14 +2,14 @@ package com.ll.tagtune.boundedContext.track.service;
 
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.track.entity.Track;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.ll.tagtune.boundedContext.track.entity.TrackTag;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,5 +54,9 @@ class TrackServiceTest {
 
         Track track = trackService.getTrackInfo(rsTrack.getData());
         assertThat(track.getAlbum().getName()).isNotNull();
+
+        List<TrackTag> tags = track.getTags();
+        tags.forEach(System.out::println);
+        assertThat(tags).isNotEmpty();
     }
 }

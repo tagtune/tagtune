@@ -37,7 +37,7 @@ public class TagService {
     }
 
     /**
-     *  페이징이 적용된 Tag 목록을 리턴합니다.
+     * 페이징이 적용된 Tag 목록을 리턴합니다.
      *
      * @param page
      * @return Page<Tag>
@@ -57,7 +57,7 @@ public class TagService {
      * @return Tag 의 중복 여부
      */
     @Transactional(readOnly = true)
-    public Boolean isDuplicate(Tag src, Tag tgt) {
+    public Boolean isDuplicate(final Tag src, final Tag tgt) {
         return src.getTagName().equalsIgnoreCase(tgt.getTagName());
     }
 
@@ -79,5 +79,9 @@ public class TagService {
         tagRepository.save(tag);
 
         return result;
+    }
+
+    public Tag getOrCreateTag(final String tagName) {
+        return findByName(tagName).orElseGet(() -> createTag(tagName));
     }
 }
