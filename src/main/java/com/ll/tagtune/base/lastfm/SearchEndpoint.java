@@ -21,14 +21,17 @@ public class SearchEndpoint {
                     + "&method=";
 
     private static String setArtist(String artistName) {
+        artistName = artistName.trim().replaceAll(" +", "+");
         return "&artist=" + artistName;
     }
 
     private static String setTrack(String trackName) {
+        trackName = trackName.trim().replaceAll(" +", "+");
         return "&track=" + trackName;
     }
 
     private static String setTag(String tagName) {
+        tagName = tagName.trim().replaceAll(" +", "+");
         return "&tag=" + tagName;
     }
 
@@ -63,7 +66,24 @@ public class SearchEndpoint {
     public static Map searchTrack(String query) {
         String body = "";
         String url = BASE_URL + "track.search"
-                + "&track=" + query;
+                + setTrack(query);
+
+        return getResponse(HttpMethod.GET, body, url);
+    }
+
+    /**
+     * 검색어로 검색하여 track 결과를 리턴합니다
+     *
+     * @param title
+     * @param artist
+     * @return 검색 결과
+     */
+    public static Map searchTrack(String title, String artist) {
+        String body = "";
+        String url = BASE_URL + "track.search"
+                + setTrack(title)
+                + setTrack(artist);
+
 
         return getResponse(HttpMethod.GET, body, url);
     }
