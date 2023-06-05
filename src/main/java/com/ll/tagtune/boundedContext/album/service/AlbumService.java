@@ -21,6 +21,10 @@ public class AlbumService {
         return albumRepository.findAllByName(name);
     }
 
+    public Optional<Album> findByNameAndArtistId(final String name, final Long id) {
+        return albumRepository.findByNameAndArtist_Id(name, id);
+    }
+
     public Optional<Album> findById(final Long id) {
         return albumRepository.findById(id);
     }

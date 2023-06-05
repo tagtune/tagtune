@@ -1,5 +1,6 @@
 package com.ll.tagtune.boundedContext.album.entity;
 
+import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,5 +16,7 @@ public class Album {
     private Long id;
     @Column(nullable = false)
     private String name;
+    @ManyToOne
+    private Artist artist;
     private String image;
 }

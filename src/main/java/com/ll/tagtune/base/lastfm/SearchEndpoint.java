@@ -21,17 +21,17 @@ public class SearchEndpoint {
                     + "&method=";
 
     private static String setArtist(String artistName) {
-        artistName = artistName.trim().replaceAll(" +", "+");
+        artistName = artistName.trim();
         return "&artist=" + artistName;
     }
 
     private static String setTrack(String trackName) {
-        trackName = trackName.trim().replaceAll(" +", "+");
+        trackName = trackName.trim();
         return "&track=" + trackName;
     }
 
     private static String setTag(String tagName) {
-        tagName = tagName.trim().replaceAll(" +", "+");
+        tagName = tagName.trim();
         return "&tag=" + tagName;
     }
 

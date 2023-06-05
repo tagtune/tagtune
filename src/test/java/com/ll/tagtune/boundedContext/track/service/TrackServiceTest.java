@@ -42,4 +42,17 @@ class TrackServiceTest {
         assertThat(trackService.searchTrackFromApi(tgtTitle).getData().getId()).isEqualTo(resultId);
     }
 
+
+    @Test
+    @DisplayName("Search Track Detail Test")
+    void t003() throws Exception {
+        final String tgtTitle = "좋은 날";
+        final String tgtArtist = "IU";
+        RsData<Track> rsTrack = trackService.searchTrackFromApi(tgtTitle, tgtArtist);
+        assertThat(rsTrack.isSuccess()).isTrue();
+
+        Track track = trackService.getTrackInfo(rsTrack.getData());
+        assertThat(track.getAlbum().getName()).isNotNull();
+        System.out.println(track.getAlbum().getName());
+    }
 }
