@@ -5,6 +5,8 @@ import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.member.entity.Gender;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
+import com.ll.tagtune.boundedContext.playlist.entity.Playlist;
+import com.ll.tagtune.boundedContext.playlist.service.PlaylistService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -17,12 +19,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("/usr/member") // 액션 URL의 공통 접두어
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final PlaylistService playlistService;
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
@@ -79,5 +84,23 @@ public class MemberController {
         }
 
         return rq.redirectWithMsg("/usr/member/me", updateRsData);
+    }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/playlist")
+    public String makePlaylistForm() {
+        return "usr/member/playlist";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/playlist")
+    public String makePlaylistForm(@RequestParam("name") String name) {
+        RsData<Playlist> updatePlaylist = playlistService.createPlaylist(name,rq.getMember());
+        if (updatePlaylist.isFail()) {
+            // 뒤로가기 하고 거기서 메세지 보여줘
+            return rq.historyBack(updatePlaylist);
+        }
+
+        // 아래 링크로 리다이렉트(302, 이동) 하고 그 페이지에서 메세지 보여줘
+        return rq.redirectWithMsg("/usr/member/playlist", updatePlaylist);
     }
 }
