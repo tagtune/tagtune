@@ -17,7 +17,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString(callSuper = true)
 public class Playlist extends BaseEntity {
-    @Setter
     @Column(nullable = false)
     private String name;
     /**
