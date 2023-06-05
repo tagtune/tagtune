@@ -2,8 +2,10 @@ package com.ll.tagtune.boundedContext.member.entity;
 
 import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.baseEntity.BaseEntity;
+import com.ll.tagtune.boundedContext.playlist.entity.Playlist;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +31,6 @@ public class Member extends BaseEntity {
     @Setter
     private Gender gender;
     private String profileImage;
-
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
