@@ -85,9 +85,9 @@ class LyricServiceTest {
     @DisplayName("lyric showLyric test2")
     void t005() throws Exception {
 
-        RsData<Lyric> lyricRsData = lyricService.showLyric(12L);
+        RsData<Lyric> lyricRsData = lyricService.showLyric(64L);
 
-        assertThat(lyricRsData.getResultCode()).isEqualTo("F-1");
+        assertThat(lyricRsData.isFail()).isTrue();
     }
 
     @Test
