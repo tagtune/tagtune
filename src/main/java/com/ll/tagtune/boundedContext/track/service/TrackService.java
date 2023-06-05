@@ -6,6 +6,7 @@ import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
+import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepository;
@@ -58,6 +59,17 @@ public class TrackService {
         return track;
     }
 
+    public Track updateTrack(Track track, Artist artist, Album album) {
+        Track result = track.toBuilder()
+                .artist(artist)
+                .album(album)
+                .build();
+
+        trackRepository.save(result);
+
+        return result;
+    }
+
     public RsData<Track> searchTrackFromApi(String title, String artistName) {
         TrackSearchDTO trackDto = ResultParser.searchTracks(title, artistName).stream().findFirst().orElse(null);
 
@@ -72,6 +84,20 @@ public class TrackService {
         if (trackDto == null) return RsData.of("F-1", "검색 결과가 없습니다.");
 
         return RsData.successOf(getOrCreateTrackByDTO(trackDto));
+    }
+
+    public Track getTrackInfo(Track track) {
+        TrackInfoDTO trackDto = ResultParser.getTrack(track.getTitle(), track.getArtist().getArtistName());
+
+        Optional<Artist> oArtist = artistService.findByArtistName(trackDto.getArtistDTO().getArtistName());
+        Artist artist = oArtist
+                .orElseGet(() -> artistService.createArtist(trackDto.getArtistDTO().getArtistName()));
+
+        Optional<Album> oAlbum = albumService.findByNameAndArtistId(trackDto.getAlbumDTO().getName(), artist.getId());
+        Album album = oAlbum
+                .orElseGet(() -> albumService.createAlbum(trackDto.getAlbumDTO().getName(), artist.getArtistName()));
+
+        return updateTrack(track, artist, album);
     }
 
     public Track getOrCreateTrackByDTO(TrackSearchDTO trackSearchDTO) {
