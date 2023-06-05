@@ -51,7 +51,7 @@ public class AlbumService {
         return albumRepository.save(album);
     }
 
-    public RsData<Album> deleteAlbum(Long id) {
+    public RsData<Album> deleteAlbum(final Long id) {
         Optional<Album> albumOptional = albumRepository.findByid(id);
 
         if (albumOptional.isEmpty()) return RsData.of("F-1", "해당하는 앨범이 없습니다.");

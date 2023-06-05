@@ -27,12 +27,12 @@ public class TrackService {
     private final TrackRepositoryImpl trackRepositoryImpl;
 
     @Transactional(readOnly = true)
-    public Optional<Track> getTrackByTitleAndArtist(String title, Long artistId) {
+    public Optional<Track> getTrackByTitleAndArtist(final String title, final Long artistId) {
         return trackRepository.findByTitleAndArtist_Id(title, artistId);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Track> getTrackByTitleAndArtist(String title, String artistName) {
+    public Optional<Track> getTrackByTitleAndArtist(final String title, final String artistName) {
         return trackRepository.findByTitleAndArtist_ArtistName(title, artistName);
     }
 
@@ -43,7 +43,7 @@ public class TrackService {
      * @param artist
      * @return Track
      */
-    public Track createTrack(String title, Artist artist) {
+    public Track createTrack(final String title, final Artist artist) {
         Track track = Track.builder()
                 .title(title)
                 .artist(artist)
@@ -62,7 +62,7 @@ public class TrackService {
      * @param album
      * @return Track
      */
-    public Track createTrack(String title, Artist artist, Album album) {
+    public Track createTrack(final String title, final Artist artist, final Album album) {
         Track track = Track.builder()
                 .title(title)
                 .artist(artist)
@@ -74,7 +74,7 @@ public class TrackService {
         return track;
     }
 
-    public Track updateTrack(Track track, Artist artist, Album album) {
+    public Track updateTrack(Track track, final Artist artist, final Album album) {
         Track result = track.toBuilder()
                 .artist(artist)
                 .album(album)
@@ -92,7 +92,7 @@ public class TrackService {
      * @param artistName
      * @return RsData Track
      */
-    public RsData<Track> searchTrackFromApi(String title, String artistName) {
+    public RsData<Track> searchTrackFromApi(final String title, final String artistName) {
         TrackSearchDTO trackDto = ResultParser.searchTracks(title, artistName).stream().findFirst().orElse(null);
 
         if (trackDto == null) return RsData.of("F-1", "검색 결과가 없습니다.");
@@ -101,11 +101,12 @@ public class TrackService {
     }
 
     /**
-     *  유저가 title 을 알고있을 때 Track 을 리턴하는 메소드입니다.
+     * 유저가 title 을 알고있을 때 Track 을 리턴하는 메소드입니다.
+     *
      * @param title
      * @return
      */
-    public RsData<Track> searchTrackFromApi(String title) {
+    public RsData<Track> searchTrackFromApi(final String title) {
         TrackSearchDTO trackDto = ResultParser.searchTracks(title).stream().findFirst().orElse(null);
 
         if (trackDto == null) return RsData.of("F-1", "검색 결과가 없습니다.");
@@ -114,7 +115,8 @@ public class TrackService {
     }
 
     /**
-     *  Track 세부 정보가 저장되지 않았을 때 정보를 갱신하는 메소드입니다.
+     * Track 세부 정보가 저장되지 않았을 때 정보를 갱신하는 메소드입니다.
+     *
      * @param track
      * @return Track with Details
      */
