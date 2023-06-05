@@ -53,7 +53,6 @@ public class SearchEndpoint {
         ResponseEntity<Map> responseEntity = rest
                 .exchange(url, httpMethod, requestEntity, Map.class);
 
-
         return responseEntity.getBody();
     }
 
