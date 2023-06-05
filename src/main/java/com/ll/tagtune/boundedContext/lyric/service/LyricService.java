@@ -64,7 +64,6 @@ public class LyricService {
         }
 
         Lyric newLyric = lyric.get().toBuilder()
-                .modifyDate(LocalDateTime.now())
                 .content(content)
                 .build();
 
