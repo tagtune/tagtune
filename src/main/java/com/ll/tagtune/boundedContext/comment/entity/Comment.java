@@ -33,7 +33,7 @@ public class Comment extends BaseEntity {
     private Album album;
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment parent;
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent" , orphanRemoval = true)
     private List<Comment> children;
 
     public void changeDeleteStatus(Boolean deleteStatus) {
