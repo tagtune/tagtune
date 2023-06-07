@@ -99,18 +99,20 @@ public class CommentService {
         if (comment.getChildren().size() != 0) {
             comment.changeDeleteStatus(true);
         }else {
-            commentRepository.delete(getDeletableParentComment(comment));
+            commentRepository.deleteById(getDeletableParentComment(comment).getId());
         }
 
         return RsData.of("S-1", "댓글을 성공적으로 삭제했습니다.");
     }
 
+    /**
+     * 부모가 있고, 부모의 자식이 1개(지금 삭제하는 댓글)이고, 부모의 삭제 상태가 TRUE인 댓글이라면 재귀
+     * */
     private Comment getDeletableParentComment(Comment comment) {
         Comment parent = comment.getParent();
         if(parent != null && parent.getChildren().size() == 1 && parent.getDeleteStatus())
-            // 부모가 있고, 부모의 자식이 1개(지금 삭제하는 댓글)이고, 부모의 삭제 상태가 TRUE인 댓글이라면 재귀
             return getDeletableParentComment(parent);
-        return comment; // 삭제해야하는 댓글 반환
+        return comment;
     }
 
     public RsData showComment(Long id) {
