@@ -110,7 +110,12 @@ public class CommentService {
         if (commentById.isEmpty()) {
             return RsData.of("F-1", "해당되는 id의 댓글이 없습니다.");
         }
+        Comment comment = commentById.get();
 
-        return RsData.successOf(commentById);
+        CommentResponseDTO commentResponseDTO = comment.getDeleteStatus() ?
+                new CommentResponseDTO(comment.getId(), "삭제된 댓글입니다.", comment.getMember()) :
+                new CommentResponseDTO(comment.getId(), comment.getContent(), comment.getMember());
+
+        return RsData.successOf(commentResponseDTO);
     }
 }
