@@ -116,5 +116,25 @@ class CommentServiceTest {
         commentService.deleteComment(parentComment.get().getId());
 
         assertThat(parentComment.get().getDeleteStatus()).isTrue();
+        assertThat(commentRepository.count()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("자식, 부모 댓글 둘 다 삭제시")
+    void t007() throws Exception{
+        Optional<Comment> parentComment = commentRepository.findAll().stream().findAny();
+        String content = "babybaby";
+
+        CommentRequestDTO commentResponseDTO = new CommentRequestDTO();
+        commentResponseDTO.setMemberId(null);
+        commentResponseDTO.setContent(content);
+        commentResponseDTO.setParentId(parentComment.get().getId());
+
+        RsData<Comment> commentRsData = commentService.saveReply(null, commentResponseDTO);
+
+        commentService.deleteComment(parentComment.get().getId());
+        commentService.deleteComment(commentRsData.getData().getId());
+
+        assertThat(commentRepository.count()).isEqualTo(0);
     }
 }
