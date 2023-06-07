@@ -74,6 +74,6 @@ class FavorServiceTest {
 
         FavorBase[] favorBases = favorService.getFavorTags(member.getId()).toArray(FavorBase[]::new);
 
-        assertThat(favors).
+        // assert favor and favorBase is equal
     }
 }
