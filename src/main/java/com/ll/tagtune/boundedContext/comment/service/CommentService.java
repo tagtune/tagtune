@@ -86,13 +86,21 @@ public class CommentService {
         return RsData.of("S-1", "댓글을 성공적으로 수정했습니다.",modifyComment);
     }
 
+    /**
+     * 대댓글 있을경우 삭제 상태만 변경
+     * */
     public RsData deleteComment(Long id) {
         Optional<Comment> commentById = commentRepository.findById(id);
         if (commentById.isEmpty()) {
             return RsData.of("F-1", "해당되는 id의 댓글이 없습니다.");
         }
+        Comment comment = commentById.get();
 
-        commentRepository.deleteById(id);
+        if (comment.getChildren().size() != 0) {
+            comment.changeDeleteStatus(true);
+        }else {
+            commentRepository.deleteById(id);
+        }
 
         return RsData.of("S-1", "댓글을 성공적으로 삭제했습니다.");
     }
