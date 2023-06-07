@@ -19,6 +19,7 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        default_batch_fetch_size: 1000
 logging:
   level:
     root: INFO
@@ -30,3 +31,5 @@ custom:
     baseUrl: http://localhost
   image:
     artistUrl: https://i.cdn.com
+  tag:
+    pagingSize: 20

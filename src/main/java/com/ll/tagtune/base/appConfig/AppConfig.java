@@ -14,6 +14,8 @@ public class AppConfig {
     private static String spotifyClientSecret;
     @Getter
     private static String lastfmClientId;
+    @Getter
+    private static Integer tagPagingSize;
 
     @Value("${custom.image.artistUrl}")
     public void setArtistUrl(String artistUrl) {
@@ -33,5 +35,10 @@ public class AppConfig {
     @Value("${custom.lastfm.clientId}")
     public void setLastfmClientId(String lastfmClientId) {
         AppConfig.lastfmClientId = lastfmClientId;
+    }
+
+    @Value("${custom.tag.pagingSize}")
+    public void setTagPagingSize(Integer tagPagingSize) {
+        AppConfig.tagPagingSize = tagPagingSize;
     }
 }
