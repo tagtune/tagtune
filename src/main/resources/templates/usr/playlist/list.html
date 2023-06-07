@@ -1,0 +1,42 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>플레이리스트</title>
+</head>
+
+<body>
+
+<main layout:fragment="main" class="flex-grow flex items-center justify-center">
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-solid fa-music"></i>
+            <div th:utext="${@rq.member.getUsername() + '의 플레이리스트'}"></div>
+        </h1>
+        <ul>
+            <th:block th:each="playlist : ${playlistByMemberId}">
+                <li>
+                    <span th:text="${playlist.name}"></span>
+                    <form th:action="@{/usr/playlist/{playlistId}(playlistId=*{playlist.id})}" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">삭제</button>
+                    </form>
+                </li>
+            </th:block>
+        </ul>
+
+        <style>
+            .container {
+                display: flex;
+                justify-content: flex-end;
+            }
+        </style>
+
+        <div class="container">
+            <button th:if="${@rq.login}"><a href="/usr/playlist/playlistForm"><i class="fa-solid fa-music"></i> 플레이리스트 생성하기</a></button>
+        </div>
+
+    </div>
+</main>
+</body>
+
+</html>

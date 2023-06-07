@@ -47,13 +47,14 @@ class PlaylistSerivceTest {
     void t002() throws Exception {
     Member member = Member
             .builder()
+            .id(3L)
             .username("박준수")
             .password("1234")
             .profileImage("아이유표지")
             //.password(passwordEncoder.encode("1234"))
             .build();
         Long playlistId = playlistService.createPlaylist("플레이리스트 1", member).getData().getId();
-        RsData<Playlist> rsData = playlistService.deletePlaylist(playlistId);
+        RsData<Playlist> rsData = playlistService.deletePlaylist(playlistId, member.getId());
         assertThat(playlistService.findById(playlistId)).isEmpty();
         assertThat(rsData.isSuccess()).isTrue();
     }
