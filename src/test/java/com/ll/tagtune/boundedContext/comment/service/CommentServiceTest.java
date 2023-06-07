@@ -1,6 +1,8 @@
 package com.ll.tagtune.boundedContext.comment.service;
 
 import com.ll.tagtune.base.rsData.RsData;
+import com.ll.tagtune.boundedContext.comment.dto.CommentRequestDTO;
+import com.ll.tagtune.boundedContext.comment.dto.CommentResponseDTO;
 import com.ll.tagtune.boundedContext.comment.entity.Comment;
 import com.ll.tagtune.boundedContext.comment.repository.CommentRepository;
 import org.junit.jupiter.api.*;
@@ -21,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class CommentServiceTest {
-
     @Autowired
     private CommentService commentService;
 
@@ -81,5 +82,39 @@ class CommentServiceTest {
         RsData<Comment> comment = commentService.modifyComment(anyComment.get().getId(), content);
 
         assertThat(comment.getData().getContent()).isEqualTo(content);
+    }
+
+    @Test
+    @DisplayName("부모 댓글 children에 댓글 추가")
+    void t005() throws Exception{
+        Optional<Comment> anyComment = commentRepository.findAll().stream().findAny();
+        String content = "babybaby";
+
+        CommentRequestDTO commentResponseDTO = new CommentRequestDTO();
+        commentResponseDTO.setMemberId(null);
+        commentResponseDTO.setContent(content);
+        commentResponseDTO.setParentId(anyComment.get().getId());
+
+        commentService.saveReply(null, commentResponseDTO);
+
+        assertThat(anyComment.get().getChildren().size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("댓글 삭제시 getDeleteStatus()가 true")
+    void t006() throws Exception{
+        Optional<Comment> parentComment = commentRepository.findAll().stream().findAny();
+        String content = "babybaby";
+
+        CommentRequestDTO commentResponseDTO = new CommentRequestDTO();
+        commentResponseDTO.setMemberId(null);
+        commentResponseDTO.setContent(content);
+        commentResponseDTO.setParentId(parentComment.get().getId());
+
+        commentService.saveReply(null, commentResponseDTO);
+
+        commentService.deleteComment(parentComment.get().getId());
+
+        assertThat(parentComment.get().getDeleteStatus()).isTrue();
     }
 }
