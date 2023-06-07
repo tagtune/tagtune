@@ -2,27 +2,73 @@ package com.ll.tagtune.boundedContext.comment.service;
 
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
+import com.ll.tagtune.boundedContext.album.repository.AlbumRepository;
+import com.ll.tagtune.boundedContext.comment.dto.CommentRequestDTO;
+import com.ll.tagtune.boundedContext.comment.dto.CommentResponseDTO;
 import com.ll.tagtune.boundedContext.comment.entity.Comment;
 import com.ll.tagtune.boundedContext.comment.repository.CommentRepository;
+import com.ll.tagtune.boundedContext.member.entity.Member;
+import com.ll.tagtune.boundedContext.member.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import se.michaelthelin.spotify.exceptions.detailed.NotFoundException;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final AlbumRepository albumRepository;
+    private final MemberRepository memberRepository;
     public RsData<Comment> saveComment(String content, Album album){
         Comment comment = Comment.builder()
                 .deleteStatus(false)
                 .content(content)
+                .children(new ArrayList<>())
                 .album(album)
                 .build();
 
         commentRepository.save(comment);
 
         return RsData.of("S-1", "댓글이 정상적으로 등록되었습니다.",comment);
+    }
+
+    /**
+     * 대댓글 메서드
+     * */
+    public RsData<Comment> saveReply(Long albumId, CommentRequestDTO commentRequestDTO){
+//        Optional<Member> memberById = memberRepository.findById(commentRequestDTO.getMemberId());
+//        if (memberById.isEmpty()) {
+//            return RsData.of("F-1", "해당되는 id의 회원이 없습니다.");
+//        }
+
+//        Optional<Album> albumById = albumRepository.findById(albumId);
+//        if (albumById.isEmpty()) {
+//            return RsData.of("F-2", "해당되는 id의 앨범이 없습니다.");
+//        }
+
+        Optional<Comment> commentById = commentRepository.findById(commentRequestDTO.getParentId());
+        if (commentById.isEmpty()) {
+            return RsData.of("F-3", "해당되는 부모 id의 댓글이 없습니다.");
+        }
+
+        Comment reply = Comment.builder()
+                .deleteStatus(false)
+                .content(commentRequestDTO.getContent())
+                .parent(commentById.get())
+                .children(new ArrayList<>())
+//                .album(albumById.get())
+//                .member(memberById.get())
+                .build();
+
+        commentRepository.save(reply);
+
+        commentById.get().addChildren(reply);
+
+        return RsData.of("S-1", "대댓글이 정상적으로 등록되었습니다.",reply);
     }
 
     public RsData<Comment> modifyComment(Long id, String content) {
