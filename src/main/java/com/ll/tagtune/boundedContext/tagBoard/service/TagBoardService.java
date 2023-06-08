@@ -18,18 +18,22 @@ public class TagBoardService {
     private final TagBoardRepository tagBoardRepository;
     private final TagRepository tagRepository;
 
+    @Transactional(readOnly = true)
     public List<TagBoard> findAll() {
         return tagBoardRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<TagBoard> findTop3ByOrderByPopularityDesc() {
         return tagBoardRepository.findTop3ByOrderByPopularityDesc();
     }
 
+    @Transactional(readOnly = true)
     public List<TagBoard> findByTagBoardNameLike(String kw) {
         return tagBoardRepository.findByTagBoardNameLike(kw);
     }
 
+    @Transactional(readOnly = true)
     public Optional<TagBoard> findById(Long id) {
         return tagBoardRepository.findById(id);
     }

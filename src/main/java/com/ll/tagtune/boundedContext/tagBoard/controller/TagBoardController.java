@@ -24,13 +24,13 @@ public class TagBoardController {
      */
     @GetMapping("/tagBoard")
     public String showTagBoard(Model model, @RequestParam(value = "kw", defaultValue = "") String kw) {
-        List<TagBoard> tagBoardList = tagBoardService.findAll();
         List<TagBoard> top3TagBoardList = tagBoardService.findTop3ByOrderByPopularityDesc();
-        List<TagBoard> filteringTagBoardList = tagBoardService.findByTagBoardNameLike("%" + kw + "%");
 
         if (!kw.equals("")) {
+            List<TagBoard> filteringTagBoardList = tagBoardService.findByTagBoardNameLike("%" + kw + "%");
             model.addAttribute("tagBoardList", filteringTagBoardList);
         } else {
+            List<TagBoard> tagBoardList = tagBoardService.findAll();
             model.addAttribute("tagBoardList", tagBoardList);
         }
         model.addAttribute("top3TagBoardList", top3TagBoardList);
