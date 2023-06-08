@@ -1,25 +1,29 @@
 package com.ll.tagtune.boundedContext.comment.dto;
 
-import com.ll.tagtune.boundedContext.member.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 public class CommentResponseDTO {
-    private Long id;
+    private Long commentId;
+    private Boolean deleteStatus;
     private String content;
-    private Member writer;
-    private List<CommentResponseDTO> children = new ArrayList<>();
+    private Long memberId;
+    private String memberName;
+    private Integer replyCnt;
 
-    public CommentResponseDTO(Long id, String content, Member writer) {
-        this.id = id;
-        this.content = content;
-        this.writer = writer;
+    public CommentResponseDTO(
+            Long commentId,
+            Boolean deleteStatus,
+            String content,
+            Long memberId,
+            String memberName,
+            Integer replyCnt
+    ) {
+        this.commentId = commentId;
+        this.deleteStatus = deleteStatus;
+        this.content = getDeleteStatus() ? "삭제된 댓글입니다." : content;
+        this.memberId = getDeleteStatus() ? -1 : memberId;
+        this.memberName = getDeleteStatus() ? "" : memberName;
+        this.replyCnt = replyCnt;
     }
 }
