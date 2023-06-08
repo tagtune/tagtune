@@ -2,7 +2,6 @@ package com.ll.tagtune.base.lastfm;
 
 import com.ll.tagtune.boundedContext.album.dto.AlbumDTO;
 import com.ll.tagtune.boundedContext.artist.dto.ArtistDTO;
-import com.ll.tagtune.boundedContext.tag.dto.TagDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
 import lombok.AccessLevel;
@@ -91,10 +90,8 @@ public class ResultParser {
         List<LinkedHashMap<String, String>> rawTags = (List<LinkedHashMap<String, String>>)
                 ((LinkedHashMap) rawTrack.get("toptags")).get("tag");
 
-        List<TagDTO> tags = rawTags.stream()
-                .map(m -> TagDTO.builder()
-                        .tagName(m.get("name"))
-                        .build())
+        List<String> tags = rawTags.stream()
+                .map(m -> m.get("name"))
                 .toList();
 
         return TrackInfoDTO.builder()
@@ -112,16 +109,13 @@ public class ResultParser {
      * @param artistName
      * @return List<TagDTO> TagDTO 목록
      */
-    public static List<TagDTO> getTrackTags(String trackName, String artistName) {
+    public static List<String> getTrackTags(String trackName, String artistName) {
         Map result = SearchEndpoint.getTrackTopTags(trackName, artistName);
         Map topTags = (Map) result.get("toptags");
         List<LinkedHashMap<String, String>> rawTags = (List<LinkedHashMap<String, String>>) topTags.get("tag");
 
         return rawTags.stream()
-                .map(s -> TagDTO.builder()
-                        .tagName(s.get("name"))
-                        .build()
-                )
+                .map(s -> s.get("name"))
                 .toList();
     }
 

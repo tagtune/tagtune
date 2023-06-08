@@ -1,11 +1,8 @@
 package com.ll.tagtune.base;
 
 import com.ll.tagtune.base.lastfm.ResultParser;
-import com.ll.tagtune.boundedContext.tag.dto.TagDTO;
-import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
-import com.ll.tagtune.boundedContext.track.entity.Track;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +32,7 @@ class LastfmTest {
     @Test
     @DisplayName("Get topTags Test")
     void t003() throws Exception {
-        List<TagDTO> tags = ResultParser.getTrackTags("blueming", "IU");
+        List<String> tags = ResultParser.getTrackTags("blueming", "IU");
         tags.forEach(System.out::println);
         assertThat(tags).isNotEmpty();
     }

@@ -139,7 +139,7 @@ public class TrackService {
 
         List<String> trackTags = track.getTags().stream().map(TrackTag::getTag).map(Tag::getTagName).toList();
         trackDto.getTags().stream()
-                .map(rawTag -> tagService.getOrCreateTag(rawTag.getTagName()))
+                .map(tagService::getOrCreateTag)
                 .filter(tag -> !trackTags.contains(tag.getTagName()))
                 .forEach(tag -> track.getTags().add(trackTagService.connect(track, tag))
                 );
