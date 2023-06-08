@@ -12,17 +12,28 @@
             <i class="fa-solid fa-music"></i>
             <div th:utext="${@rq.member.getUsername() + '의 플레이리스트'}"></div>
         </h1>
-        <ul>
-            <th:block th:each="playlist : ${playlistByMemberId}">
-                <li>
-                    <span th:text="${playlist.name}"></span>
-                    <form th:action="@{/usr/playlist/{playlistId}(playlistId=*{playlist.id})}" method="POST">
+
+        <th:block th:each="playlist : ${playlists}">
+            <div class="flex">
+                <div style="margin-right: 60px;">
+                    <div>
+                        <form th:action="@{|/playlist/detail/${playlist.id}|}" method="GET">
+
+                            <button th:text="${playlist.name}"></button>
+
+                        </form>
+                    </div>
+                </div>
+
+                <div>
+                    <form th:action="@{|/playlist/${playlist.id}|}" method="POST">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit">삭제</button>
                     </form>
-                </li>
-            </th:block>
-        </ul>
+                </div>
+            </div>
+        </th:block>
+
 
         <style>
             .container {
@@ -32,7 +43,8 @@
         </style>
 
         <div class="container">
-            <button th:if="${@rq.login}"><a href="/usr/playlist/playlistForm"><i class="fa-solid fa-music"></i> 플레이리스트 생성하기</a></button>
+            <button th:if="${@rq.login}"><a href="/playlist/playlistForm"><i class="fa-solid fa-music"></i> 플레이리스트 생성하기</a>
+            </button>
         </div>
 
     </div>

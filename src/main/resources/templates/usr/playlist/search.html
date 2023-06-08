@@ -1,0 +1,44 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>음악 검색 페이지</title>
+</head>
+
+<body>
+
+<main layout:fragment="main" class="flex-grow flex items-center justify-center">
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-solid fa-music"></i>
+            원하시는 가수와 음악을 입력해주세요.
+        </h1>
+
+        <style>
+
+            .form-row {
+                display: flex;
+                flex-direction: column;
+            }
+            .form-row label {
+                margin-bottom: 10px;
+            }
+        </style>
+
+        <div class="form-row">
+            <label>
+                <span class="label-text">가수 : </span>
+                <input type="text" name="artist" placeholder="추가하고싶은 가수" class="input input-bordered" autofocus/>
+            </label>
+            <label>
+                <span class="label-text">제목 : </span>
+                <input type="text" name="Title" placeholder="추가하고싶은 제목" class="input input-bordered" autofocus/>
+            </label>
+            <button type="submit">플레이리스트에 추가</button>
+        </div>
+
+
+    </div>
+</main>
+</body>
+
+</html>
