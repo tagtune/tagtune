@@ -22,8 +22,8 @@ public class TagBoardService {
         return tagBoardRepository.findAll();
     }
 
-    public List<TagBoard> findTop3ByPopularity(Long popularity) {
-        return tagBoardRepository.findTop3ByPopularity(popularity);
+    public List<TagBoard> findTop3ByOrderByPopularityDesc() {
+        return tagBoardRepository.findTop3ByOrderByPopularityDesc();
     }
 
     public List<TagBoard> findByTagBoardNameLike(String kw) {
@@ -34,6 +34,11 @@ public class TagBoardService {
         return tagBoardRepository.findById(id);
     }
 
+    /**
+     * 태그가 생겼을 경우
+     * tagList를 받아와서 tagBoard로 생성
+     * findTop3ByOrderByPopularityDesc 체크하려고 .popularity(tag.getId()) 추가
+     */
     public TagBoard createTagBoard() {
         TagBoard tagBoard = null;
         List<Tag> tagList = tagRepository.findAll();
@@ -41,6 +46,8 @@ public class TagBoardService {
             tagBoard = TagBoard.builder()
                     .tag(tag)
                     .tagBoardName(tag.getTagName())
+                    // todo 아래 코드 지워야 함
+                    .popularity(tag.getId())
                     .build();
             tagBoardRepository.save(tagBoard);
         }

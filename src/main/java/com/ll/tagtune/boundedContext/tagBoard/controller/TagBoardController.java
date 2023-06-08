@@ -17,10 +17,15 @@ import java.util.List;
 public class TagBoardController {
     private final TagBoardService tagBoardService;
 
+    /**
+     * 검색 필터링에 사용할 키워드 "kw"
+     * "kw"가 없을 경우 필터링 하지 않은 모든 tagBoardList 반환
+     * "kw"가 있을 경우 "kw"가 포함된 모든 tagBoardName 반환 -> "%" + kw + "%"
+     */
     @GetMapping("/tagBoard")
     public String showTagBoard(Model model, @RequestParam(value = "kw", defaultValue = "") String kw) {
         List<TagBoard> tagBoardList = tagBoardService.findAll();
-        List<TagBoard> top3TagBoardList = tagBoardService.findTop3ByPopularity(0L);
+        List<TagBoard> top3TagBoardList = tagBoardService.findTop3ByOrderByPopularityDesc();
         List<TagBoard> filteringTagBoardList = tagBoardService.findByTagBoardNameLike("%" + kw + "%");
 
         if (!kw.equals("")) {
