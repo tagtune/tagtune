@@ -8,6 +8,7 @@ import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
+import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
@@ -163,5 +164,19 @@ public class TrackService {
                 trackSearchDTO.getTitle(),
                 artistService.getOrCreateArtistByDTO(trackSearchDTO.getArtistDTO())
         ));
+    }
+
+    @Transactional(readOnly = true)
+    public RsData<Track> getTrack(final Long id) {
+        return trackRepository.findById(id)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public RsData<TrackDetailDTO> getTrackDetail(final Long id) {
+        return trackRepositoryImpl.getTrackDetail(id)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
     }
 }
