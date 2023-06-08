@@ -15,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,14 +28,16 @@ public class TrackController {
     private final TrackTagService trackTagService;
     private final Rq rq;
 
-    private record TrackSearchForm(@NotBlank String title, String artistName) {
-    }
-
     @GetMapping("/search")
-    public String search(@Valid TrackSearchForm trackSearchForm, Model model) {
-        List<TrackSearchDTO> rawTracks = (trackSearchForm.artistName == null) ?
-                ResultParser.searchTracks(trackSearchForm.title) :
-                ResultParser.searchTracks(trackSearchForm.title, trackSearchForm.artistName);
+    public String search(
+            @RequestParam(value = "title", defaultValue = "") String title,
+            @RequestParam(value = "artistName", defaultValue = "") String artistName,
+            Model model
+    ) {
+        if (title.isBlank()) rq.historyBack("검색어를 입력해야 합니다.");
+        List<TrackSearchDTO> rawTracks = (artistName.isBlank()) ?
+                ResultParser.searchTracks(title) :
+                ResultParser.searchTracks(title, artistName);
         model.addAttribute("tracks", rawTracks);
 
         return "usr/track/search";
