@@ -1,7 +1,6 @@
 package com.ll.tagtune.boundedContext.lyric.controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class LyricController {
     @GetMapping("/")
     public String lyric(HttpSession session) {
-        return "/lyric/lyric";
+        return "/usr/lyric/lyricPage.html";
     }
 
     @GetMapping("/modify")
     public String lyricModify(HttpSession session) {
-        return "/lyric/modifyLyric";
+        return "/usr/lyric/modifyLyric.html";
     }
 }
