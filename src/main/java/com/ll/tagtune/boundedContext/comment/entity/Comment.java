@@ -1,18 +1,17 @@
 package com.ll.tagtune.boundedContext.comment.entity;
 
 import com.ll.tagtune.base.baseEntity.BaseEntity;
-import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.member.entity.Member;
+import com.ll.tagtune.boundedContext.reply.entity.Reply;
+import com.ll.tagtune.boundedContext.track.entity.Track;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,24 +22,25 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = true)
 public class Comment extends BaseEntity {
-    private Boolean deleteStatus;
+    @Builder.Default
+    private Boolean deleteStatus = false;
     private String content;
-    @ColumnDefault("0")
-    private int recommendCnt;
-    @ManyToOne(fetch = FetchType.LAZY)
-    Member member;
     @ManyToOne
-    private Album album;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Comment parent;
-    @OneToMany(mappedBy = "parent" , orphanRemoval = true)
-    private List<Comment> children;
+    private Member member;
+    @ManyToOne
+    private Track track;
+    @OneToMany(mappedBy = "parent", cascade = {CascadeType.ALL})
+    @OrderBy("createDate desc")
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @ToString.Exclude
+    @Builder.Default
+    private List<Reply> replies = new ArrayList<>();
 
-    public void changeDeleteStatus(Boolean deleteStatus) {
-        this.deleteStatus = deleteStatus;
+    public void addReplies(Reply reply){
+        this.replies.add(reply);
     }
 
-    public void addChildren(Comment children){
-        this.children.add(children);
+    public void deleteReply(Reply reply) {
+        replies.removeIf(e -> e.equals(reply));
     }
 }
