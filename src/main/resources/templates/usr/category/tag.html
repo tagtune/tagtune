@@ -7,7 +7,7 @@
 <main class="flex flex-grow items-center justify-center" layout:fragment="main">
     <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
         <h1 class="mb-4">
-            <font size=6>"태그" 게시판</font>
+            <font size=6><span th:text="${tagBoard.getTagBoardName()}"></span> 게시판</font>
         </h1>
         <!-- Comments section-->
         <section class="mb-5 max-w-2xl w-full">

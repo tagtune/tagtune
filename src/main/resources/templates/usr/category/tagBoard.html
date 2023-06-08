@@ -15,19 +15,28 @@
                             원하는 태그를 검색해보세요
                         </div>
                         <div class="mt-4 flex">
-                            <label class="flex flex-grow">
-                                <input autofocus class="input input-bordered flex flex-grow" name="username"
+                            <label class="flex flex-col flex-grow">
+                                <input autofocus class="input input-bordered flex flex-grow" name="tagBoardName"
                                        onchange="$(this).keyup();"
-                                       onkeyup="$(this).prev().children(':last-child').text(this.value.trim());"
+                                       onkeydown="handleEnterKey(event);"
                                        onpaste="setTimeoutZero(() => $(this).keyup());"
                                        placeholder="원하는 태그를 입력하세요"
-                                       type="text"/>
+                                       onkeyup="$(this).next().children(':first-child').text('검색');" th:value="${kw}"
+                                       type="text">
+                                <a class="btn btn-primary btn-sm mx-1 my-2 block mt-3 text-sm break-all text-blue-400"
+                                   href="#"
+                                   onclick="event.preventDefault(); location.href = 'tagBoard?kw=' + $(this).prev().val().trim().replace(/ /g, '');">
+                                    <span></span>
+                                </a>
                                 <script>
-                                    // input : 태그가 input 인 녀석 선택
-                                    // input[name="username"] 태그가 input 이고 name 속성의 값이 username 인 녀석을 선택
-                                    // input[name="username"]:last : 태그가 input 이고 name 속성의 값이 username 인 녀석들 중에서 꼴등 한명 선택
-                                    // .keyup(); : 강제로 keyup 이벤트 트리거(이벤트를 강제로 발동시킨다.)
-                                    $(`input[name="username"]:last`).keyup();
+                                    $(`input[name="tagBoardName"]:last`).keyup();
+
+                                    function handleEnterKey(event) {
+                                        if (event.keyCode === 13) { // 13은 엔터키의 keyCode입니다.
+                                            event.preventDefault();
+                                            location.href = 'tagBoard?kw=' + event.target.value.trim().replace(/ /g, '');
+                                        }
+                                    }
                                 </script>
                             </label>
                         </div>
@@ -42,9 +51,11 @@
                         </label>
                         <ul class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-40"
                             tabindex="0">
-                            <li><a href="#">1. 아이유</a></li>
-                            <li><a href="#">2. 아이브</a></li>
-                            <li><a href="#">3. 스윙스</a></li>
+                            <li th:each="tagBoard: ${top3TagBoardList}"><a
+                                    th:href="|/usr/category/tag?id=${tagBoard.getId()}|">
+                                <span th:text="${tagBoardStat.count} + ."></span>
+                                <span th:text="${tagBoard.getTagBoardName()}"></span></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -57,209 +68,15 @@
                     전체 태그목록
                 </h1>
             </div>
-            <div>
-                <div>
-                    <div>
-                        <a class="badge badge-primary mx-1 my-2" href="/usr/category/tag">
-                            <span>아이유</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이브</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>임영웅</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>뜨거운 여름밤은 가고 남은 건 볼품없지만</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>사랑하긴 했었나요 스쳐가는 인연이었나요 짧지않은 우리 함께했던 시간들이 자꾸 내 마음을 가둬두네</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>Bruno Mars</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>Maroon 5</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>Just the Way You Are</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이유</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이브</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>임영웅</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이유</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이브</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>임영웅</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이유</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이브</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>임영웅</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이유</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이브</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>임영웅</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이유</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>아이브</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>임영웅</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                        <a class="badge badge-primary mx-1 my-2" href="#">
-                            <span>가수이름</span>
-                        </a>
-                    </div>
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${!tagBoardList.isEmpty()}">
+                <div th:each="tagBoard: ${tagBoardList}">
+                    <a class="badge badge-primary mx-1 my-2" th:href="|/usr/category/tag?id=${tagBoard.getId()}|">
+                        <span th:text="${tagBoard.getTagBoardName()}"></span>
+                    </a>
                 </div>
+            </div>
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${tagBoardList.isEmpty()}">
+                해당하는 태그가 없습니다.
             </div>
         </div>
     </div>
