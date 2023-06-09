@@ -16,6 +16,8 @@ public class AppConfig {
     private static String lastfmClientId;
     @Getter
     private static Integer tagPagingSize;
+    @Getter
+    private static String nameForNoData;
 
     @Value("${custom.image.artistUrl}")
     public void setArtistUrl(String artistUrl) {
@@ -40,5 +42,10 @@ public class AppConfig {
     @Value("${custom.tag.pagingSize}")
     public void setTagPagingSize(Integer tagPagingSize) {
         AppConfig.tagPagingSize = tagPagingSize;
+    }
+
+    @Value("${custom.data.nodata}")
+    public void setTagPagingSize(String nameForNoData) {
+        AppConfig.nameForNoData = nameForNoData;
     }
 }
