@@ -9,11 +9,13 @@ import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -87,7 +89,12 @@ public class CommentService {
         return RsData.of("S-1", "댓글이 삭제되었습니다.");
     }
 
+    @Transactional(readOnly = true)
     public List<CommentResponseDTO> getCommentsWithReplies(Track track) {
         return commentRepositoryImpl.getComments(track.getId());
+    }
+
+    public Comment findById(Long commentId) {
+        return commentRepository.findById(commentId).get();
     }
 }

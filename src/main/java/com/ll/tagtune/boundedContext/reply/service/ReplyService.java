@@ -10,11 +10,13 @@ import com.ll.tagtune.boundedContext.reply.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ReplyService {
     private final ReplyRepository replyRepository;
@@ -73,6 +75,7 @@ public class ReplyService {
         return RsData.of("S-1", "대댓글이 삭제되었습니다.");
     }
 
+    @Transactional(readOnly = true)
     public RsData<List<Reply>> getReply(final Comment comment) {
         List<Reply> replies = replyRepository.findByParent(comment);
         return RsData.successOf(replies);
