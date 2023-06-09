@@ -5,6 +5,7 @@ import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.repository.MemberRepository;
 import com.ll.tagtune.boundedContext.playlist.entity.Playlist;
 import com.ll.tagtune.boundedContext.playlist.repository.PlaylistRepository;
+import com.ll.tagtune.boundedContext.track.entity.Track;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,8 @@ public class PlaylistService {
      * @param memberId 멤버의 Id
      * @return RsData<Playlist>
      */
-    private RsData<Playlist> isValid(final Long id, final Long memberId){
+    @Transactional(readOnly = true)
+    public RsData<Playlist> getPlaylist(final Long id, final Long memberId){
         Optional<Playlist> playlistOptional = playlistRepository.findById(id);
         if (playlistOptional.isEmpty()) return RsData.of("F-1", "해당하는 플레이리스트가 없습니다.");
         if (!playlistOptional.get().getMember().getId().equals(memberId)) return RsData.of("F-2", "수정할 권한이 없습니다.");
@@ -54,7 +56,7 @@ public class PlaylistService {
     }
 
     public RsData<Playlist> deletePlaylist(final Long id, final Long memberId) {
-        RsData<Playlist> rsPlaylist= isValid(id,memberId);
+        RsData<Playlist> rsPlaylist= getPlaylist(id,memberId);
         if(rsPlaylist.isFail()) return rsPlaylist;
         playlistRepository.delete(rsPlaylist.getData());
 
@@ -67,10 +69,18 @@ public class PlaylistService {
      * @return ex : 철수의 id와 철수가 생성한 플레이리스트의 id를 매개변수로 받는다.
      */
     public RsData<Playlist> modifyPlaylist(final Long id, final Long memberId) {
-        RsData<Playlist> rsPlaylist= isValid(id,memberId);
+        RsData<Playlist> rsPlaylist= getPlaylist(id,memberId);
         if(rsPlaylist.isFail()) return rsPlaylist;
         // Todo : 수정 할 필드 작성
 
         return RsData.of("S-1", "플레이리스트 수정이 완료되었습니다.", rsPlaylist.getData());
     }
+
+    public RsData<Playlist> addTrack(final Long id, Track track){
+        Playlist playlist = playlistRepository.findById(id).get();
+        playlist.getTracks().add(track);
+        playlistRepository.save(playlist);
+        return RsData.of("S-1", "플레이리스트에 트랙이 추가되었습니다.", playlist);
+    }
+
 }
