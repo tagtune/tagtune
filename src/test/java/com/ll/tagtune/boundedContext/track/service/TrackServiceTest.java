@@ -1,9 +1,13 @@
 package com.ll.tagtune.boundedContext.track.service;
 
-import com.ll.tagtune.base.rsData.RsData;
+import com.ll.tagtune.base.lastfm.SearchEndpoint;
+import com.ll.tagtune.base.lastfm.entity.ApiTrackSearchResult;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.entity.TrackTag;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,35 +28,21 @@ class TrackServiceTest {
     @Test
     @DisplayName("Track Search Test")
     void t001() throws Exception {
-        final String tgtTitle = "Jean";
-        RsData<Track> rsTrack = trackService.searchTrackFromApi(tgtTitle);
-        assertThat(rsTrack.isSuccess()).isTrue();
+        final String tgtTitle = "jean";
+        ApiTrackSearchResult trackSearchResult = SearchEndpoint.searchTrack(tgtTitle);
 
-        assertThat(rsTrack.getData().getTitle()).contains(tgtTitle);
+        assertThat(trackSearchResult.getTracks()).isNotEmpty();
+        trackSearchResult.getTracks().forEach(track -> assertThat(track.name.toLowerCase()).contains(tgtTitle));
     }
-
-    @Test
-    @DisplayName("Search Duplicate Track Test")
-    void t002() throws Exception {
-        final String tgtTitle = "ice cream cake";
-        RsData<Track> rsTrack = trackService.searchTrackFromApi(tgtTitle);
-        assertThat(rsTrack.isSuccess()).isTrue();
-        assertThat(rsTrack.getData().getTitle().toLowerCase()).contains(tgtTitle.toLowerCase());
-        final Long resultId = rsTrack.getData().getId();
-
-        assertThat(trackService.searchTrackFromApi(tgtTitle).getData().getId()).isEqualTo(resultId);
-    }
-
 
     @Test
     @DisplayName("Search Track Detail Test")
-    void t003() throws Exception {
+    void t002() throws Exception {
         final String tgtTitle = "좋은 날";
         final String tgtArtist = "IU";
-        RsData<Track> rsTrack = trackService.searchTrackFromApi(tgtTitle, tgtArtist);
-        assertThat(rsTrack.isSuccess()).isTrue();
+        ApiTrackSearchResult rsTrack = SearchEndpoint.searchTrack(tgtTitle, tgtArtist);
 
-        Track track = trackService.getTrackInfo(rsTrack.getData());
+        Track track = trackService.setTrackInfo(rsTrack.getTracks().stream().findFirst().orElseThrow());
         assertThat(track.getAlbum().getName()).isNotNull();
 
         List<TrackTag> tags = track.getTags();
