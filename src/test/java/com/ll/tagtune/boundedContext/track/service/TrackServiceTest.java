@@ -2,6 +2,7 @@ package com.ll.tagtune.boundedContext.track.service;
 
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
 import com.ll.tagtune.base.lastfm.entity.ApiTrackSearchResult;
+import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackTagDTO;
@@ -54,11 +55,12 @@ class TrackServiceTest {
 
     @Test
     @DisplayName("Track & Tag Detail DTO Test")
-    void t003() throws Exception {
+    void t004() throws Exception {
         final String tgtTitle = "밤편지";
         final String tgtArtist = "IU";
-        final ApiTrackSearchResult rawTrack = SearchEndpoint.searchTrack(tgtTitle, tgtArtist);
-        final Track track = trackService.setTrackInfo(rawTrack.getTracks().stream().findFirst().orElseThrow());
+        final TrackSearchDTO rawTrack = SearchEndpoint.searchTrack(tgtTitle, tgtArtist)
+                .getTracks().stream().findFirst().orElseThrow();
+        final Track track = trackService.setTrackInfo(rawTrack);
 
         System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
 
