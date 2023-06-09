@@ -26,6 +26,12 @@ public class TrackService {
     private final TrackRepository trackRepository;
     private final TrackRepositoryImpl trackRepositoryImpl;
 
+    public Track getTrack(Long id) {
+        Optional<Track> oTrack = trackRepository.findById(id);
+
+        return oTrack.get();
+    }
+
     @Transactional(readOnly = true)
     public Optional<Track> getTrackByTitleAndArtist(final String title, final Long artistId) {
         return trackRepository.findByTitleAndArtist_Id(title, artistId);
