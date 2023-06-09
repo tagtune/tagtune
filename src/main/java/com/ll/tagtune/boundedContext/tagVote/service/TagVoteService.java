@@ -1,5 +1,6 @@
 package com.ll.tagtune.boundedContext.tagVote.service;
 
+import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.tagVote.entity.TagVote;
 import com.ll.tagtune.boundedContext.tagVote.repository.TagVoteRepository;
@@ -54,9 +55,16 @@ public class TagVoteService {
      * @param trackTag
      * @return TagVote
      */
-    public TagVote vote(final Boolean positive, final Member member, final TrackTag trackTag) {
+    public RsData<TagVote> vote(final Boolean positive, final Member member, final TrackTag trackTag) {
         return findByMemberAndTrackTag(member.getId(), trackTag.getId())
-                .map(tagVote -> update(positive, tagVote))
-                .orElseGet(() -> create(positive, member, trackTag));
+                .map(tagVote -> RsData.successOf(update(positive, tagVote)))
+                .orElseGet(() -> RsData.successOf(create(positive, member, trackTag)));
+    }
+
+    public RsData<Void> cancel(final Long memberId, final Long trackTagId) {
+        Optional<TagVote> oTagVote = findByMemberAndTrackTag(memberId, trackTagId);
+        if (oTagVote.isEmpty()) return RsData.of("F-1", "잘못된 접근입니다.");
+        tagVoteRepository.delete(oTagVote.get());
+        return RsData.of("S-1", "투표를 성공적으로 취소했습니다.");
     }
 }

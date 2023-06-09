@@ -2,6 +2,10 @@ package com.ll.tagtune.boundedContext.track.service;
 
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
 import com.ll.tagtune.base.lastfm.entity.ApiTrackSearchResult;
+import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
+import com.ll.tagtune.base.rsData.RsData;
+import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
+import com.ll.tagtune.boundedContext.track.dto.TrackTagDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.entity.TrackTag;
 import org.junit.jupiter.api.DisplayName;
@@ -48,5 +52,24 @@ class TrackServiceTest {
         List<TrackTag> tags = track.getTags();
         tags.forEach(System.out::println);
         assertThat(tags).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("Track & Tag Detail DTO Test")
+    void t003() throws Exception {
+        final String tgtTitle = "밤편지";
+        final String tgtArtist = "IU";
+        final TrackSearchDTO trackSearchDTO = SearchEndpoint.searchTrack(tgtTitle, tgtArtist)
+                .getTracks().stream().findFirst().orElseThrow();
+        final Track track = trackService.setTrackInfo(trackSearchDTO);
+
+        RsData<TrackDetailDTO> trackDTO = trackService.getTrackDetail(track.getId());
+        assertThat(trackDTO.isSuccess()).isTrue();
+        assertThat(trackDTO.getData().getArtistName()).isEqualTo(tgtArtist);
+        assertThat(trackDTO.getData().getAlbumName()).isEqualTo(track.getAlbum().getName());
+
+        List<TrackTagDTO> tags = trackDTO.getData().getTags();
+        assertThat(tags).isNotEmpty();
+        tags.forEach(tag -> assertThat(tag.getTagName()).isNotBlank());
     }
 }
