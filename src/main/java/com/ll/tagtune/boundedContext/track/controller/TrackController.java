@@ -1,11 +1,11 @@
 package com.ll.tagtune.boundedContext.track.controller;
 
-import com.ll.tagtune.base.lastfm.ResultParser;
+import com.ll.tagtune.base.lastfm.SearchEndpoint;
+import com.ll.tagtune.base.lastfm.entity.ApiTrackSearchResult;
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
-import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
 import com.ll.tagtune.boundedContext.track.service.TrackTagService;
@@ -16,8 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/track")
@@ -35,9 +33,9 @@ public class TrackController {
             Model model
     ) {
         if (title.isBlank()) rq.historyBack("검색어를 입력해야 합니다.");
-        List<TrackSearchDTO> rawTracks = (artistName.isBlank()) ?
-                ResultParser.searchTracks(title) :
-                ResultParser.searchTracks(title, artistName);
+        ApiTrackSearchResult rawTracks = (artistName.isBlank()) ?
+                SearchEndpoint.searchTrack(title) :
+                SearchEndpoint.searchTrack(title, artistName);
         model.addAttribute("tracks", rawTracks);
 
         return "usr/track/search";

@@ -1,25 +1,23 @@
 package com.ll.tagtune.boundedContext.track.service;
 
-import com.ll.tagtune.base.lastfm.ResultParser;
+import com.ll.tagtune.base.appConfig.AppConfig;
+import com.ll.tagtune.base.lastfm.SearchEndpoint;
+import com.ll.tagtune.base.lastfm.entity.ApiTrackInfoResult;
+import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
-import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
-import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
-import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
-import com.ll.tagtune.boundedContext.track.entity.TrackTag;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepository;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -81,89 +79,35 @@ public class TrackService {
         return track;
     }
 
-    public Track updateTrack(Track track, final Artist artist, final Album album) {
-        Track result = track.toBuilder()
-                .artist(artist)
-                .album(album)
-                .build();
-
-        trackRepository.save(result);
-
-        return result;
-    }
-
-    /**
-     * 유저가 title, artist 를 알고있을 때 Track 을 리턴하는 메소드입니다.
-     *
-     * @param title
-     * @param artistName
-     * @return RsData Track
-     */
-    public RsData<Track> searchTrackFromApi(final String title, final String artistName) {
-        TrackSearchDTO trackDto = ResultParser.searchTracks(title, artistName).stream().findFirst().orElse(null);
-
-        if (trackDto == null) return RsData.of("F-1", "검색 결과가 없습니다.");
-
-        return RsData.successOf(getOrCreateTrackByDTO(trackDto));
-    }
-
-    /**
-     * 유저가 title 을 알고있을 때 Track 을 리턴하는 메소드입니다.
-     *
-     * @param title
-     * @return RsData Track
-     */
-    public RsData<Track> searchTrackFromApi(final String title) {
-        TrackSearchDTO trackDto = ResultParser.searchTracks(title).stream().findFirst().orElse(null);
-
-        if (trackDto == null) return RsData.of("F-1", "검색 결과가 없습니다.");
-
-        return RsData.successOf(getOrCreateTrackByDTO(trackDto));
-    }
-
     /**
      * Track 세부 정보가 저장되지 않았을 때 정보를 갱신하는 메소드입니다.
      *
-     * @param track
+     * @param rawTrack 검증되지 않은 Track
      * @return Track with Details
      */
-    public Track getTrackInfo(Track track) {
-        TrackInfoDTO trackDto = ResultParser.getTrack(track.getTitle(), track.getArtist().getArtistName());
+    public Track setTrackInfo(final TrackSearchDTO rawTrack) {
+        final ApiTrackInfoResult.Track result = SearchEndpoint.getTrackInfo(
+                rawTrack.name,
+                rawTrack.artist
+        ).track;
 
-        Optional<Artist> oArtist = artistService.findByArtistName(trackDto.getArtistDTO().getArtistName());
-        Artist artist = oArtist
-                .orElseGet(() -> artistService.createArtist(trackDto.getArtistDTO().getArtistName()));
+        final Artist artist = artistService.findByArtistName(result.artist.name)
+                .orElseGet(() -> artistService.createArtist(result.artist.name));
 
-        Optional<Album> oAlbum = albumService.findByNameAndArtistId(trackDto.getAlbumDTO().getName(), artist.getId());
-        Album album = oAlbum
-                .orElseGet(() -> albumService.createAlbum(trackDto.getAlbumDTO().getName(), artist.getArtistName()));
+        final String albumTitle = result.album != null ? result.album.title : AppConfig.getNameForNoData();
 
-        List<String> trackTags = track.getTags().stream().map(TrackTag::getTag).map(Tag::getTagName).toList();
-        trackDto.getTags().stream()
-                .map(tagService::getOrCreateTag)
-                .filter(tag -> !trackTags.contains(tag.getTagName()))
-                .forEach(tag -> track.getTags().add(trackTagService.connect(track, tag))
-                );
+        final Album album = albumService.findByNameAndArtistId(albumTitle, artist.getId())
+                .orElseGet(() -> albumService.createAlbum(albumTitle, artist));
 
-        return updateTrack(track, artist, album);
-    }
+        final Track track = createTrack(result.name, artist, album);
+        track.getTags().addAll(result.toptags.tags.stream()
+                .map(rawTag -> tagService.getOrCreateTag(rawTag.name))
+                .map(tag -> trackTagService.connect(track, tag))
+                .toList());
 
-    /**
-     * TrackSearch 에 적합한 Track 를 생성하거나 리턴합니다.
-     * <p>
-     * API 에서 받아온 Track 를 반드시 받기 위해 사용합니다.
-     *
-     * @param trackSearchDTO
-     * @return Track
-     */
-    public Track getOrCreateTrackByDTO(TrackSearchDTO trackSearchDTO) {
-        return getTrackByTitleAndArtist(
-                trackSearchDTO.getTitle(),
-                trackSearchDTO.getArtistDTO().getArtistName()
-        ).orElseGet(() -> createTrack(
-                trackSearchDTO.getTitle(),
-                artistService.getOrCreateArtistByDTO(trackSearchDTO.getArtistDTO())
-        ));
+        trackRepository.save(track);
+
+        return track;
     }
 
     @Transactional(readOnly = true)
