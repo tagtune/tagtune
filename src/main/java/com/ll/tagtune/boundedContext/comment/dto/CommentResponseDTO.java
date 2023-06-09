@@ -10,6 +10,7 @@ public class CommentResponseDTO {
     private Long memberId;
     private String memberName;
     private Integer replyCnt;
+    private Long trackId;
 
     public CommentResponseDTO(
             Long commentId,
@@ -17,7 +18,8 @@ public class CommentResponseDTO {
             String content,
             Long memberId,
             String memberName,
-            Integer replyCnt
+            Integer replyCnt,
+            Long trackId
     ) {
         this.commentId = commentId;
         this.deleteStatus = deleteStatus;
@@ -25,5 +27,6 @@ public class CommentResponseDTO {
         this.memberId = getDeleteStatus() ? -1 : memberId;
         this.memberName = getDeleteStatus() ? "" : memberName;
         this.replyCnt = replyCnt;
+        this.trackId = trackId;
     }
 }
