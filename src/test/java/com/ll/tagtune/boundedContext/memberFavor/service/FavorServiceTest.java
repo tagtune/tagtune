@@ -58,7 +58,7 @@ class FavorServiceTest {
         final Member member = memberService.findByUsername("user1")
                 .orElseThrow(() -> new UsernameNotFoundException(""));
         final Artist artist = artistService.createArtist("계릫");
-        final Album album = albumService.createAlbum("흎폼", "0000");
+        final Album album = albumService.createAlbum("흎폼", artist);
         final Tag tag = tagService.createTag("뀴유");
 
         FavorBase[] favors = {
