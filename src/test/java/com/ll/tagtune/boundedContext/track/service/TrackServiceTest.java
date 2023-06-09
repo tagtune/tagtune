@@ -32,9 +32,7 @@ class TrackServiceTest {
     @DisplayName("Track Search Test")
     void t001() throws Exception {
         final String tgtTitle = "jean";
-        SearchEndpoint SearchEndpoint;
         ApiTrackSearchResult trackSearchResult = SearchEndpoint.searchTrack(tgtTitle);
-        
         assertThat(trackSearchResult.getTracks()).isNotEmpty();
         trackSearchResult.getTracks().forEach(track -> assertThat(track.name.toLowerCase()).contains(tgtTitle));
     }

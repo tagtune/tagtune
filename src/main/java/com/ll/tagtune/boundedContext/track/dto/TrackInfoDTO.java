@@ -1,7 +1,5 @@
 package com.ll.tagtune.boundedContext.track.dto;
 
-import com.ll.tagtune.boundedContext.album.dto.AlbumDTO;
-import com.ll.tagtune.boundedContext.artist.dto.ArtistDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,8 +13,8 @@ import java.util.List;
 @Builder
 public class TrackInfoDTO {
     private String title;
-    private ArtistDTO artistDTO;
-    private AlbumDTO albumDTO;
+    private String artistName;
+    private String albumName;
     @Builder.Default
     private List<String> tags = new ArrayList<>();
 }
