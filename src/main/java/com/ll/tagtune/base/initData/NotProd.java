@@ -34,7 +34,7 @@ public class NotProd {
                 Track[] tracks = {
                         trackService.searchTrackFromApi("IU", "blueming").getData(),
                         trackService.searchTrackFromApi("나훈아", "테스형").getData(),
-                        trackService.searchTrackFromApi("Believe").getData(),
+                       // trackService.searchTrackFromApi("Believe").getData(),
                         trackService.searchTrackFromApi("Believer", "Imagine Dragons").getData()
                 };
 
