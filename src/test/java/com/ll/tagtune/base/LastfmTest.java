@@ -1,16 +1,13 @@
 package com.ll.tagtune.base;
 
-import com.ll.tagtune.base.lastfm.ResultParser;
-import com.ll.tagtune.boundedContext.tag.dto.TagDTO;
-import com.ll.tagtune.boundedContext.tag.entity.Tag;
-import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
-import com.ll.tagtune.boundedContext.track.dto.TrackSearchDTO;
-import com.ll.tagtune.boundedContext.track.entity.Track;
+import com.ll.tagtune.base.lastfm.SearchEndpoint;
+import com.ll.tagtune.base.lastfm.entity.ApiTopTrackFromTag;
+import com.ll.tagtune.base.lastfm.entity.ApiTrackInfoResult;
+import com.ll.tagtune.base.lastfm.entity.ApiTrackSearchResult;
+import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,32 +16,38 @@ class LastfmTest {
     @Test
     @DisplayName("Search Test")
     void t001() throws Exception {
-        List<TrackSearchDTO> result = ResultParser.searchTracks("IU");
-        assertThat(result).isNotEmpty();
-        result.forEach(System.out::println);
+        final String title = "spirit";
+        final String artist = "Nirvana";
+
+        ApiTrackSearchResult searchResult = SearchEndpoint.searchTrack(title, artist);
+        searchResult.getTracks().forEach(t -> assertThat(t.name.toLowerCase()).contains(title));
+        // debug
+        // result.getResult().forEach(System.out::println);
     }
 
     @Test
     @DisplayName("Get trackInfo Test")
     void t002() throws Exception {
-        TrackInfoDTO result = ResultParser.getTrack("blueming", "IU");
-        System.out.println(result);
-        assertThat(result).isNotNull();
-    }
+        ApiTrackSearchResult searchResult = SearchEndpoint.searchTrack("blueming", "IU");
+        assertThat(searchResult.getTracks()).isNotEmpty();
 
-    @Test
-    @DisplayName("Get topTags Test")
-    void t003() throws Exception {
-        List<TagDTO> tags = ResultParser.getTrackTags("blueming", "IU");
-        tags.forEach(System.out::println);
-        assertThat(tags).isNotEmpty();
+        TrackSearchDTO target = searchResult.getTracks().stream().findFirst().orElseThrow();
+        ApiTrackInfoResult infoResult = SearchEndpoint.getTrackInfo(target.name, target.artist);
+        assertThat(infoResult).isNotNull();
+        // debug
+        // System.out.println(infoResult);
+
+        assertThat(infoResult.track.name).isEqualTo(target.name);
+        assertThat(infoResult.track.artist.name).isEqualTo(target.artist);
+        assertThat(infoResult.track.toptags.tags).isNotEmpty();
     }
 
     @Test
     @DisplayName("Recommend From Tag Test")
-    void t004() throws Exception {
-        List<TrackSearchDTO> tracks = ResultParser.getTrackFromTag("k-pop");
-        tracks.forEach(System.out::println);
-        assertThat(tracks).isNotEmpty();
+    void t003() throws Exception {
+        ApiTopTrackFromTag searchResult = SearchEndpoint.getTracksFromTag("trot");
+        // debug
+        // debug searchResult.getResult().forEach(System.out::println);
+        assertThat(searchResult.getTracks()).isNotEmpty();
     }
 }
