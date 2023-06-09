@@ -5,9 +5,9 @@
 </head>
 <body>
 <main class="flex flex-grow items-center justify-center" layout:fragment="main">
-    <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
-        <h1 class="mb-4 text-[30px]">
-            <span th:text="${tagBoard.getTagBoardName() + ' 게시판'}"></span>
+    <div class="flex flex-col max-w-2xl w-full justify-center">
+        <h1 class="mb-4 text-[30px] max-w-2xl w-full">
+            <span style="word-break: break-all" th:text="${tagBoard.getTagBoardName() + ' 게시판'}"></span>
         </h1>
         <!-- Comments section-->
         <section class="mb-5 max-w-2xl w-full">
