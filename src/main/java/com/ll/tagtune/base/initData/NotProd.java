@@ -1,7 +1,11 @@
 package com.ll.tagtune.base.initData;
 
+import com.ll.tagtune.boundedContext.comment.entity.Comment;
+import com.ll.tagtune.boundedContext.comment.service.CommentService;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
+import com.ll.tagtune.boundedContext.reply.entity.Reply;
+import com.ll.tagtune.boundedContext.reply.service.ReplyService;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +22,9 @@ public class NotProd {
     @Bean
     CommandLineRunner initData(
             MemberService memberService,
-            TrackService trackService
+            TrackService trackService,
+            CommentService commentService,
+            ReplyService replyService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -38,6 +44,14 @@ public class NotProd {
                         trackService.searchTrackFromApi("Believer", "Imagine Dragons").getData()
                 };
 
+                Comment[] comments = {
+                        commentService.saveComment("안녕하십니까", tracks[0], members[0]).getData(),
+                        commentService.saveComment("이 노래 좋다 정말!", tracks[0], members[1]).getData()
+                };
+
+                Reply[] replies = {
+                        replyService.saveReply(members[0], comments[1].getId(), "덧글입니다!").getData()
+                };
             }
         };
     }
