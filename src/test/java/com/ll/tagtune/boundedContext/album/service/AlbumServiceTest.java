@@ -1,9 +1,11 @@
 package com.ll.tagtune.boundedContext.album.service;
 
+import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.repository.AlbumRepository;
-import com.ll.tagtune.boundedContext.album.service.AlbumService;
+import com.ll.tagtune.boundedContext.artist.entity.Artist;
+import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,12 +26,17 @@ class AlbumServiceTest {
     private AlbumService albumService;
     @Autowired
     private AlbumRepository albumRepository;
+    @Autowired
+    private ArtistService artistService;
+
+    private Artist noArtist;
 
     @BeforeEach
     void beforeEach() {
+        noArtist = artistService.findByArtistName(AppConfig.getNameForNoData()).orElseThrow();
         Album[] albums = IntStream
                 .rangeClosed(1, 10)
-                .mapToObj(i -> albumService.createAlbum("Album%d".formatted(i), "1234"))
+                .mapToObj(i -> albumService.createAlbum("Album%d".formatted(i), noArtist))
                 .toArray(Album[]::new);
     }
 
@@ -42,16 +49,15 @@ class AlbumServiceTest {
     @DisplayName("Album Create test")
     void t001() throws Exception {
         final String AlbumName = "cheolSoo";
-        final String image = "null";
 
-        Album album = albumService.createAlbum(AlbumName, image);
+        Album album = albumService.createAlbum(AlbumName, noArtist);
         assertThat(album.getName()).isEqualTo(AlbumName);
     }
 
     @Test
     @DisplayName("Album Delete test")
     void t002() throws Exception {
-        Long albumId = albumService.createAlbum("AlbumName", "image").getId();
+        Long albumId = albumService.createAlbum("AlbumName", noArtist).getId();
         RsData<Album> rsData = albumService.deleteAlbum(albumId);
         assertThat(rsData.isSuccess()).isTrue();
     }

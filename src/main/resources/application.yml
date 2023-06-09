@@ -33,3 +33,5 @@ custom:
     artistUrl: https://i.cdn.com
   tag:
     pagingSize: 20
+  data:
+    nodata: __nodata

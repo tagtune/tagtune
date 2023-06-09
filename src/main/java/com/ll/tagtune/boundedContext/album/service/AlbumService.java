@@ -1,9 +1,9 @@
 package com.ll.tagtune.boundedContext.album.service;
 
 import com.ll.tagtune.base.rsData.RsData;
-import com.ll.tagtune.boundedContext.album.dto.AlbumDTO;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.repository.AlbumRepository;
+import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,11 +41,11 @@ public class AlbumService {
                 .orElseGet(() -> RsData.of("F-1", "해당하는 앨범이 없습니다."));
     }
 
-    public Album createAlbum(final String name, final String image) {
+    public Album createAlbum(final String name, final Artist artist) {
         Album album = Album
                 .builder()
                 .name(name)
-                .image(image)
+                .artist(artist)
                 .build();
 
         return albumRepository.save(album);
@@ -58,19 +58,5 @@ public class AlbumService {
         albumRepository.delete(albumOptional.get());
 
         return RsData.of("S-1", "앨범삭제가 완료되었습니다.");
-    }
-
-    /**
-     * AlbumDTO 에 적합한 Album 를 생성하거나 리턴합니다.
-     * <p>
-     * API 에서 받아온 Album 를 반드시 받기 위해 사용합니다.
-     *
-     * @param albumDTO
-     * @return Album
-     */
-    public Album getOrCreateAlbumDTO(AlbumDTO albumDTO) {
-        Optional<Album> oAlbum = findAllByName(albumDTO.getName()).stream().findAny();
-
-        return oAlbum.orElseGet(() -> createAlbum(albumDTO.getName(), albumDTO.getImage()));
     }
 }
