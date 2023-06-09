@@ -13,7 +13,20 @@
 
             if (form.iComment.value == "") {
                 toastWarning('댓글을 입력해주세요.');
-                form.content.focus();
+                form.iComment.focus();
+                return;
+            }
+
+            form.submit();
+        }
+
+        function ModifyComment__submit(form) {
+            // iComment 이(가) 올바른지 체크
+            form.modifyComment.value = form.modifyComment.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.modifyComment.value == "") {
+                toastWarning('댓글을 입력해주세요.');
+                form.modifyComment.focus();
                 return;
             }
 
@@ -21,17 +34,15 @@
         }
 
         function SaveReply__submit(form) {
-            for ()
+            form.iReply.value == form.iReply.value.trim();
+
+            if (form.iReply.value == "") {
+                toastWarning('댓글을 입력해주세요.');
+                form.iReply.focus();
+                return;
+            }
 
             form.submit();
-        }
-
-        function SendGetRequest(button) {
-            const commentId = button.getAttribute('data-comment-id');
-            const trackId = button.getAttribute('data-track-id');
-
-            const url = '/track' + trackId + '/comment/' + commentId;
-            window.location.href = url;
         }
 
         function toggleContent(commentId) {
@@ -50,7 +61,7 @@
         }
     </script>
 
-    <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
+    <div class="flex flex-col max-w-2xl w-full px-4">
         <h1 th:text="${track.title}" class="mb-4 text-[60px]">
         </h1>
         <!-- Comments section-->
@@ -83,6 +94,21 @@
                                         </div>
                                         <!--                                            댓글 삭제, 수정, 작성, 확인-->
                                         <div class="flex">
+<!--                                            댓글수정-->
+                                            <div>
+                                                <button th:id="dBtn_+${comment.commentId}"
+                                                        class="btn btn-primary btn-sm mt-2 w-[40px] mb-5"
+                                                        th:attr="data-comment-id=${comment.commentId}"
+                                                        onclick="$(this).next().submit();">
+                                                    <span class="">수정</span>
+                                                </button>
+                                                <form hidden th:action=
+                                                        "@{|/track/${comment.trackId}/comment/${comment.commentId}|}"
+                                                      method="POST">
+                                                    <input type="hidden" name="_method" value="PATCH">
+                                                </form>
+                                            </div>
+
                                             <div>
                                                 <button th:id="dBtn_+${comment.commentId}"
                                                         class="btn btn-primary btn-sm mt-2 w-[40px] mb-5"
@@ -164,7 +190,7 @@
                                                             <button th:id="srBtn_+${reply.id}"
                                                                     class="btn btn-primary btn-sm mt-2 w-[80px] mb-5"
                                                                     th:attr="data-comment-id=${comment.commentId}"
-                                                                    onclick="toggleContent(this.getAttribute('commentId'))">
+                                                                    onclick="ModifyComment__submit(this)">
                                                                 <span class="">덧글 수정</span>
                                                             </button>
                                                         </div>
@@ -178,20 +204,22 @@
 
 <!--                                    댓글 관련-->
                                     <div th:id="saveReplyT_+${comment.commentId}"
-                                         class="flex justify-between mt-3 w-full hidden">
+                                         class="flex mt-3 w-full hidden">
                                     <div>
-                                        <form th:action method="POST"
-                                              class="flex"
-                                              onsubmit="SaveReply__submit(this); return false;">
-                                            <textarea name="" th:id="textarea+${comment.commentId}"
-                                                      type="text"
-                                                      placeholder="덧글을 남겨보세요" class="w-full grow ml-2"
-                                                      rows="2"></textarea>
-
-                                            <input class="btn btn-primary btn-sm ml-2 mt-5 mb-5 flex-none w-14"
-                                                   type="submit" value="덧글등록">
+                                        <form th:action="@{|/track/${comment.trackId}/comment/${comment.commentId}/reply|}"
+                                              method="POST"
+                                              onsubmit="SaveReply__submit(this); return false;"
+                                              class="flex flex-grow mb-4">
+                                            <textarea class="form-control grow"
+                                                      name="iReply" type="text"
+                                                      placeholder="덧글을 남겨보세요"
+                                                rows="2"></textarea>
+                                            <input class="btn btn-primary flex-none btn-sm mt-5 mb-5"
+                                                    type="submit" value="댓글등록">
                                         </form>
+
                                     </div>
+
                                     </div>
                                 </div>
                             </th:block>
