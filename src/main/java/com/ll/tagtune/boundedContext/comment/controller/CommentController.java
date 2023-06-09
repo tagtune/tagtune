@@ -72,7 +72,14 @@ public class CommentController {
     public String deleteComment(@PathVariable Long trackId, @PathVariable Long commentId) {
         RsData<Void> deleteCmtRsData = commentService.deleteComment(commentId, rq.getMember().getId());
 
-        System.out.println("실행은 되는것인가?");
         return rq.redirectWithMsg("/track/"+trackId+"/comment",deleteCmtRsData);
     }
+//todo 수정
+//    @PreAuthorize("isAuthenticated()")
+//    @PatchMapping("/track/{trackId}/comment/{commentId}")
+//    public String modifyComment(@PathVariable Long trackId, @PathVariable Long commentId, String modifyContent) {
+//        RsData<Comment> modifyCommentRsData = commentService.modifyComment(commentId, modifyContent);
+//
+//        return rq.redirectWithMsg("/track/"+trackId+"/comment",modifyCommentRsData);
+//    }
 }
