@@ -55,7 +55,7 @@ class TrackServiceTest {
 
     @Test
     @DisplayName("Track & Tag Detail DTO Test")
-    void t004() throws Exception {
+    void t003() throws Exception {
         final String tgtTitle = "밤편지";
         final String tgtArtist = "IU";
         final TrackSearchDTO rawTrack = SearchEndpoint.searchTrack(tgtTitle, tgtArtist)
