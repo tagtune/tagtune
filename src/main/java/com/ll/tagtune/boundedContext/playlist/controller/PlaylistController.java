@@ -3,7 +3,6 @@ package com.ll.tagtune.boundedContext.playlist.controller;
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.playlist.entity.Playlist;
-import com.ll.tagtune.boundedContext.playlist.repository.PlaylistRepository;
 import com.ll.tagtune.boundedContext.playlist.service.PlaylistService;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
@@ -73,12 +72,12 @@ public class PlaylistController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/detail/{playlistId}")
-    public String playlistDetail(Model model,@PathVariable Long playlistId) {
-        RsData<Playlist> rsPlaylist =playlistService.getPlaylist(playlistId,rq.getMember().getId());
-        if(rsPlaylist.isFail()){
+    public String playlistDetail(Model model, @PathVariable Long playlistId) {
+        RsData<Playlist> rsPlaylist = playlistService.getPlaylist(playlistId, rq.getMember().getId());
+        if (rsPlaylist.isFail()) {
             return rq.historyBack(rsPlaylist);
         }
-        model.addAttribute("playlist",rsPlaylist.getData());
+        model.addAttribute("playlist", rsPlaylist.getData());
         return "usr/playlist/detail";
     }
 
@@ -103,13 +102,13 @@ public class PlaylistController {
         // TODO : 영우님 수정
         //Track track = trackService.getOrCreateTrack(playlistTrackAddForm.trackName,playlistTrackAddForm.artistName);
         // 멤버의 플레이리스트 id를 가져오기
-        RsData<Playlist> addTrack = playlistService.addTrack(playlistTrackAddForm.playlistId,track);
+        RsData<Playlist> addTrack = playlistService.addTrack(playlistTrackAddForm.playlistId, track);
         if (addTrack.isFail()) {
             // 뒤로가기 하고 거기서 메세지 보여줘
             return rq.historyBack(addTrack);
         }
         //
         // 아래 링크로 리다이렉트(302, 이동) 하고 그 페이지에서 메세지 보여줘
-        return rq.redirectWithMsg("/usr/playlist/list", addTrack);
+        return rq.redirectWithMsg("/playlist/list", addTrack);
     }
 }
