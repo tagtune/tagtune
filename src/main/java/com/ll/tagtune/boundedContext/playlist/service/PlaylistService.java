@@ -5,6 +5,7 @@ import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.repository.MemberRepository;
 import com.ll.tagtune.boundedContext.playlist.entity.Playlist;
 import com.ll.tagtune.boundedContext.playlist.repository.PlaylistRepository;
+import com.ll.tagtune.boundedContext.track.entity.Track;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,21 @@ public class PlaylistService {
         return playlistRepository.findById(id);
     }
 
+    /**
+     * 해당 플레이리스트가 member의 플레이리스트가 맞는지 확인하는 함수
+     *
+     * @param id 플레이리스트의 Id
+     * @param memberId 멤버의 Id
+     * @return RsData<Playlist>
+     */
+    @Transactional(readOnly = true)
+    public RsData<Playlist> getPlaylist(final Long id, final Long memberId){
+        Optional<Playlist> playlistOptional = playlistRepository.findById(id);
+        if (playlistOptional.isEmpty()) return RsData.of("F-1", "해당하는 플레이리스트가 없습니다.");
+        if (!playlistOptional.get().getMember().getId().equals(memberId)) return RsData.of("F-2", "수정할 권한이 없습니다.");
+
+        return RsData.successOf(playlistOptional.get());
+    }
     public RsData<Playlist> createPlaylist(String name, Member member) {
         Playlist playlist = Playlist
                 .builder()
@@ -39,11 +55,10 @@ public class PlaylistService {
         return RsData.of("S-1", "플레이리스트 생성이 완료되었습니다.", playlist);
     }
 
-    public RsData<Playlist> deletePlaylist(final Long id) {
-        Optional<Playlist> playlistOptional = playlistRepository.findById(id);
-
-        if (playlistOptional.isEmpty()) return RsData.of("F-1", "해당하는 플레이리스트가 없습니다.");
-        playlistRepository.delete(playlistOptional.get());
+    public RsData<Playlist> deletePlaylist(final Long id, final Long memberId) {
+        RsData<Playlist> rsPlaylist= getPlaylist(id,memberId);
+        if(rsPlaylist.isFail()) return rsPlaylist;
+        playlistRepository.delete(rsPlaylist.getData());
 
         return RsData.of("S-1", "플레이리스트 삭제가 완료되었습니다.");
     }
@@ -54,13 +69,18 @@ public class PlaylistService {
      * @return ex : 철수의 id와 철수가 생성한 플레이리스트의 id를 매개변수로 받는다.
      */
     public RsData<Playlist> modifyPlaylist(final Long id, final Long memberId) {
-        Optional<Playlist> playlistOptional = playlistRepository.findById(id);
-
-        if (playlistOptional.isEmpty()) return RsData.of("F-1", "해당하는 플레이리스트가 없습니다.");
-        if (!playlistOptional.get().getMember().getId().equals(memberId)) return RsData.of("F-2", "수정할 권한이 없습니다.");
-        Playlist playlist = playlistOptional.get();
+        RsData<Playlist> rsPlaylist= getPlaylist(id,memberId);
+        if(rsPlaylist.isFail()) return rsPlaylist;
         // Todo : 수정 할 필드 작성
 
-        return RsData.of("S-1", "플레이리스트 수정이 완료되었습니다.", playlist);
+        return RsData.of("S-1", "플레이리스트 수정이 완료되었습니다.", rsPlaylist.getData());
     }
+
+    public RsData<Playlist> addTrack(final Long id, Track track){
+        Playlist playlist = playlistRepository.findById(id).get();
+        playlist.getTracks().add(track);
+        playlistRepository.save(playlist);
+        return RsData.of("S-1", "플레이리스트에 트랙이 추가되었습니다.", playlist);
+    }
+
 }
