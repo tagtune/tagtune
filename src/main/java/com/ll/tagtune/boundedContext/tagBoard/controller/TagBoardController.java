@@ -1,5 +1,6 @@
 package com.ll.tagtune.boundedContext.tagBoard.controller;
 
+import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.boundedContext.tagBoard.entity.TagBoard;
 import com.ll.tagtune.boundedContext.tagBoard.service.TagBoardService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TagBoardController {
     private final TagBoardService tagBoardService;
+    private final Rq rq;
 
     /**
      * 검색 필터링에 사용할 키워드 "kw"
@@ -39,7 +41,10 @@ public class TagBoardController {
     }
 
     @GetMapping("/tag")
-    public String showTag(Model model, @RequestParam(value = "id") Long id) {
+    public String showTag(Model model, @RequestParam(value = "id", defaultValue = "") Long id) {
+        if (id == null) {
+            return rq.historyBack("잘못된 접근입니다.");
+        }
         TagBoard tagBoard = tagBoardService.findById(id).get();
         model.addAttribute("tagBoard", tagBoard);
 
