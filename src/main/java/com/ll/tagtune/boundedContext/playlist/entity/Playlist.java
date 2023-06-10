@@ -2,14 +2,18 @@ package com.ll.tagtune.boundedContext.playlist.entity;
 
 import com.ll.tagtune.base.baseEntity.BaseEntity;
 import com.ll.tagtune.boundedContext.member.entity.Member;
+import com.ll.tagtune.boundedContext.track.entity.Track;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,7 +28,6 @@ public class Playlist extends BaseEntity {
      */
     @ManyToOne
     private Member member;
-
-//    @OneToMany
-//    private List<Track> tracks;
+    @OneToMany
+    private List<Track> tracks;
 }

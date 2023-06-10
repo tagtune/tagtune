@@ -5,6 +5,7 @@ import com.ll.tagtune.base.baseEntity.BaseEntity;
 import com.ll.tagtune.boundedContext.playlist.entity.Playlist;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

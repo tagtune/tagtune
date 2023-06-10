@@ -11,6 +11,13 @@ spring:
     url: jdbc:mariadb://127.0.0.1:3306/tagtune__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
     username: root
     password:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  thymeleaf:
+      cache: false
   jpa:
     hibernate:
       ddl-auto: create

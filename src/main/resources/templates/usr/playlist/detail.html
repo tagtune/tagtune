@@ -1,0 +1,54 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>플레이리스트</title>
+</head>
+
+<body>
+
+<main layout:fragment="main" class="flex-grow flex items-center justify-center">
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-solid fa-music"></i>
+            <div style="display: flex ">
+                <div class="index">
+                <div th:text="${playlist.name}"></div>
+                <div th:text="${(playlist.tracks.size() == 0) ? '추가된 트랙이 없습니다.' : playlist.tracks.size()}"></div>
+                </div>
+
+                <div style="margin-left: 400px;">
+                    <div>
+                        <a th:href="@{/playlist/search}">
+                            <button>음악 검색하기</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+
+    <div class="fixed">
+        <a th:href="@{/playlist/list}">
+            <button>플레이리스트 목록으로 돌아가기</button>
+        </a>
+    </div>
+    <style>
+        .index {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fixed {
+            position: fixed;
+            top: 10%;
+            left: 60%;
+            margin: 10px;
+        }
+
+    </style>
+
+
+</main>
+</body>
+
+</html>
