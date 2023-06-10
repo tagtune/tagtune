@@ -30,7 +30,7 @@ public class PlaylistController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/playlistForm")
-    public String makePlaylistForm() {
+    public String makePlaylist() {
         return "usr/playlist/playlistForm";
     }
 
