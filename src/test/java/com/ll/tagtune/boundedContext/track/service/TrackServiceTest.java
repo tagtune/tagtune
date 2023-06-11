@@ -6,6 +6,7 @@ import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackTagDTO;
+import com.ll.tagtune.boundedContext.track.dto.TrackTagStatusDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.entity.TrackTag;
 import org.junit.jupiter.api.DisplayName;
@@ -68,7 +69,7 @@ class TrackServiceTest {
         assertThat(trackDTO.getData().getArtistName()).isEqualTo(tgtArtist);
         assertThat(trackDTO.getData().getAlbumName()).isEqualTo(track.getAlbum().getName());
 
-        List<TrackTagDTO> tags = trackDTO.getData().getTags();
+        List<TrackTagStatusDTO> tags = trackDTO.getData().getTags();
         assertThat(tags).isNotEmpty();
         tags.forEach(tag -> assertThat(tag.getTagName()).isNotBlank());
     }
