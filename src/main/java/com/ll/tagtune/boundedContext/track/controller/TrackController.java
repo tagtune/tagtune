@@ -1,7 +1,7 @@
 package com.ll.tagtune.boundedContext.track.controller;
 
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
-import com.ll.tagtune.base.lastfm.entity.ApiTrackSearchResult;
+import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
@@ -17,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/track")
 @RequiredArgsConstructor
@@ -28,17 +30,29 @@ public class TrackController {
 
     @GetMapping("/search")
     public String search(
-            @RequestParam(value = "title", defaultValue = "") String title,
+            @RequestParam(value = "trackName", defaultValue = "") String trackName,
             @RequestParam(value = "artistName", defaultValue = "") String artistName,
             Model model
     ) {
-        if (title.isBlank()) rq.historyBack("검색어를 입력해야 합니다.");
-        ApiTrackSearchResult rawTracks = (artistName.isBlank()) ?
-                SearchEndpoint.searchTrack(title) :
-                SearchEndpoint.searchTrack(title, artistName);
-        model.addAttribute("tracks", rawTracks);
+        if (!trackName.isBlank()) {
+            if (artistName.isBlank()) rq.historyBack("트랙 제목을 입력해야합니다.");
+            List<TrackSearchDTO> rawTracks = (artistName.isBlank() ?
+                    SearchEndpoint.searchTrack(trackName) :
+                    SearchEndpoint.searchTrack(trackName, artistName))
+                    .getTracks();
+            model.addAttribute("tracks", rawTracks);
+        }
 
-        return "usr/track/search";
+        return "usr/track/searchForm";
+    }
+
+    @PostMapping("/search")
+    public String searchResult(TrackSearchDTO searchDTO) {
+        System.out.println(searchDTO);
+        if (searchDTO.name.isBlank() || searchDTO.artist.isBlank()) return rq.historyBack("잘못된 접근입니다.");
+        final Long trackId = trackService.setTrackInfo(searchDTO).getId();
+
+        return "redirect:/track/" + trackId;
     }
 
     @GetMapping("/{trackId}")
