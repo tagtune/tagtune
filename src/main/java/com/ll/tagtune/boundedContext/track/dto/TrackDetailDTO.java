@@ -16,7 +16,7 @@ public class TrackDetailDTO {
     private String artistName;
     private Long albumId;
     private String albumName;
-    private List<TrackTagDTO> tags;
+    private List<TrackTagStatusDTO> tags;
 
     public TrackDetailDTO(
             Long id,

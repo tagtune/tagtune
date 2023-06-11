@@ -42,11 +42,11 @@ public class TrackTagController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/remove/{trackTagId}")
+    @PostMapping("/cancel/{trackTagId}")
     public String remove(@PathVariable Long trackTagId) {
         RsData<Void> result = tagVoteService.cancel(rq.getMember().getId(), trackTagId);
         if (result.isFail()) return rq.historyBack(result);
 
-        return "usr/track/detail";
+        return rq.historyBack(result);
     }
 }

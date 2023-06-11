@@ -123,4 +123,11 @@ public class TrackService {
                 .map(RsData::successOf)
                 .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
     }
+
+    @Transactional(readOnly = true)
+    public RsData<TrackDetailDTO> getTrackDetailWithVote(final Long id, final Long memberId) {
+        return trackRepositoryImpl.getTrackDetailWithVote(id, memberId)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
+    }
 }

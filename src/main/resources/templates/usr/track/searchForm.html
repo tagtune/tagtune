@@ -73,7 +73,7 @@
                     검색 결과
                 </h1>
             </div>
-            <div class="flex flex-wrap max-w-2xl w-full" th:if="${!tracks.isEmpty()}">
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${tracks != null &&!tracks.isEmpty()}">
                 <div th:each="track: ${tracks}">
                     <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
                         <input th:value="${track.name}" type="hidden" name="name">
@@ -86,7 +86,7 @@
                     </form>
                 </div>
             </div>
-            <div class="flex flex-wrap max-w-2xl w-full" th:if="${tracks.isEmpty()}">
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${tracks == null || tracks.isEmpty()}">
                 검색 결과가 없습니다.
             </div>
         </div>

@@ -64,7 +64,7 @@ class TrackTagTest {
         final Tag tag = tagService.createTag("SUPE__-+1");
         final TrackTag trackTag = trackTagService.connect(track, tag);
         final Boolean memberVote = Boolean.FALSE;
-        TagVote tagVote = tagVoteService.vote(memberVote, member, trackTag);
+        TagVote tagVote = tagVoteService.vote(memberVote, member, trackTag).getData();
 
         assertThat(tagVote.getPositive()).isEqualTo(memberVote);
     }

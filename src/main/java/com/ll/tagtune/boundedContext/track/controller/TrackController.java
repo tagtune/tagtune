@@ -48,16 +48,19 @@ public class TrackController {
 
     @PostMapping("/search")
     public String searchResult(TrackSearchDTO searchDTO) {
-        System.out.println(searchDTO);
         if (searchDTO.name.isBlank() || searchDTO.artist.isBlank()) return rq.historyBack("잘못된 접근입니다.");
-        final Long trackId = trackService.setTrackInfo(searchDTO).getId();
+        final Long trackId = trackService.getTrackByTitleAndArtist(searchDTO.name, searchDTO.artist)
+                .map(Track::getId)
+                .orElseGet(() -> trackService.setTrackInfo(searchDTO).getId());
 
         return "redirect:/track/" + trackId;
     }
 
     @GetMapping("/{trackId}")
     public String detail(@PathVariable Long trackId, Model model) {
-        RsData<TrackDetailDTO> rsTrack = trackService.getTrackDetail(trackId);
+        RsData<TrackDetailDTO> rsTrack = rq.isLogin() ?
+                trackService.getTrackDetailWithVote(trackId, rq.getMember().getId()) :
+                trackService.getTrackDetail(trackId);
         if (rsTrack.isFail()) return rq.historyBack(rsTrack);
         model.addAttribute("trackDetail", rsTrack.getData());
 

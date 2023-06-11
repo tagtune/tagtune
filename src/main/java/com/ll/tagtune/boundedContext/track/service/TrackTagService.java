@@ -46,4 +46,12 @@ public class TrackTagService {
         if (oTrackTag.isEmpty()) return RsData.of("F-1", "해당하는 데이터가 없습니다.");
         return RsData.successOf(null);
     }
+
+    public Optional<TrackTag> update(final TrackTag trackTag, final Integer popularity) {
+        TrackTag result = trackTag.toBuilder()
+                .popularity(popularity)
+                .build();
+        trackTagRepository.save(result);
+        return Optional.of(result);
+    }
 }

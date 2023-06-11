@@ -1,7 +1,7 @@
 package com.ll.tagtune.boundedContext.track.repository;
 
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
-import com.ll.tagtune.boundedContext.track.dto.TrackTagDTO;
+import com.ll.tagtune.boundedContext.track.dto.TrackTagStatusDTO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import java.util.Optional;
 import static com.ll.tagtune.boundedContext.album.entity.QAlbum.album;
 import static com.ll.tagtune.boundedContext.artist.entity.QArtist.artist;
 import static com.ll.tagtune.boundedContext.tag.entity.QTag.tag;
+import static com.ll.tagtune.boundedContext.tagVote.entity.QTagVote.tagVote;
 import static com.ll.tagtune.boundedContext.track.entity.QTrack.track;
 import static com.ll.tagtune.boundedContext.track.entity.QTrackTag.trackTag;
 
@@ -18,9 +19,8 @@ import static com.ll.tagtune.boundedContext.track.entity.QTrackTag.trackTag;
 public class TrackRepositoryImpl implements TrackRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
-    @Override
-    public Optional<TrackDetailDTO> getTrackDetail(final Long id) {
-        Optional<TrackDetailDTO> result = Optional.ofNullable(jpaQueryFactory
+    private Optional<TrackDetailDTO> getTrackBase(final Long id) {
+        return Optional.ofNullable(jpaQueryFactory
                 .select(Projections.constructor(
                         TrackDetailDTO.class,
                         track.id,
@@ -36,16 +36,44 @@ public class TrackRepositoryImpl implements TrackRepositoryCustom {
                 .where(track.id.eq(id))
                 .fetchOne()
         );
+    }
+
+    @Override
+    public Optional<TrackDetailDTO> getTrackDetail(final Long id) {
+        Optional<TrackDetailDTO> result = getTrackBase(id);
         result.ifPresent(trackDetailDTO -> trackDetailDTO.setTags(jpaQueryFactory
                 .select(Projections.constructor(
-                        TrackTagDTO.class,
+                        TrackTagStatusDTO.class,
                         trackTag.id,
                         tag.tagName,
-                        trackTag.voteCount
+                        trackTag.popularity
                 ))
                 .from(trackTag)
                 .join(trackTag.track, track).on(track.id.eq(id))
                 .join(trackTag.tag, tag)
+                .orderBy(trackTag.popularity.desc())
+                .leftJoin(trackTag.tagVotes, tagVote)
+                .fetch()));
+
+        return result;
+    }
+
+    @Override
+    public Optional<TrackDetailDTO> getTrackDetailWithVote(final Long id, final Long memberId) {
+        Optional<TrackDetailDTO> result = getTrackBase(id);
+        result.ifPresent(trackDetailDTO -> trackDetailDTO.setTags(jpaQueryFactory
+                .select(Projections.constructor(
+                        TrackTagStatusDTO.class,
+                        trackTag.id,
+                        tag.tagName,
+                        trackTag.popularity,
+                        tagVote.positive
+                ))
+                .from(trackTag)
+                .join(trackTag.track, track).on(track.id.eq(id))
+                .join(trackTag.tag, tag)
+                .orderBy(trackTag.popularity.desc())
+                .leftJoin(trackTag.tagVotes, tagVote)
                 .fetch()));
 
         return result;

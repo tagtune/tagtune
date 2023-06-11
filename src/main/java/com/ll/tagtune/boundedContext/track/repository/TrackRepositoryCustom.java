@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface TrackRepositoryCustom {
     Optional<TrackDetailDTO> getTrackDetail(final Long id);
+
+    Optional<TrackDetailDTO> getTrackDetailWithVote(final Long id, final Long memberId);
 }

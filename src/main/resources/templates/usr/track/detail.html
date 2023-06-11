@@ -19,10 +19,23 @@
                     <a class="badge badge-primary mx-1 my-2" th:href="@{|/tag/${tag.id}|}">
                         <span th:text="${tag.tagName}"></span>
                     </a>
-                    <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/trackTag/vote/up/${tag.id}|}">
+                    <div class="badge badge-primary mx-1 my-2">
+                        <span th:text="${tag.voteCount}"></span>
+                    </div>
+                    <form th:if="${tag.positive != true}" class="badge badge-primary mx-1 my-2" method="POST"
+                          th:action="@{|/trackTag/vote/up/${tag.id}|}">
                         <button type="submit" name="submit" value="value" class="link-button">추천</button>
                     </form>
-                    <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/trackTag/vote/down/${tag.id}|}">
+                    <form th:if="${tag.positive == true}" class="badge badge-primary mx-1 my-2" method="POST"
+                          th:action="@{|/trackTag/vote/cancel/${tag.id}|}">
+                        <button type="submit" name="submit" value="value" class="link-button">추천</button>
+                    </form>
+                    <form th:if="${tag.positive != false}" class="badge badge-primary mx-1 my-2" method="POST"
+                          th:action="@{|/trackTag/vote/down/${tag.id}|}">
+                        <button type="submit" name="submit" value="value" class="link-button">비추천</button>
+                    </form>
+                    <form th:if="${tag.positive == false}" class="badge badge-primary mx-1 my-2" method="POST"
+                          th:action="@{|/trackTag/vote/cancel/${tag.id}|}">
                         <button type="submit" name="submit" value="value" class="link-button">비추천</button>
                     </form>
                 </li>
