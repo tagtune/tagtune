@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/favor")
@@ -44,8 +45,9 @@ public class MemberFavorController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/addTag")
     public String addFavorTag(TagDTO tagDTO) {
-        Tag tag = tagService.getOrCreateTag(tagDTO.getTagName());
-        favorService.create(rq.getMember(), tag);
+        Optional<Tag> optionalTag = tagService.findByName(tagDTO.getTagName());
+        if (optionalTag.isEmpty()) return rq.redirectWithMsg("/favor/list", "존재하지 않는 태그입니다.");
+        favorService.create(rq.getMember(), optionalTag.get());
 
         return rq.redirectWithMsg("/favor/list", "태그가 추가되었습니다.");
     }

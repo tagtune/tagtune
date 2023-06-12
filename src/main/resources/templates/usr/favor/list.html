@@ -44,7 +44,7 @@
                         <span th:text="${favorTag.name}"></span>
                     </a>
                     <form class="badge badge-primary mx-1 my-2" method="POST"
-                          th:action="@{|/favor/${favorTag.tagId}|}">
+                          th:action="@{|/favor/${favorTag.id}|}">
                         <input name="_method" type="hidden" value="DELETE">
                         <button class="link-button" name="submit" type="submit" value="value">삭제</button>
                     </form>
