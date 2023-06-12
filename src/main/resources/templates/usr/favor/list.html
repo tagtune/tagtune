@@ -1,0 +1,62 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>선호태그 게시판</title>
+</head>
+
+<body>
+<main class="flex flex-grow items-center justify-center" layout:fragment="main">
+    <div class="flex flex-col max-w-2xl w-full justify-center">
+        <div class="flex max-w-2xl w-full my-4">
+            <div class="flex justify-between flex-grow">
+                <div class="px-4 flex flex-grow">
+                    <div class="form-control flex flex-grow">
+                        <div>
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            선호태그를 추가해보세요
+                        </div>
+
+                        <div class="mt-4 flex">
+                            <form class="flex flex-col flex-grow" method="POST" th:action="@{|/favor/addTag|}">
+                                <input autoFocus class="input input-bordered flex flex-grow" name="tagName"
+                                       placeholder="추가하고싶은 태그를 입력하세요" type="text">
+                                <button class="btn btn-primary btn-sm mx-1 my-2 block mt-3 text-sm break-all text-blue-400"
+                                        type="submit">추가
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-2xl w-full mt-4 px-4">
+            <div>
+                <h1 class="mb-4">
+                    <i class="fa-solid fa-list"></i>
+                    나의 선호태그 목록
+                </h1>
+            </div>
+            <div class="flex flex-col max-w-2xl w-full" th:if="${!favorTags.isEmpty()}">
+                <div th:each="favorTag: ${favorTags}">
+                    <a class="badge badge-primary mx-1 my-2"
+                       th:href="|/usr/category/tag?id=${favorTag.tagId}|">
+                        <span th:text="${favorTag.name}"></span>
+                    </a>
+                    <form class="badge badge-primary mx-1 my-2" method="POST"
+                          th:action="@{|/favor/${favorTag.id}|}">
+                        <input name="_method" type="hidden" value="DELETE">
+                        <button class="link-button" name="submit" type="submit" value="value">삭제</button>
+                    </form>
+                </div>
+            </div>
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${favorTags.isEmpty()}">
+                나의 선호목록이 없습니다.
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>
