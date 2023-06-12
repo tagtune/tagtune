@@ -73,7 +73,7 @@ public class FavorService {
     public RsData<Void> delete(final Member member, final Long id) {
         RsData<FavorTag> rsData = getFavorTag(id);
         if (rsData.isFail()) return RsData.of("F-1", "해당하는 선호태그가 없습니다.");
-        if (rsData.getData().getMember().getId().equals(member.getId())) return RsData.of("F-2", "잘못된 접근입니다.");
+        if (!rsData.getData().getMember().getId().equals(member.getId())) return RsData.of("F-2", "잘못된 접근입니다.");
         // 태그의 멤버와 제공된 멤버의 id가 일치하는지 검사
         favorTagRepository.delete(rsData.getData());
 
