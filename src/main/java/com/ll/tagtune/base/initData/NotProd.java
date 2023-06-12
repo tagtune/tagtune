@@ -13,6 +13,10 @@ import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.tagBoard.entity.TagBoard;
 import com.ll.tagtune.boundedContext.tagBoard.service.TagBoardService;
+import com.ll.tagtune.boundedContext.tagComment.entity.TagComment;
+import com.ll.tagtune.boundedContext.tagComment.service.TagCommentService;
+import com.ll.tagtune.boundedContext.tagReply.entity.TagReply;
+import com.ll.tagtune.boundedContext.tagReply.service.TagReplyService;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
 import org.springframework.boot.CommandLineRunner;
@@ -34,7 +38,9 @@ public class NotProd {
             TagService tagService,
             TagBoardService tagBoardService,
             ArtistService artistService,
-            AlbumService albumService
+            AlbumService albumService,
+            TagCommentService tagCommentService,
+            TagReplyService tagReplyService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -88,6 +94,14 @@ public class NotProd {
 
                 // for (Track track : result) System.out.println("[D2BUG]: " + track);
 
+                TagComment[] comments = {
+                        tagCommentService.saveComment("안녕하십니까", tagBoards[0], members[0]).getData(),
+                        tagCommentService.saveComment("이 노래 좋다 정말!", tagBoards[0], members[1]).getData()
+                };
+
+                TagReply[] replies = {
+                        tagReplyService.saveReply(members[0], comments[1].getId(), "덧글입니다!").getData()
+                };
             }
         };
     }
