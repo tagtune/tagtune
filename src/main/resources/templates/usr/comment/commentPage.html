@@ -128,6 +128,7 @@
                                             <!--                                            댓글수정-->
                                             <div>
                                                 <button th:id="dBtn_+${comment.commentId}"
+                                                        th:if="${@rq.member.id == comment.getMemberId()}"
                                                         th:commentId="${comment.commentId}"
                                                         class="btn btn-primary btn-sm mt-2 w-[40px] mb-5"
                                                         onclick="modifyComment(this.getAttribute('commentId'))">
@@ -142,6 +143,7 @@
 
                                             <div>
                                                 <button th:id="dBtn_+${comment.commentId}"
+                                                        th:if="${@rq.member.id == comment.getMemberId()}"
                                                         class="btn btn-primary btn-sm mt-2 w-[40px] mb-5"
                                                         th:attr="data-comment-id=${comment.commentId}"
                                                         onclick="$(this).next().submit();">
@@ -166,16 +168,10 @@
                                             </div>
 
                                             <div class="ml-3">
-                                                <button th:id="shBtn_+${comment.commentId}"
-                                                        class="btn btn-primary btn-sm mt-2 w-[80px] mb-5"
-                                                        onclick="$(this).next().submit();">
-                                                    <span class="">덧글 확인</span>
-                                                </button>
-                                                <form hidden th:action=
-                                                        "@{|/track/${comment.trackId}/comment?commentId=${comment.commentId}|}"
-                                                      method="GET">
-                                                    <input type="hidden" name="_method">
-                                                </form>
+                                                <a class="btn btn-primary btn-sm mt-2 w-[80px] mb-5"
+                                                   th:href=
+                                                           "@{|/track/${comment.trackId}/comment?commentId=${comment.commentId}|}">
+                                                    덧글확인</a>
                                             </div>
                                         </div>
                                     </div>
@@ -192,7 +188,7 @@
                                         <ul>
                                             <li th:each="reply : ${replies}"
                                                 th:if="${reply.parent.id == comment.commentId}"
-                                                >
+                                            >
                                                 <div class="flex flex-col">
                                                     <div class="flex justify-between">
                                                         <div class="flex items-center ms-5">
@@ -206,6 +202,7 @@
                                                             <div class="flex items-center">
                                                                 <div class="ml-3">
                                                                     <button th:id="drBtn_+${reply.id}"
+                                                                            th:if="${@rq.member.id == comment.getMemberId()}"
                                                                             class="btn btn-primary btn-sm w-[80px] mt-2 mb-5"
                                                                             th:attr="data-comment-id=${reply.id}"
                                                                             onclick="$(this).next().submit();">
@@ -214,13 +211,15 @@
                                                                     <form hidden th:action=
                                                                             "@{|/track/${comment.trackId}/comment/${reply.id}|}"
                                                                           method="POST">
-                                                                        <input type="hidden" name="_method" value="DELETE">
+                                                                        <input type="hidden" name="_method"
+                                                                               value="DELETE">
                                                                     </form>
                                                                 </div>
 
                                                                 <!--대댓글 수정-->
                                                                 <div class="ml-3">
                                                                     <button th:id="mrBtn_+${reply.id}"
+                                                                            th:if="${@rq.member.id == comment.getMemberId()}"
                                                                             th:replyId="${reply.id}"
                                                                             class="btn btn-primary btn-sm mt-2 w-[80px] mb-5"
                                                                             onclick="modifyReply(this.getAttribute('replyId'))">
