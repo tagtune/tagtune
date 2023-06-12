@@ -52,7 +52,7 @@
                         <ul class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-40"
                             tabindex="0">
                             <li th:each="tagBoard: ${top3TagBoardList}"><a
-                                    th:href="|/usr/category/tag?id=${tagBoard.getId()}|">
+                                    th:href="|/category/tag?id=${tagBoard.getId()}|">
                                 <span th:text="${tagBoardStat.count} + ."></span>
                                 <span th:text="${tagBoard.getTagBoardName()}"></span></a>
                             </li>
@@ -70,7 +70,7 @@
             </div>
             <div class="flex flex-wrap max-w-2xl w-full" th:if="${!tagBoardList.isEmpty()}">
                 <div th:each="tagBoard: ${tagBoardList}">
-                    <a class="badge badge-primary mx-1 my-2" th:href="|/usr/category/tag?id=${tagBoard.getId()}|">
+                    <a class="badge badge-primary mx-1 my-2" th:href="|/category/tag?id=${tagBoard.getId()}|">
                         <span th:text="${tagBoard.getTagBoardName()}"></span>
                     </a>
                 </div>
