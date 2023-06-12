@@ -38,21 +38,14 @@ public class TagBoardService {
         return tagBoardRepository.findById(id);
     }
 
-    /**
-     * 태그가 생겼을 경우
-     * tagList를 받아와서 tagBoard로 생성
-     * findTop3ByOrderByPopularityDesc 체크하려고 .popularity(tag.getId()) 추가
-     */
-    public TagBoard createTagBoard() {
-        TagBoard tagBoard = null;
-        List<Tag> tagList = tagRepository.findAll();
-        for (Tag tag : tagList) {
-            tagBoard = TagBoard.builder()
-                    .tag(tag)
-                    .tagBoardName(tag.getTagName())
-                    .build();
-            tagBoardRepository.save(tagBoard);
-        }
+    public TagBoard create(Tag tag) {
+        TagBoard tagBoard = TagBoard.builder()
+                .tag(tag)
+                .tagBoardName(tag.getTagName())
+                .build();
+
+        tagBoardRepository.save(tagBoard);
+
         return tagBoard;
     }
 }
