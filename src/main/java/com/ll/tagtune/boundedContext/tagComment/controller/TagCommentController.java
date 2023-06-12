@@ -2,7 +2,6 @@ package com.ll.tagtune.boundedContext.tagComment.controller;
 
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
-import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.tagBoard.entity.TagBoard;
 import com.ll.tagtune.boundedContext.tagBoard.service.TagBoardService;
 import com.ll.tagtune.boundedContext.tagComment.dto.TagCommentResponseDTO;
@@ -37,9 +36,7 @@ public class TagCommentController {
 
         List<TagCommentResponseDTO> commentsDTO = tagCommentService.getCommentsWithReplies(tagBoard);
         List<TagReplyResponseDTO> replyResponseDTO = tagReplyService.getReplies(tagBoard);
-        Member member = rq.getMember();
 
-        model.addAttribute("member", member);
         model.addAttribute("comments", commentsDTO);
         model.addAttribute("tagId", id);
 

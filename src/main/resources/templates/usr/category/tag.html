@@ -104,11 +104,10 @@
                                         <!--                                            댓글 삭제, 수정, 작성, 확인-->
                                         <div class="flex">
                                             <!--                                            댓글수정-->
-                                            <div class="flex" th:if="${comment.getMemberId()}==${member.getId()}">
+                                            <div class="flex" th:if="${comment.getMemberId()}==${@rq.member.id}">
                                                 <div>
                                                     <button class="btn btn-primary btn-sm mt-2 w-[40px] mx-1 mb-5"
                                                             onclick="modifyComment(this.getAttribute(`commentId`))"
-                                                            th:attr="data-comment-id=${comment.commentId}"
                                                             th:commentId="${comment.commentId}"
                                                             th:id="dBtn_+${comment.commentId}">
                                                         <span class="">수정</span>
@@ -122,7 +121,6 @@
                                                 <div>
                                                     <button class="btn btn-primary btn-sm mt-2 w-[40px] mx-1 mb-5"
                                                             onclick="$(this).next().submit();"
-                                                            th:attr="data-comment-id=${comment.commentId}"
                                                             th:id="dBtn_+${comment.commentId}">
                                                         <span class="">삭제</span>
                                                     </button>
@@ -137,7 +135,6 @@
                                             <div class="ml-3">
                                                 <button class="btn btn-primary btn-sm mt-2 mb-5"
                                                         onclick="toggleContent(this.getAttribute('commentId'))"
-                                                        th:attr="data-comment-id=${comment.commentId}"
                                                         th:commentId="${comment.commentId}"
                                                         th:id="sBtn_+${comment.commentId}">
                                                     <span class="">덧글 작성</span>
@@ -168,10 +165,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="flex" th:if="${reply.getMemberId()}== ${member.getId()}">
+                                            <div class="flex" th:if="${reply.getMemberId()}== ${@rq.member.id}">
                                                 <button class="btn btn-primary btn-sm mt-2 w-[40px] mx-1 mb-5"
                                                         onclick="$(this).next().submit();"
-                                                        th:attr="data-reply-id=${reply.replyId}"
                                                         th:id="dBtn_+${reply.replyId}">
                                                     <span class="">삭제</span>
                                                 </button>
