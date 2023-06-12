@@ -19,8 +19,10 @@ public class TrackTagService {
     private final TrackTagRepository trackTagRepository;
 
     @Transactional(readOnly = true)
-    public Optional<TrackTag> getTrackTag(final Long id) {
-        return trackTagRepository.findById(id);
+    public RsData<TrackTag> getTrackTag(final Long id) {
+        return trackTagRepository.findById(id)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 데이터가 없습니다."));
     }
 
     @Transactional(readOnly = true)
@@ -43,5 +45,13 @@ public class TrackTagService {
         Optional<TrackTag> oTrackTag = trackTagRepository.findById(id);
         if (oTrackTag.isEmpty()) return RsData.of("F-1", "해당하는 데이터가 없습니다.");
         return RsData.successOf(null);
+    }
+
+    public Optional<TrackTag> update(final TrackTag trackTag, final Integer popularity) {
+        TrackTag result = trackTag.toBuilder()
+                .popularity(popularity)
+                .build();
+        trackTagRepository.save(result);
+        return Optional.of(result);
     }
 }

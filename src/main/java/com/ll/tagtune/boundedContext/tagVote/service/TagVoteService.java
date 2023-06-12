@@ -1,10 +1,13 @@
 package com.ll.tagtune.boundedContext.tagVote.service;
 
+import com.ll.tagtune.base.event.EventAfterVoteTrackTag;
+import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.tagVote.entity.TagVote;
 import com.ll.tagtune.boundedContext.tagVote.repository.TagVoteRepository;
 import com.ll.tagtune.boundedContext.track.entity.TrackTag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TagVoteService {
     private final TagVoteRepository tagVoteRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional(readOnly = true)
     public Optional<TagVote> findById(final Long id) {
@@ -35,6 +39,11 @@ public class TagVoteService {
 
         tagVoteRepository.save(tagVote);
 
+        publisher.publishEvent(new EventAfterVoteTrackTag(
+                trackTag,
+                trackTag.getPopularity() + (Boolean.TRUE.equals(positive) ? 1 : -1))
+        );
+
         return tagVote;
     }
 
@@ -42,6 +51,11 @@ public class TagVoteService {
         tagVote.setPositive(positive);
 
         tagVoteRepository.save(tagVote);
+
+        publisher.publishEvent(new EventAfterVoteTrackTag(
+                tagVote.getTrackTag(),
+                tagVote.getTrackTag().getPopularity() + (Boolean.TRUE.equals(positive) ? 2 : -2))
+        );
 
         return tagVote;
     }
@@ -54,9 +68,22 @@ public class TagVoteService {
      * @param trackTag
      * @return TagVote
      */
-    public TagVote vote(final Boolean positive, final Member member, final TrackTag trackTag) {
+    public RsData<TagVote> vote(final Boolean positive, final Member member, final TrackTag trackTag) {
         return findByMemberAndTrackTag(member.getId(), trackTag.getId())
-                .map(tagVote -> update(positive, tagVote))
-                .orElseGet(() -> create(positive, member, trackTag));
+                .map(tagVote -> RsData.successOf(update(positive, tagVote)))
+                .orElseGet(() -> RsData.successOf(create(positive, member, trackTag)));
+    }
+
+    public RsData<Void> cancel(final Long memberId, final Long trackTagId) {
+        Optional<TagVote> oTagVote = findByMemberAndTrackTag(memberId, trackTagId);
+        if (oTagVote.isEmpty()) return RsData.of("F-1", "잘못된 접근입니다.");
+        publisher.publishEvent(new EventAfterVoteTrackTag(
+                oTagVote.get().getTrackTag(),
+                oTagVote.get().getTrackTag().getPopularity()
+                        + (Boolean.TRUE.equals(oTagVote.get().getPositive()) ? -1 : 1))
+        );
+        tagVoteRepository.delete(oTagVote.get());
+
+        return RsData.of("S-1", "투표를 성공적으로 취소했습니다.");
     }
 }

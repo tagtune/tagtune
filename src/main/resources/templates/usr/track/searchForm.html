@@ -1,0 +1,96 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
+
+<head>
+    <title>음악 검색</title>
+</head>
+
+<body>
+<main class="flex flex-grow items-center justify-center" layout:fragment="main">
+    <div class="flex flex-col max-w-2xl w-full justify-center">
+        <div class="flex max-w-2xl w-full my-4">
+            <div class="flex justify-between flex-grow">
+                <div class="px-4 flex flex-grow">
+                    <div class="form-control flex flex-grow">
+                        <div><i class="fa-solid fa-magnifying-glass"></i>
+                            원하는 음악를 검색해보세요
+                        </div>
+                        <div class="mt-4 flex">
+                            <label class="flex flex-col flex-grow">
+                                <input autofocus class="input input-bordered flex flex-grow" name="artistName"
+                                       onchange="$(this).keyup();"
+                                       onkeydown="handleEnterKey(event);"
+                                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                                       placeholder="원하는 아티스트를 입력하세요" type="text">
+                                <input autofocus class="input input-bordered flex flex-grow" name="trackName"
+                                       onchange="$(this).keyup();"
+                                       onkeydown="handleEnterKey(event);"
+                                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                                       placeholder="원하는 트랙을 입력하세요" type="text">
+                                <a class="btn btn-primary btn-sm mx-1 my-2 block mt-3 text-sm break-all text-blue-400"
+                                   href="#"
+                                   onclick="event.preventDefault(); performSearch();">
+                                    <span>검색</span>
+                                </a>
+                                <script>
+                                    $(`input[name="artistName"]:last`).keyup();
+                                    $(`input[name="trackName"]:last`).keyup();
+
+                                    function handleEnterKey(event) {
+                                        if (event.keyCode === 13) {
+                                            event.preventDefault();
+                                            performSearch();
+                                        }
+                                    }
+
+                                    function performSearch() {
+                                        var artistName = $(`input[name="artistName"]:last`).val().trim().replace(/ /g, '');
+                                        var trackName = $(`input[name="trackName"]:last`).val().trim();
+
+                                        if (trackName === '') {
+                                            $(`input[name="trackName"]:last`).addClass('border-red-500');
+                                            alert('트랙 이름을 입력해주세요!');
+                                            return;
+                                        }
+
+                                        var query = 'trackName=' + trackName;
+                                        if (artistName !== '') {
+                                            query += '&artistName=' + artistName;
+                                        }
+
+                                        location.href = 'search?' + query;
+                                    }
+                                </script>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-2xl w-full mt-4 px-4">
+            <div>
+                <h1 class="mb-4">
+                    <i class="fa-solid fa-list"></i>
+                    검색 결과
+                </h1>
+            </div>
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${tracks != null &&!tracks.isEmpty()}">
+                <div th:each="track: ${tracks}">
+                    <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
+                        <input th:value="${track.name}" type="hidden" name="name">
+                        <input th:value="${track.artist}" type="hidden" name="artist">
+                        <button type="submit" name="submit" value="value" class="link-button">
+                            <span th:text="${track.name}"></span>
+                            <span>-</span>
+                            <span th:text="${track.artist}"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${tracks == null || tracks.isEmpty()}">
+                검색 결과가 없습니다.
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
