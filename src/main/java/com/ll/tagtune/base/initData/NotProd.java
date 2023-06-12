@@ -3,6 +3,7 @@ package com.ll.tagtune.base.initData;
 import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
 import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
+import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
@@ -15,6 +16,8 @@ import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.tagBoard.entity.TagBoard;
 import com.ll.tagtune.boundedContext.tagBoard.service.TagBoardService;
+import com.ll.tagtune.boundedContext.tagVote.entity.TagVote;
+import com.ll.tagtune.boundedContext.tagVote.service.TagVoteService;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
 import org.springframework.boot.CommandLineRunner;
@@ -38,7 +41,8 @@ public class NotProd {
             TagBoardService tagBoardService,
             ArtistService artistService,
             AlbumService albumService,
-            FavorService favorService
+            FavorService favorService,
+            TagVoteService tagVoteService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -97,6 +101,12 @@ public class NotProd {
                 FavorTag[] favorTags = IntStream.range(0, 3)
                         .mapToObj(i -> favorService.create(members[0], tags[i]))
                         .toArray(FavorTag[]::new);
+
+                TagVote[] tagVotes = tracks[0].getTags().stream()
+                        .map(tag -> tagVoteService.vote(true, members[0], tag))
+                        .filter(RsData::isSuccess)
+                        .map(RsData::getData)
+                        .toArray(TagVote[]::new);
             }
         };
     }

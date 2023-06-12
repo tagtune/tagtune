@@ -33,7 +33,7 @@ class LastfmTest {
         assertThat(searchResult.getTracks()).isNotEmpty();
 
         TrackSearchDTO target = searchResult.getTracks().stream().findFirst().orElseThrow();
-        TrackInfoDTO infoResult = SearchEndpoint.getTrackInfo(target.name, target.artist);
+        TrackInfoDTO infoResult = SearchEndpoint.getTrackInfo(target.name, target.artist).get();
         assertThat(infoResult).isNotNull();
         // debug
         // System.out.println(infoResult);

@@ -86,23 +86,24 @@ public class TrackService {
      * @return Track with Details
      */
     public Optional<Track> setTrackInfo(final TrackSearchDTO rawTrack) {
-        final TrackInfoDTO result = SearchEndpoint.getTrackInfo(
+        final Optional<TrackInfoDTO> result = SearchEndpoint.getTrackInfo(
                 rawTrack.name,
                 rawTrack.artist
         );
 
-        if (result == null || result.getArtistName() == null) return Optional.empty();
+        if (result.isEmpty() || result.get().getArtistName() == null) return Optional.empty();
 
-        final Artist artist = artistService.findByArtistName(result.getArtistName())
-                .orElseGet(() -> artistService.createArtist(result.getArtistName()));
+        final Artist artist = artistService.findByArtistName(result.get().getArtistName())
+                .orElseGet(() -> artistService.createArtist(result.get().getArtistName()));
 
-        final String albumTitle = result.getAlbumName() != null ? result.getAlbumName() : AppConfig.getNameForNoData();
+        final String albumTitle = result.get().getAlbumName() != null ?
+                result.get().getAlbumName() : AppConfig.getNameForNoData();
 
         final Album album = albumService.findByNameAndArtistId(albumTitle, artist.getId())
                 .orElseGet(() -> albumService.createAlbum(albumTitle, artist));
 
-        final Track track = createTrack(result.getTitle(), artist, album);
-        track.getTags().addAll(result.getTags().stream()
+        final Track track = createTrack(result.get().getTitle(), artist, album);
+        track.getTags().addAll(result.get().getTags().stream()
                 .map(rawTag -> tagService.getOrCreateTag(rawTag.getTagName()))
                 .map(tag -> trackTagService.connect(track, tag))
                 .toList());

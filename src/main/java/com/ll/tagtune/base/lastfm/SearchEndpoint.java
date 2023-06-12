@@ -5,17 +5,19 @@ import com.ll.tagtune.base.lastfm.entity.*;
 import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SearchEndpoint {
-    private static final String BASE_HOST = "ws.audioscrobbler.com";
     private static final String BASE_URL =
             "http://ws.audioscrobbler.com/2.0/?"
                     + "api_key=" + AppConfig.getLastfmClientId()
@@ -37,6 +39,13 @@ public class SearchEndpoint {
         return "&tag=" + tagName;
     }
 
+    private static WebClient createWebClient() {
+        return WebClient.builder()
+                .baseUrl(BASE_URL)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+    }
+
     /**
      * lastfm API를 호출합니다
      *
@@ -46,21 +55,13 @@ public class SearchEndpoint {
      * @return map 수행 결과
      */
     private static <T> T getResponse(HttpMethod httpMethod, String body, String url, Class<T> responseType) {
-        RestTemplate rest = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        // debug
-        // System.out.println(url);
-        httpHeaders.add("Host", BASE_HOST);
-        httpHeaders.add("Content-type", "application/json");
-        HttpEntity<String> requestEntity = new HttpEntity<>(body, httpHeaders);
-        ResponseEntity<T> result = rest.exchange(
-                url,
-                httpMethod,
-                requestEntity,
-                responseType
-        );
-
-        return result.getBody();
+        return createWebClient()
+                .method(httpMethod)
+                .uri(url)
+                .body(BodyInserters.fromValue(body))
+                .retrieve()
+                .bodyToMono(responseType)
+                .block();
     }
 
     /**
@@ -71,12 +72,11 @@ public class SearchEndpoint {
      * @return 검색 결과
      */
     public static ApiTrackSearchResult searchTrack(String title, String artist) {
-        String body = "";
         String url = BASE_URL + "track.search"
                 + setTrack(title)
                 + (artist.equals("") ? "" : setArtist(artist));
 
-        return getResponse(HttpMethod.GET, body, url, ApiTrackSearchResult.class);
+        return getResponse(HttpMethod.GET, "", url, ApiTrackSearchResult.class);
     }
 
     /**
@@ -96,14 +96,35 @@ public class SearchEndpoint {
      * @param artistName
      * @return track 세부정보
      */
-    public static TrackInfoDTO getTrackInfo(String trackName, String artistName) {
-        String body = "";
+    public static Optional<TrackInfoDTO> getTrackInfo(String trackName, String artistName) {
         String url = BASE_URL + "track.getInfo"
                 + setTrack(trackName)
                 + setArtist(artistName);
 
-        return getResponse(HttpMethod.GET, body, url, ApiTrackInfoResult.class).getTrackInfoDTO()
-                .orElseThrow(() -> new RuntimeException("해당하는 데이터가 없습니다."));
+        return getResponse(HttpMethod.GET, "", url, ApiTrackInfoResult.class)
+                .getTrackInfoDTO();
+    }
+
+    public static List<TrackInfoDTO> getTrackInfos(final List<TrackSearchDTO> searchDTOs) {
+        Mono<List<ApiTrackInfoResult>> result = Flux.range(0, searchDTOs.size())
+                .flatMap(i -> createWebClient()
+                        .method(HttpMethod.GET)
+                        .uri(BASE_URL + "track.getInfo"
+                                + setTrack(searchDTOs.get(i).getName())
+                                + setArtist(searchDTOs.get(i).getArtist())
+                        )
+                        .retrieve()
+                        .bodyToMono(ApiTrackInfoResult.class)
+                )
+                .collectList();
+
+        // 결과를 반환받음
+        return result.block()
+                .stream()
+                .map(ApiTrackInfoResult::getTrackInfoDTO)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
     }
 
     /**
@@ -113,11 +134,11 @@ public class SearchEndpoint {
      * @return tag 가 등록된 track 목록
      */
     public static List<TrackSearchDTO> getTracksFromTag(String tagName) {
-        String body = "";
         String url = BASE_URL + "tag.gettoptracks"
                 + setTag(tagName);
 
-        return getResponse(HttpMethod.GET, body, url, ApiTopTrackFromTag.class).getTracks();
+        return getResponse(HttpMethod.GET, "", url, ApiTopTrackFromTag.class)
+                .getTracks();
     }
 
     /**
@@ -126,9 +147,9 @@ public class SearchEndpoint {
      * @return Tracks
      */
     public static List<TrackSearchDTO> getTrendingList() {
-        String body = "";
         String url = BASE_URL + "chart.gettoptracks";
 
-        return getResponse(HttpMethod.GET, body, url, ApiTopTracksFromTrending.class).getTracks();
+        return getResponse(HttpMethod.GET, "", url, ApiTopTracksFromTrending.class)
+                .getTracks();
     }
 }

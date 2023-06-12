@@ -6,10 +6,9 @@ import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.memberFavor.entity.FavorTag;
 import com.ll.tagtune.boundedContext.memberFavor.service.FavorService;
 import com.ll.tagtune.boundedContext.tag.entity.Tag;
-import com.ll.tagtune.boundedContext.tagVote.entity.TagVote;
+import com.ll.tagtune.boundedContext.tagVote.dto.TagVoteCountDTO;
 import com.ll.tagtune.boundedContext.tagVote.service.TagVoteService;
 import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
-import com.ll.tagtune.boundedContext.track.entity.TrackTag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,29 +33,18 @@ public class RecommendService {
         Set<TrackSearchDTO> rawRecommends = new LinkedHashSet<>();
         tags.forEach(tag -> rawRecommends.addAll(SearchEndpoint.getTracksFromTag(tag.getTagName())));
 
-        List<TrackInfoDTO> result = rawRecommends.stream()
-                .map(track -> SearchEndpoint.getTrackInfo(track.name, track.artist))
-                .filter(t -> t != null)
-                .toList();
-
-        return result;
+        return SearchEndpoint.getTrackInfos(rawRecommends.stream().toList());
     }
 
     public List<TrackInfoDTO> getPersonalList(final Member member) {
-        List<Tag> tags = tagVoteService.findAllByMemberId(member.getId())
+        final List<String> tags = tagVoteService.getTagVotesCount(member.getId())
                 .stream()
-                .map(TagVote::getTrackTag)
-                .map(TrackTag::getTag)
+                .map(TagVoteCountDTO::getTagName)
                 .toList();
 
         Set<TrackSearchDTO> rawRecommends = new LinkedHashSet<>();
-        tags.forEach(tag -> rawRecommends.addAll(SearchEndpoint.getTracksFromTag(tag.getTagName())));
+        tags.forEach(tag -> rawRecommends.addAll(SearchEndpoint.getTracksFromTag(tag)));
 
-        List<TrackInfoDTO> result = rawRecommends.stream()
-                .map(track -> SearchEndpoint.getTrackInfo(track.name, track.artist))
-                .filter(t -> t != null)
-                .toList();
-
-        return result;
+        return SearchEndpoint.getTrackInfos(rawRecommends.stream().toList());
     }
 }
