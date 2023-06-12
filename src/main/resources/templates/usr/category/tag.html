@@ -5,6 +5,61 @@
 </head>
 <body>
 <main class="flex flex-grow items-center justify-center" layout:fragment="main">
+    <script th:inline="javascript">
+        function SaveComment__submit(form) {
+            // iComment 이(가) 올바른지 체크
+            form.iComment.value = form.iComment.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.iComment.value === "") {
+                toastWarning('댓글을 입력해주세요.');
+                form.iComment.focus();
+                return;
+            }
+
+            form.submit();
+        }
+
+        function ModifyComment__submit(form) {
+            // iComment 이(가) 올바른지 체크
+            form.modifyComment.value = form.modifyComment.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.modifyComment.value === "") {
+                toastWarning('댓글을 입력해주세요.');
+                form.modifyComment.focus();
+                return;
+            }
+
+            form.submit();
+        }
+
+        function SaveReply__submit(form) {
+            form.iReply.value = form.iReply.value.trim();
+
+            if (form.iReply.value === "") {
+                toastWarning('댓글을 입력해주세요.');
+                form.iReply.focus();
+                return;
+            }
+
+            form.submit();
+        }
+
+        function toggleContent(commentId) {
+            console.log("토글컨텐트 사용");
+
+            const content = document.getElementById("saveReplyT_" + commentId);
+            const toggleIcon = document.getElementById("saveCmt_" + commentId);
+
+            if (content.style.display === "none") {
+                content.style.display = "block";
+                toggleIcon.innerText = "-";
+            } else {
+                content.style.display = "none";
+                toggleIcon.innerText = "+";
+            }
+        }
+    </script>
+
     <div class="flex flex-col max-w-2xl w-full justify-center">
         <h1 class="mb-4 text-[30px] max-w-2xl w-full">
             <span style="word-break: break-all" th:text="${tagBoard.getTagBoardName() + ' 게시판'}"></span>
@@ -13,52 +68,133 @@
         <section class="mb-5 max-w-2xl w-full">
             <div class="card bg-light">
                 <!-- Comment form-->
-                <form class="flex flex-col flex-grow mb-4"><textarea class="form-control" placeholder="댓글을 남겨보세요"
-                                                                     rows="3"></textarea>
-                    <input dir="ltr" style="float:left;" type="submit" value="답변등록">
+                <form class="flex flex-col flex-grow mb-4" method="POST" onsubmit="SaveComment__submit(this); return false;"
+                      th:action>
+                    <textarea class="form-control" name="iComment" placeholder="댓글을 남겨보세요" rows="3"
+                              type="text"></textarea>
+                    <input class="btn btn-primary btn-sm mt-5 mb-5"
+                           style="float:left;" type="submit" value="댓글등록">
                 </form>
-                <!-- Comment with nested comments-->
-                <div class="flex mb-4">
-                    <!-- Parent comment-->
-                    <div class="flex-shrink-0"><img alt="..."
-                                                    class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
-                    </div>
-                    <div class="flex flex-col ms-5 max-w-2xl w-full">
-                        <div class="fw-bold">작성자</div>
-                        <div class="flex max-w-2xl w-full">
-                            댓글 어쩌구저쩌구 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구
-                        </div>
-                        <!-- Child comment 1-->
-                        <div class="flex mt-4">
-                            <div class="flex-shrink-0"><img alt="..."
-                                                            class="rounded-circle"
-                                                            src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/></div>
-                            <div class="ms-5 max-w-2xl w-full">
-                                <div class="fw-bold">작성자</div>
-                                답글 저쩌구어쩌구
-                            </div>
-                        </div>
-                        <!-- Child comment 2-->
-                        <div class="flex mt-4">
-                            <div class="flex-shrink-0"><img alt="..."
-                                                            class="rounded-circle"
-                                                            src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/></div>
-                            <div class="ms-5 max-w-2xl w-full">
-                                <div class="fw-bold">작성자</div>
-                                답글입니다답글입니다답글입니다답글입니다답글입니다답글입니다답글입니다 답글입니다답글입니다답글입니다답글입니다답글입니다답글입니다답글입니다
-                            </div>
-                        </div>
-                    </div>
+                <div class="flex items-center card bg-light" th:unless="${!#lists.isEmpty(comments)}">
+                    댓글이 없습니다!!
                 </div>
-                <!-- Single comment-->
-                <div class="flex">
-                    <div class="flex-shrink-0"><img alt="..."
-                                                    class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
-                    </div>
-                    <div class="ms-5 max-w-2xl w-full">
-                        <div class="fw-bold">작성자</div>
-                        댓글인데요
-                    </div>
+                <div class="flex mb-4" th:if="${!#lists.isEmpty(comments)}">
+                    <!-- Parent comment-->
+                    <ul class="flex flex-col max-w-2xl w-full gap-4" th:if="${!#lists.isEmpty(comments)}">
+                        <li class="mb-2" th:each="comment: ${comments}">
+                            <th:block class="flex flex-col ms-5 max-w-2xl w-full">
+                                <div class="max-w-2xl w-full">
+                                    <div class="flex justify-between">
+                                        <div class="flex h-12">
+                                            <img alt="..."
+                                                 class="rounded-circle"
+                                                 src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
+                                            <div class="flex justify-center items-center ml-5"
+                                                 th:text="${comment.memberName}"></div>
+                                        </div>
+                                        <!--                                            댓글 삭제, 수정, 작성, 확인-->
+                                        <div class="flex">
+                                            <!--                                            댓글수정-->
+                                            <div class="flex" th:if="${comment.getMemberId()}==${member.getId()}">
+                                                <div>
+                                                    <button class="btn btn-primary btn-sm mt-2 w-[40px] mx-1 mb-5"
+                                                            onclick="$(this).next().submit();"
+                                                            th:attr="data-comment-id=${comment.commentId}"
+                                                            th:id="dBtn_+${comment.commentId}">
+                                                        <span class="">수정</span>
+                                                    </button>
+                                                    <form hidden method="POST"
+                                                          th:action=
+                                                            "@{|/category/tag/${comment.commentId}|}">
+                                                        <input name="_method" type="hidden" value="PATCH">
+                                                    </form>
+                                                </div>
+
+                                                <div>
+                                                    <button class="btn btn-primary btn-sm mt-2 w-[40px] mx-1 mb-5"
+                                                            onclick="$(this).next().submit();"
+                                                            th:attr="data-comment-id=${comment.commentId}"
+                                                            th:id="dBtn_+${comment.commentId}">
+                                                        <span class="">삭제</span>
+                                                    </button>
+                                                    <form hidden method="POST"
+                                                          th:action=
+                                                            "@{|/category/tag/${comment.commentId}|}">
+                                                        <input name="_method" type="hidden" value="Delete">
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div class="ml-3">
+                                                <button class="btn btn-primary btn-sm mt-2 mb-5"
+                                                        onclick="toggleContent(this.getAttribute('commentId'))"
+                                                        th:attr="data-comment-id=${comment.commentId}"
+                                                        th:commentId="${comment.commentId}"
+                                                        th:id="sBtn_+${comment.commentId}">
+                                                    <span class="">덧글 작성</span>
+                                                    <span class="ml-2" th:id="saveCmt_+${comment.commentId}">+</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col w-full">
+                                    <div class="flex rounded-lg ring-2 outline
+                                        outline-offset-2 outline-2 outline-blue-500 max-w-2xl w-full">
+                                        <div class="flex max-w-2xl w-full" th:text="${comment.content}">
+                                        </div>
+                                    </div>
+                                    <div class="flex ml-7 mt-4" th:each="reply: ${replies}">
+                                        <div class="flex justify-between"
+                                             th:if="${reply.getParent().getId()} == ${comment.getCommentId()}">
+                                            <div>
+                                                <div class="flex">
+                                                    <i class="fa-solid fa-reply fa-rotate-180"></i>
+                                                    <div class="ml-2 flex-shrink-0" th:text="${reply.getMemberName()}">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="ms-6 max-w-2xl w-full">
+                                                        <div class="fw-bold" th:text="${reply.getContent()}"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div th:if="${reply.getMemberId()}== ${member.getId()}">
+                                                <button class="btn btn-primary btn-sm mt-2 w-[40px] mx-1 mb-5"
+                                                        onclick="$(this).next().submit();"
+                                                        th:attr="data-reply-id=${reply.replyId}"
+                                                        th:id="dBtn_+${reply.replyId}">
+                                                    <span class="">삭제</span>
+                                                </button>
+                                                <form hidden method="POST"
+                                                      th:action=
+                                                        "@{|/category/tag/${comment.commentId}/${reply.ReplyId}|}">
+                                                    <input name="_method" type="hidden" value="DELETE">
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--                                    댓글 관련-->
+                                <div class="flex mt-3 w-full hidden"
+                                     th:id="saveReplyT_+${comment.commentId}">
+                                    <div>
+                                        <form class="flex flex-grow mb-4"
+                                              method="POST"
+                                              onsubmit="SaveReply__submit(this); return false;"
+                                              th:action="@{|/category/tag/${comment.commentId}/${comment.getReplyCnt()+1}}">
+                                            <textarea class="form-control grow"
+                                                      name="iReply" placeholder="덧글을 남겨보세요"
+                                                      rows="2"
+                                                      type="text"></textarea>
+                                            <input class="btn btn-primary flex-none btn-sm mx-2 mt-5 mb-5"
+                                                   type="submit" value="댓글등록">
+                                        </form>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>
