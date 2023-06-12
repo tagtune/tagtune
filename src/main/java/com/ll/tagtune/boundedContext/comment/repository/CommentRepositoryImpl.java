@@ -10,7 +10,7 @@ import java.util.List;
 import static com.ll.tagtune.boundedContext.comment.entity.QComment.comment;
 
 @RequiredArgsConstructor
-public class CommentRepositoryImpl implements CommentCustomRepository {
+public class CommentRepositoryImpl implements CommentRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override

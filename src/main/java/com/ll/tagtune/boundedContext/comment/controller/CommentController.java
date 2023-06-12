@@ -29,11 +29,13 @@ public class CommentController {
     private final Rq rq;
     private final CommentService commentService;
     private final TrackService trackService;
+    private final ReplyService replyService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/track/{trackId}/comment")
-    public String showComment(@PathVariable Long trackId, Model model) {
-
+    public String showComment(@PathVariable Long trackId,
+                              @RequestParam(value = "commentId", defaultValue = "") Long commentId,
+                              Model model) {
         Track track = trackService.getTrack(trackId);
 
         List<CommentResponseDTO> commentsDTO = commentService.getCommentsWithReplies(track);
@@ -41,8 +43,12 @@ public class CommentController {
         model.addAttribute("track", track);
 
         // 이전 요청에서 전달받은 모델 데이터를 가져옵니다.
-        List<Reply> replies = (List<Reply>) model.getAttribute("replies");
-        model.addAttribute("replies", replies);
+        if (commentId != null) {
+            RsData<List<Reply>> replyRsdata =
+                    replyService.getReply(commentService.findById(commentId));
+            model.addAttribute("replies", replyRsdata.getData());
+        }
+
         return "usr/comment/commentPage";
     }
 
@@ -64,7 +70,7 @@ public class CommentController {
             return rq.historyBack(commentRsData);
         }
 
-        return rq.redirectWithMsg("/track/"+trackId+"/comment", commentRsData);
+        return rq.redirectWithMsg("/track/" + trackId + "/comment", commentRsData);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -72,14 +78,20 @@ public class CommentController {
     public String deleteComment(@PathVariable Long trackId, @PathVariable Long commentId) {
         RsData<Void> deleteCmtRsData = commentService.deleteComment(commentId, rq.getMember().getId());
 
-        return rq.redirectWithMsg("/track/"+trackId+"/comment",deleteCmtRsData);
+        return rq.redirectWithMsg("/track/" + trackId + "/comment", deleteCmtRsData);
     }
-//todo 수정
-//    @PreAuthorize("isAuthenticated()")
-//    @PatchMapping("/track/{trackId}/comment/{commentId}")
-//    public String modifyComment(@PathVariable Long trackId, @PathVariable Long commentId, String modifyContent) {
-//        RsData<Comment> modifyCommentRsData = commentService.modifyComment(commentId, modifyContent);
-//
-//        return rq.redirectWithMsg("/track/"+trackId+"/comment",modifyCommentRsData);
-//    }
+
+    //todo 수정
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/track/{trackId}/comment/{commentId}/modify")
+    public String modifyComment(
+            @PathVariable Long trackId,
+            @PathVariable Long commentId,
+            String modifyComment
+    ) {
+        RsData<Comment> modifyCommentRsData =
+                commentService.modifyComment(commentId, modifyComment, rq.getMember());
+
+        return rq.redirectWithMsg("/track/" + trackId + "/comment", modifyCommentRsData);
+    }
 }

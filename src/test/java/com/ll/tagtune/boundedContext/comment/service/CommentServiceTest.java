@@ -2,6 +2,7 @@ package com.ll.tagtune.boundedContext.comment.service;
 
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
+import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import com.ll.tagtune.boundedContext.comment.dto.CommentResponseDTO;
 import com.ll.tagtune.boundedContext.comment.entity.Comment;
 import com.ll.tagtune.boundedContext.comment.repository.CommentRepository;
@@ -13,6 +14,7 @@ import com.ll.tagtune.boundedContext.reply.repository.ReplyRepository;
 import com.ll.tagtune.boundedContext.reply.service.ReplyService;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
+import groovy.transform.AutoImplement;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,6 +45,8 @@ class CommentServiceTest {
     @Autowired
     private MemberService memberService;
     @Autowired
+    private ArtistService artistService;
+    @Autowired
     private TrackService trackService;
     private Member member1;
     private Member member2;
@@ -60,7 +64,9 @@ class CommentServiceTest {
         member1 = memberService.join("parkkhee_%d".formatted(num),"1234").getData();
         member2 = memberService.join("pahee_%d".formatted(num),"1234").getData();
 
-        track = trackService.createTrack(content, Artist.builder().build());
+        Artist artist = artistService.createArtist("박관희");
+
+        track = trackService.createTrack(content, artist);
 
         comments = IntStream.rangeClosed(1, 10)
                 .mapToObj(i -> commentService.saveComment(content2.formatted(num, i), track, member1).getData())
@@ -93,7 +99,7 @@ class CommentServiceTest {
         Comment comment = comments[0];
 
         String content = "abdbdsdfawead";
-        RsData<Comment> commentRsData = commentService.modifyComment(comment.getId(), content);
+        RsData<Comment> commentRsData = commentService.modifyComment(comment.getId(), content, member1);
 
         assertThat(commentRsData.getData().getContent()).isEqualTo(content);
     }
@@ -142,10 +148,23 @@ class CommentServiceTest {
         assertThat(commentRepository.findById(parentComment.getId())).isEmpty();
     }
 
+    @Autowired
+    ReplyRepository replyRepository;
+
+    //todo 수정 테스트 다시
     @Test
-    @DisplayName("댓글, 대댓글 다 보여주기")
+    @DisplayName("대댓글 수정하기")
     void t008() throws Exception{
+        String newContent = "newnewnew";
+        String oriContent = comments[0].getContent();
 
+        Member member = memberService.join("parkkhee_%d".formatted(num),"1234").getData();
+        RsData<Reply> replyRsData = replyService.saveReply(member, comments[0].getId(), oriContent);
 
+        RsData<Reply> newReplyRsData =
+                replyService.modifyReply(replyRsData.getData().getId(),
+                        comments[0].getId(), newContent, member.getId());
+
+        assertThat(newReplyRsData.getData().getContent()).isEqualTo(newContent);
     }
 }

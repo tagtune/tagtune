@@ -4,6 +4,6 @@ import com.ll.tagtune.boundedContext.comment.dto.CommentResponseDTO;
 
 import java.util.List;
 
-public interface CommentCustomRepository {
+public interface CommentRepositoryCustom {
     List<CommentResponseDTO> getComments(Long trackId);
 }

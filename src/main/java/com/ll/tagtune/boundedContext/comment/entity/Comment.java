@@ -29,7 +29,7 @@ public class Comment extends BaseEntity {
     private Member member;
     @ManyToOne
     private Track track;
-    @OneToMany(mappedBy = "parent", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "parent")
     @OrderBy("createDate desc")
     @LazyCollection(LazyCollectionOption.EXTRA)
     @ToString.Exclude
