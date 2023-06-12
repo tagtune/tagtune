@@ -37,7 +37,7 @@
             form.iReply.value == form.iReply.value.trim();
 
             if (form.iReply.value == "") {
-                toastWarning('댓글을 입력해주세요.');
+                toastWarning('덧글을 입력해주세요.');
                 form.iReply.focus();
                 return;
             }
@@ -45,9 +45,19 @@
             form.submit();
         }
 
-        function toggleContent(commentId) {
-            console.log("토글컨텐트 사용");
+        function ModifyReply__submit(form) {
+            form.modifyReply.value == form.modifyReply.value.trim();
 
+            if (form.modifyReply.value == "") {
+                toastWarning('덧글을 입력해주세요.');
+                form.modifyReply.focus();
+                return;
+            }
+
+            form.submit();
+        }
+
+        function toggleContent(commentId) {
             const content = document.getElementById("saveReplyT_" + commentId);
             const toggleIcon = document.getElementById("saveCmt_" + commentId);
 
@@ -57,6 +67,26 @@
             } else {
                 content.style.display = "none";
                 toggleIcon.innerText = "+";
+            }
+        }
+
+        function modifyComment(commentId) {
+            const content = document.getElementById("modifyCommentT_" + commentId);
+
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        }
+
+        function modifyReply(replyId) {
+            const content = document.getElementById("modifyReplyT_" + replyId);
+
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
             }
         }
     </script>
@@ -92,14 +122,15 @@
                                             <div class="flex justify-center items-center ml-5"
                                                  th:text="${comment.memberName}"></div>
                                         </div>
+
                                         <!--                                            댓글 삭제, 수정, 작성, 확인-->
                                         <div class="flex">
-<!--                                            댓글수정-->
+                                            <!--                                            댓글수정-->
                                             <div>
                                                 <button th:id="dBtn_+${comment.commentId}"
+                                                        th:commentId="${comment.commentId}"
                                                         class="btn btn-primary btn-sm mt-2 w-[40px] mb-5"
-                                                        th:attr="data-comment-id=${comment.commentId}"
-                                                        onclick="$(this).next().submit();">
+                                                        onclick="modifyComment(this.getAttribute('commentId'))">
                                                     <span class="">수정</span>
                                                 </button>
                                                 <form hidden th:action=
@@ -137,12 +168,11 @@
                                             <div class="ml-3">
                                                 <button th:id="shBtn_+${comment.commentId}"
                                                         class="btn btn-primary btn-sm mt-2 w-[80px] mb-5"
-                                                        th:attr="data-comment-id=${comment.commentId}"
                                                         onclick="$(this).next().submit();">
                                                     <span class="">덧글 확인</span>
                                                 </button>
                                                 <form hidden th:action=
-                                                        "@{|/track/${comment.trackId}/comment/${comment.commentId}|}"
+                                                        "@{|/track/${comment.trackId}/comment?commentId=${comment.commentId}|}"
                                                       method="GET">
                                                     <input type="hidden" name="_method">
                                                 </form>
@@ -150,6 +180,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="flex flex-col w-full">
                                     <div class="flex rounded-lg ring-2 outline
                                         outline-offset-2 outline-2 outline-blue-500 max-w-2xl w-full">
@@ -161,38 +192,64 @@
                                         <ul>
                                             <li th:each="reply : ${replies}"
                                                 th:if="${reply.parent.id == comment.commentId}"
-                                                class="flex justify-between">
-                                                <div class="flex items-center ms-5">
-                                                    <img alt="..."
-                                                         class="rounded-circle h-4 w-4"
-                                                         src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
-                                                    <p class="ml-2" th:text="${reply.member.username}"></p>
-                                                    <p class="ml-4" th:text="${reply.content}+': '"></p>
-                                                </div>
-                                                <div class="flex">
-                                                    <div class="flex items-center">
-                                                        <div class="ml-3">
-                                                            <button th:id="drBtn_+${reply.id}"
-                                                                    class="btn btn-primary btn-sm w-[80px] mt-2 mb-5"
-                                                                    th:attr="data-comment-id=${reply.id}"
-                                                                    onclick="$(this).next().submit();">
-                                                                <span class="">덧글 삭제</span>
-                                                            </button>
-                                                            <form hidden th:action=
-                                                                    "@{|/track/${comment.trackId}/comment/${reply.id}|}"
-                                                                  method="POST">
-                                                                <input type="hidden" name="_method" value="DELETE">
-                                                            </form>
+                                                >
+                                                <div class="flex flex-col">
+                                                    <div class="flex justify-between">
+                                                        <div class="flex items-center ms-5">
+                                                            <img alt="..."
+                                                                 class="rounded-circle h-4 w-4"
+                                                                 src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
+                                                            <p class="ml-2" th:text="${reply.member.username}"></p>
+                                                            <p class="ml-4" th:text="${reply.content}"></p>
                                                         </div>
+                                                        <div class="flex">
+                                                            <div class="flex items-center">
+                                                                <div class="ml-3">
+                                                                    <button th:id="drBtn_+${reply.id}"
+                                                                            class="btn btn-primary btn-sm w-[80px] mt-2 mb-5"
+                                                                            th:attr="data-comment-id=${reply.id}"
+                                                                            onclick="$(this).next().submit();">
+                                                                        <span class="">덧글 삭제</span>
+                                                                    </button>
+                                                                    <form hidden th:action=
+                                                                            "@{|/track/${comment.trackId}/comment/${reply.id}|}"
+                                                                          method="POST">
+                                                                        <input type="hidden" name="_method" value="DELETE">
+                                                                    </form>
+                                                                </div>
 
-                                                        <!--대댓글 수정-->
-                                                        <div class="ml-3">
-                                                            <button th:id="srBtn_+${reply.id}"
-                                                                    class="btn btn-primary btn-sm mt-2 w-[80px] mb-5"
-                                                                    th:attr="data-comment-id=${comment.commentId}"
-                                                                    onclick="ModifyComment__submit(this)">
-                                                                <span class="">덧글 수정</span>
-                                                            </button>
+                                                                <!--대댓글 수정-->
+                                                                <div class="ml-3">
+                                                                    <button th:id="mrBtn_+${reply.id}"
+                                                                            th:replyId="${reply.id}"
+                                                                            class="btn btn-primary btn-sm mt-2 w-[80px] mb-5"
+                                                                            onclick="modifyReply(this.getAttribute('replyId'))">
+                                                                        <span class="">덧글 수정</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <!--                                                대댓글 수정 관련-->
+                                                    <div th:id="modifyReplyT_+${reply.id}"
+                                                         class="flex mt-3 w-full hidden">
+                                                        <div>
+                                                            <form th:action=
+                                                                          "@{|/track/${comment.trackId}/${comment.commentId}/${reply.id}/modify|}"
+                                                                  method="POST"
+                                                                  onsubmit="ModifyReply__submit(this); return false;"
+                                                                  class="flex flex-grow mb-4">
+                                                                <input type="hidden" name="_method" value="PATCH">
+                                                                <textarea class="form-control grow"
+                                                                          name="modifyReply" type="text"
+                                                                          th:placeholder="${reply.content}"
+                                                                          rows="2"></textarea>
+
+                                                                <input class="btn btn-primary flex-none btn-sm mt-5 mb-5"
+                                                                       type="submit" value="덧글수정">
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -202,24 +259,42 @@
 
                                     </div>
 
-<!--                                    댓글 관련-->
+                                    <!--                                    댓글 관련-->
                                     <div th:id="saveReplyT_+${comment.commentId}"
                                          class="flex mt-3 w-full hidden">
-                                    <div>
-                                        <form th:action="@{|/track/${comment.trackId}/comment/${comment.commentId}/reply|}"
-                                              method="POST"
-                                              onsubmit="SaveReply__submit(this); return false;"
-                                              class="flex flex-grow mb-4">
+                                        <div>
+                                            <form th:action="@{|/track/${comment.trackId}/comment/${comment.commentId}/reply|}"
+                                                  method="POST"
+                                                  onsubmit="SaveReply__submit(this); return false;"
+                                                  class="flex flex-grow mb-4">
                                             <textarea class="form-control grow"
                                                       name="iReply" type="text"
                                                       placeholder="덧글을 남겨보세요"
-                                                rows="2"></textarea>
-                                            <input class="btn btn-primary flex-none btn-sm mt-5 mb-5"
-                                                    type="submit" value="댓글등록">
-                                        </form>
-
+                                                      rows="2"></textarea>
+                                                <input class="btn btn-primary flex-none btn-sm mt-5 mb-5"
+                                                       type="submit" value="댓글등록">
+                                            </form>
+                                        </div>
                                     </div>
 
+                                    <!--                                    댓글 수정 관련-->
+                                    <div th:id="modifyCommentT_+${comment.commentId}"
+                                         class="flex mt-3 w-full hidden">
+                                        <div>
+                                            <form th:action="@{|/track/${comment.trackId}/comment/${comment.commentId}/modify|}"
+                                                  method="POST"
+                                                  onsubmit="ModifyComment__submit(this); return false;"
+                                                  class="flex flex-grow mb-4">
+                                                <input type="hidden" name="_method" value="PATCH">
+                                                <textarea class="form-control grow"
+                                                          name="modifyComment" type="text"
+                                                          th:placeholder="${comment.content}"
+                                                          rows="2"></textarea>
+
+                                                <input class="btn btn-primary flex-none btn-sm mt-5 mb-5"
+                                                       type="submit" value="댓글수정">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </th:block>
