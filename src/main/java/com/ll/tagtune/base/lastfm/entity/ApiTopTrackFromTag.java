@@ -12,7 +12,6 @@ import java.util.List;
 public class ApiTopTrackFromTag {
     public List<TrackSearchDTO> getTracks() {
         return result.tracks.stream()
-//                .sorted(Comparator.comparingLong(t -> t.attr.rank != null ? t.attr.rank : 0))
                 .map(t -> TrackSearchDTO.builder()
                         .name(t.name)
                         .artist(t.artist.name)
