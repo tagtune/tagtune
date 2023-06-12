@@ -45,8 +45,6 @@
         }
 
         function toggleContent(commentId) {
-            console.log("토글컨텐트 사용");
-
             const content = document.getElementById("saveReplyT_" + commentId);
             const toggleIcon = document.getElementById("saveCmt_" + commentId);
 
@@ -56,6 +54,16 @@
             } else {
                 content.style.display = "none";
                 toggleIcon.innerText = "+";
+            }
+        }
+
+        function modifyComment(commentId) {
+            const content = document.getElementById("modifyCommentT_" + commentId);
+
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
             }
         }
     </script>
@@ -68,7 +76,8 @@
         <section class="mb-5 max-w-2xl w-full">
             <div class="card bg-light">
                 <!-- Comment form-->
-                <form class="flex flex-col flex-grow mb-4" method="POST" onsubmit="SaveComment__submit(this); return false;"
+                <form class="flex flex-col flex-grow mb-4" method="POST"
+                      onsubmit="SaveComment__submit(this); return false;"
                       th:action>
                     <textarea class="form-control" name="iComment" placeholder="댓글을 남겨보세요" rows="3"
                               type="text"></textarea>
@@ -98,14 +107,14 @@
                                             <div class="flex" th:if="${comment.getMemberId()}==${member.getId()}">
                                                 <div>
                                                     <button class="btn btn-primary btn-sm mt-2 w-[40px] mx-1 mb-5"
-                                                            onclick="$(this).next().submit();"
+                                                            onclick="modifyComment(this.getAttribute(`commentId`))"
                                                             th:attr="data-comment-id=${comment.commentId}"
+                                                            th:commentId="${comment.commentId}"
                                                             th:id="dBtn_+${comment.commentId}">
                                                         <span class="">수정</span>
                                                     </button>
                                                     <form hidden method="POST"
-                                                          th:action=
-                                                            "@{|/category/tag/${comment.commentId}|}">
+                                                          th:action="@{|/category/tag/${comment.commentId}|}">
                                                         <input name="_method" type="hidden" value="PATCH">
                                                     </form>
                                                 </div>
@@ -119,7 +128,7 @@
                                                     </button>
                                                     <form hidden method="POST"
                                                           th:action=
-                                                            "@{|/category/tag/${comment.commentId}|}">
+                                                                  "@{|/category/tag/${comment.commentId}|}">
                                                         <input name="_method" type="hidden" value="Delete">
                                                     </form>
                                                 </div>
@@ -159,7 +168,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div th:if="${reply.getMemberId()}== ${member.getId()}">
+                                            <div class="flex" th:if="${reply.getMemberId()}== ${member.getId()}">
                                                 <button class="btn btn-primary btn-sm mt-2 w-[40px] mx-1 mb-5"
                                                         onclick="$(this).next().submit();"
                                                         th:attr="data-reply-id=${reply.replyId}"
@@ -168,7 +177,7 @@
                                                 </button>
                                                 <form hidden method="POST"
                                                       th:action=
-                                                        "@{|/category/tag/${comment.commentId}/${reply.ReplyId}|}">
+                                                              "@{|/category/tag/${comment.commentId}/${reply.ReplyId}|}">
                                                     <input name="_method" type="hidden" value="DELETE">
                                                 </form>
                                             </div>
@@ -189,6 +198,23 @@
                                                       type="text"></textarea>
                                             <input class="btn btn-primary flex-none btn-sm mx-2 mt-5 mb-5"
                                                    type="submit" value="댓글등록">
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="flex mt-3 w-full hidden" th:id="modifyCommentT_+${comment.commentId}">
+                                    <div>
+                                        <form class="flex flex-grow mb-4"
+                                              method="POST"
+                                              onsubmit="ModifyComment__submit(this); return false;"
+                                              th:action="@{|/category/tag/${comment.commentId}|}">
+                                            <input name="_method" type="hidden" value="PATCH">
+                                            <textarea class="form-control grow"
+                                                      name="modifyContent" rows="2"
+                                                      th:placeholder="${comment.content}"
+                                                      type="text"></textarea>
+
+                                            <input class="btn btn-primary flex-none btn-sm ml-5 mt-5 mb-5"
+                                                   type="submit" value="댓글수정">
                                         </form>
                                     </div>
                                 </div>

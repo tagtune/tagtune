@@ -78,12 +78,11 @@ public class TagCommentController {
         return rq.redirectWithMsg("/category/tag?id=" + tagBoardId, deleteCmtRsData);
     }
 
-    // todo 수정버튼 누르면 입력창 나오게
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/tag/{id}")
     public String modifyComment(@PathVariable Long id, String modifyContent) {
         Long tagBoardId = tagCommentService.findById(id).getTagBoard().getId();
-        RsData<TagComment> modifyCommentRsData = tagCommentService.modifyComment(id, modifyContent);
+        RsData<TagComment> modifyCommentRsData = tagCommentService.modifyComment(id, modifyContent, rq.getMember());
 
         return rq.redirectWithMsg("/category/tag?id=" + tagBoardId, modifyCommentRsData);
     }

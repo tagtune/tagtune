@@ -33,15 +33,20 @@ public class TagCommentService {
         return RsData.of("S-1", "댓글이 정상적으로 등록되었습니다.", tagComment);
     }
 
-    public RsData<TagComment> modifyComment(final Long id, String content) {
-        Optional<TagComment> commentById = tagCommentRepository.findById(id);
+    public RsData<TagComment> modifyComment(final Long id, String content, Member member) {
+        Optional<TagComment> oComment = tagCommentRepository.findById(id);
 
-        if (commentById.isEmpty()) {
+        if (oComment.isEmpty()) {
             return RsData.of("F-1", "해당되는 id의 댓글이 없습니다.");
         }
-        TagComment tagComment = commentById.get();
 
-        TagComment modifyComment = tagComment.toBuilder()
+        if (!oComment.get().getMember().equals(member)) {
+            return RsData.of("F-2", "다른 유저입니다.");
+        }
+
+        TagComment comment = oComment.get();
+
+        TagComment modifyComment = comment.toBuilder()
                 .content(content)
                 .build();
 
