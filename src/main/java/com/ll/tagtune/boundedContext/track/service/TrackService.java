@@ -4,13 +4,16 @@ import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
 import com.ll.tagtune.base.lastfm.entity.ApiTrackInfoResult;
 import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
+import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
+import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepository;
+import com.ll.tagtune.boundedContext.track.repository.TrackRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,7 @@ public class TrackService {
     private final TagService tagService;
     private final TrackRepository trackRepository;
     private final TrackTagService trackTagService;
+    private final TrackRepositoryImpl trackRepositoryImpl;
 
     @Transactional(readOnly = true)
     public Optional<Track> getTrackByTitleAndArtist(final String title, final Long artistId) {
@@ -104,5 +108,26 @@ public class TrackService {
         trackRepository.save(track);
 
         return track;
+    }
+
+    @Transactional(readOnly = true)
+    public RsData<Track> getTrack(final Long id) {
+        return trackRepository.findById(id)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public RsData<TrackDetailDTO> getTrackDetail(final Long id) {
+        return trackRepositoryImpl.getTrackDetail(id)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public RsData<TrackDetailDTO> getTrackDetailWithVote(final Long id, final Long memberId) {
+        return trackRepositoryImpl.getTrackDetailWithVote(id, memberId)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
     }
 }
