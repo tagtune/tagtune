@@ -1,12 +1,7 @@
 package com.ll.tagtune.boundedContext.memberFavor.service;
 
-import com.ll.tagtune.boundedContext.album.entity.Album;
-import com.ll.tagtune.boundedContext.album.service.AlbumService;
-import com.ll.tagtune.boundedContext.artist.entity.Artist;
-import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
-import com.ll.tagtune.boundedContext.memberFavor.entity.FavorBase;
 import com.ll.tagtune.boundedContext.memberFavor.entity.FavorTag;
 import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
@@ -32,10 +27,6 @@ class FavorServiceTest {
     @Autowired
     private MemberService memberService;
     @Autowired
-    private ArtistService artistService;
-    @Autowired
-    private AlbumService albumService;
-    @Autowired
     private TagService tagService;
     @Autowired
     private FavorService favorService;
@@ -49,7 +40,7 @@ class FavorServiceTest {
 
         FavorTag favor = favorService.create(member, tag);
 
-        assertThat(favor.getData()).isEqualTo(tag);
+        assertThat(favor.getTag()).isEqualTo(tag);
     }
 
     @Test
@@ -57,22 +48,16 @@ class FavorServiceTest {
     void t002() throws Exception {
         final Member member = memberService.findByUsername("user1")
                 .orElseThrow(() -> new UsernameNotFoundException(""));
-        final Artist artist = artistService.createArtist("계릫");
-        final Album album = albumService.createAlbum("흎폼", artist);
         final Tag tag = tagService.createTag("뀴유");
 
-        FavorBase[] favors = {
-                favorService.create(member, artist),
-                favorService.create(member, album),
+        FavorTag[] favors = {
                 favorService.create(member, tag)
         };
 
         assertThat(favors).isNotEmpty();
-        assertThat(Arrays.stream(favors).map(FavorBase::getData).filter(o -> o.equals(artist))).isNotEmpty();
-        assertThat(Arrays.stream(favors).map(FavorBase::getData).filter(o -> o.equals(album))).isNotEmpty();
-        assertThat(Arrays.stream(favors).map(FavorBase::getData).filter(o -> o.equals(tag))).isNotEmpty();
+        assertThat(Arrays.stream(favors).map(FavorTag::getTag).filter(o -> o.equals(tag))).isNotEmpty();
 
-        FavorBase[] favorBases = favorService.getFavorTags(member.getId()).toArray(FavorBase[]::new);
+        FavorTag[] favorTags = favorService.getFavorTags(member.getId()).toArray(FavorTag[]::new);
 
         // assert favor and favorBase is equal
     }

@@ -9,6 +9,8 @@ import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
+import com.ll.tagtune.boundedContext.memberFavor.entity.FavorTag;
+import com.ll.tagtune.boundedContext.memberFavor.service.FavorService;
 import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.tagBoard.entity.TagBoard;
@@ -22,6 +24,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -34,7 +37,8 @@ public class NotProd {
             TagService tagService,
             TagBoardService tagBoardService,
             ArtistService artistService,
-            AlbumService albumService
+            AlbumService albumService,
+            FavorService favorService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -84,10 +88,15 @@ public class NotProd {
 
                 Track[] tracks = Arrays.stream(rawTracks)
                         .map(trackService::setTrackInfo)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .toArray(Track[]::new);
 
                 // for (Track track : result) System.out.println("[D2BUG]: " + track);
 
+                FavorTag[] favorTags = IntStream.range(0, 3)
+                        .mapToObj(i -> favorService.create(members[0], tags[i]))
+                        .toArray(FavorTag[]::new);
             }
         };
     }

@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +24,11 @@ public class TagVoteService {
     @Transactional(readOnly = true)
     public Optional<TagVote> findById(final Long id) {
         return tagVoteRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TagVote> findAllByMemberId(final Long memberId) {
+        return tagVoteRepository.findAllByMember_Id(memberId);
     }
 
     @Transactional(readOnly = true)

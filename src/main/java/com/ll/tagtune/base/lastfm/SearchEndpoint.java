@@ -1,9 +1,8 @@
 package com.ll.tagtune.base.lastfm;
 
 import com.ll.tagtune.base.appConfig.AppConfig;
-import com.ll.tagtune.base.lastfm.entity.ApiTopTrackFromTag;
-import com.ll.tagtune.base.lastfm.entity.ApiTrackInfoResult;
-import com.ll.tagtune.base.lastfm.entity.ApiTrackSearchResult;
+import com.ll.tagtune.base.lastfm.entity.*;
+import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -11,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SearchEndpoint {
@@ -47,7 +48,8 @@ public class SearchEndpoint {
     private static <T> T getResponse(HttpMethod httpMethod, String body, String url, Class<T> responseType) {
         RestTemplate rest = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
-        System.out.println(url);
+        // debug
+        // System.out.println(url);
         httpHeaders.add("Host", BASE_HOST);
         httpHeaders.add("Content-type", "application/json");
         HttpEntity<String> requestEntity = new HttpEntity<>(body, httpHeaders);
@@ -94,13 +96,14 @@ public class SearchEndpoint {
      * @param artistName
      * @return track 세부정보
      */
-    public static ApiTrackInfoResult getTrackInfo(String trackName, String artistName) {
+    public static TrackInfoDTO getTrackInfo(String trackName, String artistName) {
         String body = "";
         String url = BASE_URL + "track.getInfo"
                 + setTrack(trackName)
                 + setArtist(artistName);
 
-        return getResponse(HttpMethod.GET, body, url, ApiTrackInfoResult.class);
+        return getResponse(HttpMethod.GET, body, url, ApiTrackInfoResult.class).getTrackInfoDTO()
+                .orElseThrow(() -> new RuntimeException("해당하는 데이터가 없습니다."));
     }
 
     /**
@@ -109,11 +112,23 @@ public class SearchEndpoint {
      * @param tagName
      * @return tag 가 등록된 track 목록
      */
-    public static ApiTopTrackFromTag getTracksFromTag(String tagName) {
+    public static List<TrackSearchDTO> getTracksFromTag(String tagName) {
         String body = "";
         String url = BASE_URL + "tag.gettoptracks"
                 + setTag(tagName);
 
-        return getResponse(HttpMethod.GET, body, url, ApiTopTrackFromTag.class);
+        return getResponse(HttpMethod.GET, body, url, ApiTopTrackFromTag.class).getTracks();
+    }
+
+    /**
+     * 현재 인기 리스트를 가져옵니다.
+     *
+     * @return Tracks
+     */
+    public static List<TrackSearchDTO> getTrendingList() {
+        String body = "";
+        String url = BASE_URL + "chart.gettoptracks";
+
+        return getResponse(HttpMethod.GET, body, url, ApiTopTracksFromTrending.class).getTracks();
     }
 }
