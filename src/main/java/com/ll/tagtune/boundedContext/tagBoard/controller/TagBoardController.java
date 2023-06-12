@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("usr/category")
+@RequestMapping("category")
 @RequiredArgsConstructor
 public class TagBoardController {
     private final TagBoardService tagBoardService;
@@ -38,16 +38,5 @@ public class TagBoardController {
         model.addAttribute("top3TagBoardList", top3TagBoardList);
         model.addAttribute("kw", kw);
         return "usr/category/tagBoard";
-    }
-
-    @GetMapping("/tag")
-    public String showTag(Model model, @RequestParam(value = "id", defaultValue = "") Long id) {
-        if (id == null) {
-            return rq.historyBack("잘못된 접근입니다.");
-        }
-        TagBoard tagBoard = tagBoardService.findById(id).get();
-        model.addAttribute("tagBoard", tagBoard);
-
-        return "usr/category/tag";
     }
 }

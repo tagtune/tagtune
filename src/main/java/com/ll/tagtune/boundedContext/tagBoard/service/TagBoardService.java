@@ -50,8 +50,6 @@ public class TagBoardService {
             tagBoard = TagBoard.builder()
                     .tag(tag)
                     .tagBoardName(tag.getTagName())
-                    // todo 아래 코드 지워야 함
-                    .popularity(tag.getId())
                     .build();
             tagBoardRepository.save(tagBoard);
         }
