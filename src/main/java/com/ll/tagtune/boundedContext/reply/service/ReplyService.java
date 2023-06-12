@@ -2,7 +2,7 @@ package com.ll.tagtune.boundedContext.reply.service;
 
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.comment.entity.Comment;
-import com.ll.tagtune.base.event.EventAfterDelete;
+import com.ll.tagtune.base.event.EventAfterReplyDelete;
 import com.ll.tagtune.boundedContext.comment.repository.CommentRepository;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.reply.entity.Reply;
@@ -25,9 +25,8 @@ public class ReplyService {
 
     /**
      * 대댓글 메서드
-     * */
-    public RsData<Reply> saveReply(final Member member, final Long parentId, final String content){
-
+     */
+    public RsData<Reply> saveReply(final Member member, final Long parentId, final String content) {
         Optional<Comment> parentComment = commentRepository.findById(parentId);
         if (parentComment.isEmpty()) {
             return RsData.of("F-3", "해당되는 부모 id의 댓글이 없습니다.");
@@ -43,16 +42,48 @@ public class ReplyService {
 
         parentComment.get().addReplies(reply);
 
-        return RsData.of("S-1", "대댓글이 정상적으로 등록되었습니다.",reply);
+        return RsData.of("S-1", "대댓글이 정상적으로 등록되었습니다.", reply);
     }
 
-    private void deleteReply(Reply reply){
+    public RsData<Reply> modifyReply(
+            final Long replyId,
+            final Long parentCommentId,
+            final String content,
+            final Long memberId
+    ) {
+        Optional<Comment> parentComment = commentRepository.findById(parentCommentId);
+        if (parentComment.isEmpty()) {
+            return RsData.of("F-1", "댓글에 대한 잘못된 접근입니다.");
+        }
+
+        Optional<Reply> oReply = replyRepository.findById(replyId);
+        if (!oReply.get().getMember().getId().equals(memberId))
+            return RsData.of("F-2", "잘못된 접근입니다.");
+
+        if (oReply.isEmpty()) {
+            return RsData.of("F-3", "대댓글에 대한 잘못된 접근입니다.");
+        }
+
+        parentComment.get().deleteReply(oReply.get()); //전에 있던 reply를 지운다.
+
+        Reply newReply = oReply.get().toBuilder()
+                .content(content)
+                .build();
+
+        replyRepository.save(newReply);
+
+        parentComment.get().addReplies(newReply); //새로 수정된 reply를 추가한다.
+
+        return RsData.of("S-1", "대댓글이 정상적으로 등록되었습니다.", newReply);
+    }
+
+    private void deleteReply(Reply reply) {
         replyRepository.delete(reply);
     }
 
     /**
      * 대댓글도 삭제, 부모댓글도 삭제시 DB 삭제
-     * */
+     */
     public RsData<Void> deleteReply(final Long id, final Long memberId) {
         Optional<Reply> oReply = replyRepository.findById(id);
         if (oReply.isEmpty())
@@ -70,7 +101,7 @@ public class ReplyService {
 //        reply.getParent().deleteReply(reply);
 
         deleteReply(reply);
-        publisher.publishEvent(new EventAfterDelete(this, reply.getParent()));
+        publisher.publishEvent(new EventAfterReplyDelete(reply.getParent()));
 
         return RsData.of("S-1", "대댓글이 삭제되었습니다.");
     }
