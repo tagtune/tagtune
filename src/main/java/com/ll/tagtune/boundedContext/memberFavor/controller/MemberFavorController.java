@@ -19,12 +19,12 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/favor")
 @RequiredArgsConstructor
+@PreAuthorize("isAuthenticated()")
 public class MemberFavorController {
     private final FavorService favorService;
     private final TagService tagService;
     private final Rq rq;
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
     public String list(Model model) {
         List<FavorTagDTO> favorTags = favorService.getFavorTags(rq.getMember().getId())
@@ -42,7 +42,6 @@ public class MemberFavorController {
         return "usr/favor/list";
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/addTag")
     public String addFavorTag(TagDTO tagDTO) {
         Optional<Tag> optionalTag = tagService.findByName(tagDTO.getTagName());
@@ -52,7 +51,6 @@ public class MemberFavorController {
         return rq.redirectWithMsg("/favor/list", "태그가 추가되었습니다.");
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{favorTagId}")
     public String deleteFavorTag(@PathVariable Long favorTagId) {
         RsData<Void> rsData = favorService.delete(rq.getMember(), favorTagId);
