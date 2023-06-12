@@ -2,7 +2,6 @@ package com.ll.tagtune.boundedContext.track.service;
 
 import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
-import com.ll.tagtune.base.lastfm.entity.ApiTrackInfoResult;
 import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
@@ -11,6 +10,7 @@ import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
+import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepository;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepositoryImpl;
@@ -85,29 +85,31 @@ public class TrackService {
      * @param rawTrack 검증되지 않은 Track
      * @return Track with Details
      */
-    public Track setTrackInfo(final TrackSearchDTO rawTrack) {
-        final ApiTrackInfoResult.Track result = SearchEndpoint.getTrackInfo(
+    public Optional<Track> setTrackInfo(final TrackSearchDTO rawTrack) {
+        final TrackInfoDTO result = SearchEndpoint.getTrackInfo(
                 rawTrack.name,
                 rawTrack.artist
-        ).track;
+        );
 
-        final Artist artist = artistService.findByArtistName(result.artist.name)
-                .orElseGet(() -> artistService.createArtist(result.artist.name));
+        if (result == null || result.getArtistName() == null) return Optional.empty();
 
-        final String albumTitle = result.album != null ? result.album.title : AppConfig.getNameForNoData();
+        final Artist artist = artistService.findByArtistName(result.getArtistName())
+                .orElseGet(() -> artistService.createArtist(result.getArtistName()));
+
+        final String albumTitle = result.getAlbumName() != null ? result.getAlbumName() : AppConfig.getNameForNoData();
 
         final Album album = albumService.findByNameAndArtistId(albumTitle, artist.getId())
                 .orElseGet(() -> albumService.createAlbum(albumTitle, artist));
 
-        final Track track = createTrack(result.name, artist, album);
-        track.getTags().addAll(result.toptags.tags.stream()
-                .map(rawTag -> tagService.getOrCreateTag(rawTag.name))
+        final Track track = createTrack(result.getTitle(), artist, album);
+        track.getTags().addAll(result.getTags().stream()
+                .map(rawTag -> tagService.getOrCreateTag(rawTag.getTagName()))
                 .map(tag -> trackTagService.connect(track, tag))
                 .toList());
 
         trackRepository.save(track);
 
-        return track;
+        return Optional.of(track);
     }
 
     @Transactional(readOnly = true)

@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/track")
@@ -49,11 +50,11 @@ public class TrackController {
     @PostMapping("/search")
     public String searchResult(TrackSearchDTO searchDTO) {
         if (searchDTO.name.isBlank() || searchDTO.artist.isBlank()) return rq.historyBack("잘못된 접근입니다.");
-        final Long trackId = trackService.getTrackByTitleAndArtist(searchDTO.name, searchDTO.artist)
-                .map(Track::getId)
-                .orElseGet(() -> trackService.setTrackInfo(searchDTO).getId());
+        final Optional<Track> oTrack = trackService.getTrackByTitleAndArtist(searchDTO.name, searchDTO.artist)
+                .or(() -> trackService.setTrackInfo(searchDTO));
 
-        return "redirect:/track/" + trackId;
+        return oTrack.map(track -> "redirect:/track/" + track.getId())
+                .orElseGet(() -> rq.historyBack("잘못된 데이터입니다."));
     }
 
     @GetMapping("/{trackId}")

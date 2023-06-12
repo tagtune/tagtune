@@ -31,8 +31,8 @@ public class MemberFavorController {
                 .stream()
                 .map(tag -> FavorTagDTO.builder()
                         .id(tag.getId())
-                        .tagId(tag.getData().getId())
-                        .name(tag.getData().getTagName())
+                        .tagId(tag.getTag().getId())
+                        .name(tag.getTag().getTagName())
                         .build()
                 )
                 .toList();
