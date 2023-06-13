@@ -75,8 +75,9 @@ public class TrackRepositoryImpl implements TrackRepositoryCustom {
                 .from(trackTag)
                 .join(trackTag.track, track).on(track.id.eq(id))
                 .join(trackTag.tag, tag)
-                .orderBy(trackTag.popularity.desc())
                 .leftJoin(trackTag.tagVotes, tagVote)
+                .on(tagVote.member.id.eq(memberId))
+                .orderBy(trackTag.popularity.desc())
                 .fetch()));
 
         return result;
