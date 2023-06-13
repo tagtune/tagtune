@@ -6,10 +6,6 @@
 <body>
 <main class="flex flex-grow items-center justify-center" layout:fragment="main">
     <script>
-        function Lyric__submit(form) {
-            form.submit(); // 폼 발송
-        }
-
         function SaveComment__submit(form) {
             // iComment 이(가) 올바른지 체크
             form.iComment.value = form.iComment.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
@@ -143,12 +139,9 @@
             </ul>
         </div>
 
-        <div class="flex">
+        <div class="flex flex-col max-w-2xl w-full px-4">
             <a th:href="@{|/track/${trackId}/lyric|}"
                class="btn btn-primary btn-sm mt-2 w-[70px] mb-5 flex-none w-14 h-14">가사보기</a>
-        </div>
-
-        <div class="flex flex-col max-w-2xl w-full px-4">
             <!-- Comments section-->
             <section class="mb-5 max-w-2xl w-full">
                 <div class="card bg-light">
