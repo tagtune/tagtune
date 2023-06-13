@@ -51,8 +51,7 @@ public class TrackController {
     public String searchResult(TrackSearchDTO searchDTO) {
         if (searchDTO.name.isBlank() || searchDTO.artist.isBlank()) return rq.historyBack("잘못된 접근입니다.");
 
-        final Optional<Track> oTrack = trackService.getTrackByTitleAndArtist(searchDTO.name, searchDTO.artist)
-                .or(() -> trackService.setTrackInfo(searchDTO));
+        final Optional<Track> oTrack = trackService.setTrackInfo(searchDTO);
 
         return oTrack.map(track -> "redirect:/track/" + track.getId())
                 .orElseGet(() -> rq.historyBack("잘못된 데이터입니다."));

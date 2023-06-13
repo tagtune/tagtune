@@ -41,6 +41,11 @@ public class TrackService {
         return trackRepository.findByTitleAndArtist_ArtistName(title, artistName);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Track> getTrackByTitleAndArtistidAndAlbumid(final String title, final Long artistId, final Long albumId) {
+        return trackRepository.findByTitleAndArtist_IdAndAlbum_Id(title, artistId, albumId);
+    }
+
     /**
      * API 호출 결과에 title, artist 가 제공될 때 Track 을 생성하는 메소드입니다.
      *
@@ -102,7 +107,11 @@ public class TrackService {
         final Album album = albumService.findByNameAndArtistId(albumTitle, artist.getId())
                 .orElseGet(() -> albumService.createAlbum(albumTitle, artist));
 
+        final Optional<Track> oTrack = getTrackByTitleAndArtistidAndAlbumid(result.get().getTitle(), artist.getId(), album.getId());
+        if (oTrack.isPresent()) return oTrack;
+
         final Track track = createTrack(result.get().getTitle(), artist, album);
+
         track.getTags().addAll(result.get().getTags().stream()
                 .map(tagService::getOrCreateTag)
                 .map(tag -> trackTagService.connect(track, tag))
