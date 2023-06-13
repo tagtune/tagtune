@@ -3,16 +3,21 @@ package com.ll.tagtune.base.initData;
 import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
 import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
+import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.album.service.AlbumService;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
+import com.ll.tagtune.boundedContext.memberFavor.entity.FavorTag;
+import com.ll.tagtune.boundedContext.memberFavor.service.FavorService;
 import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.tagBoard.entity.TagBoard;
 import com.ll.tagtune.boundedContext.tagBoard.service.TagBoardService;
+import com.ll.tagtune.boundedContext.tagVote.entity.TagVote;
+import com.ll.tagtune.boundedContext.tagVote.service.TagVoteService;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +27,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Configuration
@@ -34,7 +40,9 @@ public class NotProd {
             TagService tagService,
             TagBoardService tagBoardService,
             ArtistService artistService,
-            AlbumService albumService
+            AlbumService albumService,
+            FavorService favorService,
+            TagVoteService tagVoteService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -84,10 +92,21 @@ public class NotProd {
 
                 Track[] tracks = Arrays.stream(rawTracks)
                         .map(trackService::setTrackInfo)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .toArray(Track[]::new);
 
                 // for (Track track : result) System.out.println("[D2BUG]: " + track);
 
+                FavorTag[] favorTags = IntStream.range(0, 3)
+                        .mapToObj(i -> favorService.create(members[0], tags[i]))
+                        .toArray(FavorTag[]::new);
+
+                TagVote[] tagVotes = tracks[0].getTags().stream()
+                        .map(tag -> tagVoteService.vote(true, members[0], tag))
+                        .filter(RsData::isSuccess)
+                        .map(RsData::getData)
+                        .toArray(TagVote[]::new);
             }
         };
     }

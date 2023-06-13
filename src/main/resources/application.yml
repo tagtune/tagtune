@@ -38,6 +38,8 @@ custom:
     baseUrl: http://localhost
   image:
     artistUrl: https://i.cdn.com
+  track:
+    recommendSize: 20
   tag:
     pagingSize: 20
   data:

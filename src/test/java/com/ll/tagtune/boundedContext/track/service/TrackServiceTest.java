@@ -5,7 +5,6 @@ import com.ll.tagtune.base.lastfm.entity.ApiTrackSearchResult;
 import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
-import com.ll.tagtune.boundedContext.track.dto.TrackTagDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackTagStatusDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.entity.TrackTag;
@@ -19,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,11 +47,13 @@ class TrackServiceTest {
         final String tgtArtist = "IU";
         ApiTrackSearchResult rsTrack = SearchEndpoint.searchTrack(tgtTitle, tgtArtist);
 
-        Track track = trackService.setTrackInfo(rsTrack.getTracks().stream().findFirst().orElseThrow());
-        assertThat(track.getAlbum().getName()).isNotNull();
+        Optional<Track> oTrack = trackService.setTrackInfo(rsTrack.getTracks().stream().findFirst().orElseThrow());
 
-        List<TrackTag> tags = track.getTags();
-        tags.forEach(System.out::println);
+        assertThat(oTrack.get().getAlbum().getName()).isNotNull();
+
+        List<TrackTag> tags = oTrack.get().getTags();
+        // debug
+        // tags.forEach(System.out::println);
         assertThat(tags).isNotEmpty();
     }
 
@@ -62,7 +64,7 @@ class TrackServiceTest {
         final String tgtArtist = "IU";
         final TrackSearchDTO trackSearchDTO = SearchEndpoint.searchTrack(tgtTitle, tgtArtist)
                 .getTracks().stream().findFirst().orElseThrow();
-        final Track track = trackService.setTrackInfo(trackSearchDTO);
+        final Track track = trackService.setTrackInfo(trackSearchDTO).orElseThrow();
 
         RsData<TrackDetailDTO> trackDTO = trackService.getTrackDetail(track.getId());
         assertThat(trackDTO.isSuccess()).isTrue();

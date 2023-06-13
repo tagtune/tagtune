@@ -1,6 +1,7 @@
 package com.ll.tagtune.boundedContext.track.repository;
 
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
+import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.dto.TrackTagStatusDTO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -77,5 +78,25 @@ public class TrackRepositoryImpl implements TrackRepositoryCustom {
                 .fetch()));
 
         return result;
+    }
+
+    @Override
+    public Optional<TrackInfoDTO> getTrackInfo(final String title, final String artistName) {
+        return Optional.ofNullable(jpaQueryFactory
+                .select(Projections.constructor(
+                        TrackInfoDTO.class,
+                        track.title,
+                        artist.artistName,
+                        album.name,
+                        Projections.list(tag.tagName)
+                ))
+                .from(track)
+                .join(track.artist, artist)
+                .join(track.album, album)
+                .join(track.tags, trackTag)
+                .join(trackTag.tag, tag)
+                .where(track.title.eq(title).and(artist.artistName.eq(artistName)))
+                .fetchFirst()
+        );
     }
 }
