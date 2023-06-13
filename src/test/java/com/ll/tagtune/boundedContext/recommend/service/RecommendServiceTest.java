@@ -35,7 +35,7 @@ class RecommendServiceTest {
     void t001() throws Exception {
         List<TrackInfoDTO> result = recommendService.getFavoriteList(member);
         // debug
-        result.forEach(System.out::println);
+        // result.forEach(System.out::println);
         assertThat(result).isNotEmpty();
     }
 
@@ -44,7 +44,7 @@ class RecommendServiceTest {
     void t002() throws Exception {
         List<TrackInfoDTO> result = recommendService.getPersonalList(member);
         // debug
-        result.forEach(System.out::println);
+        // result.forEach(System.out::println);
         assertThat(result).isNotEmpty();
     }
 }
