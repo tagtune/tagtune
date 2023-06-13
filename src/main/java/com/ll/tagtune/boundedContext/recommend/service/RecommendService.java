@@ -56,7 +56,6 @@ public class RecommendService {
             trackScores.put(track, score);
         }
 
-        // Return top 20 tracks with highest scores
         return trackScores.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(Map.Entry::getKey)
