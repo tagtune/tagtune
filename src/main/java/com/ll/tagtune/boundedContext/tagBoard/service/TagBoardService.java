@@ -38,6 +38,11 @@ public class TagBoardService {
         return tagBoardRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<TagBoard> findByTagBoardName(String name) {
+        return tagBoardRepository.findByTagBoardName(name);
+    }
+
     public TagBoard create(Tag tag) {
         TagBoard tagBoard = TagBoard.builder()
                 .tag(tag)
