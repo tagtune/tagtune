@@ -12,13 +12,13 @@
         <div>
             <h1 class="font-bold text-xl">음악</h1>
             <ul class="flex flex-col gap-4 mt-4" th:if="${!#lists.isEmpty(tracks)}">
-                <li th:each="track, i: ${tracks}">
-                    <h1 class="font-bold text-xl" th:text="${i.count}"></h1>
+                <li th:each="track: ${tracks}">
+                    <h1 class="font-bold text-xl" th:text="${track.rank}"></h1>
                     <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
-                        <input name="name" th:value="${track.name}" type="hidden">
+                        <input name="name" th:value="${track.title}" type="hidden">
                         <input name="artist" th:value="${track.artist}" type="hidden">
                         <button class="link-button" name="submit" type="submit" value="value">
-                            <span th:text="${track.name}"></span>
+                            <span th:text="${track.title}"></span>
                         </button>
                     </form>
                     <div class="badge badge-primary mx-1 my-2">

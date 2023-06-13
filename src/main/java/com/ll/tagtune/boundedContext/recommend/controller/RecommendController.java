@@ -1,6 +1,5 @@
 package com.ll.tagtune.boundedContext.recommend.controller;
 
-import com.ll.tagtune.base.lastfm.SearchEndpoint;
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.boundedContext.recommend.service.RecommendService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class RecommendController {
 
     @GetMapping("/trending")
     public String trending(Model model) {
-        model.addAttribute("tracks", SearchEndpoint.getTrendingList());
+        model.addAttribute("tracks", recommendService.getTrending());
 
         return "usr/recommend/trending";
     }

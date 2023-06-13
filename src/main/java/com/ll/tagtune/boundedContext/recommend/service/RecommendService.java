@@ -6,12 +6,15 @@ import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.memberFavor.entity.FavorTag;
 import com.ll.tagtune.boundedContext.memberFavor.service.FavorService;
+import com.ll.tagtune.boundedContext.recommend.entity.TrendingTrack;
+import com.ll.tagtune.boundedContext.recommend.repository.TrendingRepository;
 import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tagVote.dto.TagVoteCountDTO;
 import com.ll.tagtune.boundedContext.tagVote.service.TagVoteService;
 import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +22,13 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class RecommendService {
     private final TrackService trackService;
     private final FavorService favorService;
     private final TagVoteService tagVoteService;
+    private final TrendingRepository trendingRepository;
 
     private List<TrackInfoDTO> getTrackInfos(final List<String> tagNames) {
         List<TrackInfoDTO> result = new CopyOnWriteArrayList<>();
@@ -38,6 +42,19 @@ public class RecommendService {
         return result;
     }
 
+    private void processTrackSearchDTO(
+            TrackSearchDTO trackSearchDTO,
+            List<TrackInfoDTO> result,
+            List<TrackSearchDTO> emptyTracks
+    ) {
+        trackService.getTrackInfo(trackSearchDTO.getName(), trackSearchDTO.getArtist())
+                .ifPresentOrElse(
+                        result::add,
+                        () -> emptyTracks.add(trackSearchDTO)
+                );
+    }
+
+    @Transactional(readOnly = true)
     public List<TrackInfoDTO> getFavoriteList(final Member member) {
         final List<FavorTag> tags = favorService.getFavorTags(member.getId());
         List<TrackInfoDTO> result = getTrackInfos(tags.stream()
@@ -63,6 +80,7 @@ public class RecommendService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<TrackInfoDTO> getPersonalList(final Member member) {
         final List<TagVoteCountDTO> tags = tagVoteService.getTagVotesCount(member.getId());
         List<TrackInfoDTO> result = getTrackInfos(tags.stream()
@@ -87,15 +105,33 @@ public class RecommendService {
                 .toList();
     }
 
-    private void processTrackSearchDTO(
-            TrackSearchDTO trackSearchDTO,
-            List<TrackInfoDTO> result,
-            List<TrackSearchDTO> emptyTracks
-    ) {
-        trackService.getTrackInfo(trackSearchDTO.getName(), trackSearchDTO.getArtist())
-                .ifPresentOrElse(
-                        result::add,
-                        () -> emptyTracks.add(trackSearchDTO)
-                );
+    /**
+     * 인기 음악을 불러옵니다.
+     *
+     * @return TrendingTracks
+     */
+    public List<TrendingTrack> getTrending() {
+        List<TrendingTrack> result = trendingRepository.findAll();
+
+        return result.isEmpty() ? getTrendingSearchData() : result;
+    }
+
+    /**
+     * lastfm api 의 인기 음악을 갱신합니다.
+     */
+    private List<TrendingTrack> getTrendingSearchData() {
+        // debug
+        // System.out.println("[D2BUG]: Trending Update");
+        List<TrendingTrack> trendingTracks = TrendingTrack.of(SearchEndpoint.getTrendingList());
+        trendingRepository.saveAll(trendingTracks);
+        return trendingTracks;
+    }
+
+    /**
+     * 1시간에 한번 lastfm api 의 인기 음악을 갱신합니다.
+     */
+    @Scheduled(fixedRate = 3600000) // 1시간에 한 번씩 실행
+    private void scheduledTrending() {
+        getTrendingSearchData();
     }
 }
