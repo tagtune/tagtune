@@ -105,6 +105,12 @@ public class SearchEndpoint {
                 .getTrackInfoDTO();
     }
 
+    /**
+     * Track 검색 결과들의 Tag 정보를 갱신합니다
+     *
+     * @param searchDTOs
+     * @return tracks 세부정보
+     */
     public static List<TrackInfoDTO> getTrackInfos(final List<TrackSearchDTO> searchDTOs) {
         Mono<List<ApiTrackInfoResult>> result = Flux.range(0, searchDTOs.size())
                 .flatMap(i -> createWebClient()
