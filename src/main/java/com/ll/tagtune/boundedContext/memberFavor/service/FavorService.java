@@ -23,7 +23,7 @@ public class FavorService {
                 .map(RsData::successOf)
                 .orElseGet(() -> RsData.of("F-1", "해당하는 데이터가 없습니다."));
     }
-
+  
     @Transactional(readOnly = true)
     public List<FavorTag> getFavorTags(final Long memberId) {
         return favorTagRepository.findAllByMember_Id(memberId);

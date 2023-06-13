@@ -46,6 +46,7 @@ public class TrackRepositoryImpl implements TrackRepositoryCustom {
                 .select(Projections.constructor(
                         TrackTagStatusDTO.class,
                         trackTag.id,
+                        tag.id,
                         tag.tagName,
                         trackTag.popularity
                 ))
@@ -66,6 +67,7 @@ public class TrackRepositoryImpl implements TrackRepositoryCustom {
                 .select(Projections.constructor(
                         TrackTagStatusDTO.class,
                         trackTag.id,
+                        tag.id,
                         tag.tagName,
                         trackTag.popularity,
                         tagVote.positive

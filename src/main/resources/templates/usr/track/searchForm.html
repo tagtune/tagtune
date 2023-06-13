@@ -16,12 +16,12 @@
                         </div>
                         <div class="mt-4 flex">
                             <label class="flex flex-col flex-grow">
-                                <input autofocus class="input input-bordered flex flex-grow" name="artistName"
+                                <input autofocus class="input input-bordered flex flex-grow my-1" name="artistName"
                                        onchange="$(this).keyup();"
                                        onkeydown="handleEnterKey(event);"
                                        onpaste="setTimeoutZero(() => $(this).keyup());"
                                        placeholder="원하는 아티스트를 입력하세요" type="text">
-                                <input autofocus class="input input-bordered flex flex-grow" name="trackName"
+                                <input autofocus class="input input-bordered flex flex-grow my-1" name="trackName"
                                        onchange="$(this).keyup();"
                                        onkeydown="handleEnterKey(event);"
                                        onpaste="setTimeoutZero(() => $(this).keyup());"
@@ -75,13 +75,14 @@
             </div>
             <div class="flex flex-wrap max-w-2xl w-full" th:if="${tracks != null &&!tracks.isEmpty()}">
                 <div th:each="track: ${tracks}">
-                    <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
+                    <form class="btn btn-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
                         <input th:value="${track.name}" type="hidden" name="name">
                         <input th:value="${track.artist}" type="hidden" name="artist">
                         <button type="submit" name="submit" value="value" class="link-button">
-                            <span th:text="${track.name}"></span>
-                            <span>-</span>
-                            <span th:text="${track.artist}"></span>
+                            <div class="flex flex-col">
+                                <span class="my-1" th:text="${track.name}"></span>
+                                <span class="flex justify-start my-1" th:text="${track.artist}"></span>
+                            </div>
                         </button>
                     </form>
                 </div>

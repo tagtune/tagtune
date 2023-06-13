@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("usr/category")
+@RequestMapping("category")
 @RequiredArgsConstructor
 public class TagBoardController {
     private final TagBoardService tagBoardService;
-
     /**
      * 검색 필터링에 사용할 키워드 "kw"
      * "kw"가 없을 경우 필터링 하지 않은 모든 tagBoardList 반환
@@ -36,13 +35,5 @@ public class TagBoardController {
         model.addAttribute("top3TagBoardList", top3TagBoardList);
         model.addAttribute("kw", kw);
         return "usr/category/tagBoard";
-    }
-
-    @GetMapping("/tag")
-    public String showTag(Model model, @RequestParam(value = "id") Long id) {
-        TagBoard tagBoard = tagBoardService.findById(id).get();
-        model.addAttribute("tagBoard", tagBoard);
-
-        return "usr/category/tag";
     }
 }

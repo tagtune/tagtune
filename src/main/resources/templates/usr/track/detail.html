@@ -16,27 +16,39 @@
             <h1 class="font-bold text-xl">태그</h1>
             <ul th:if="${!#lists.isEmpty(trackDetail.tags)}" class="flex flex-col gap-4 mt-4">
                 <li th:each="tag: ${trackDetail.tags}">
-                    <a class="badge badge-primary mx-1 my-2" th:href="@{|/tag/${tag.id}|}">
+
+                    <a class="badge badge-primary mx-1 my-2"
+                       th:href="@{|/category/tag?id=${tag.tagId}|}">
                         <span th:text="${tag.tagName}"></span>
                     </a>
-                    <div class="badge badge-primary mx-1 my-2">
+                    <div class="badge badge-secondary mx-1 my-2">
+
                         <span th:text="${tag.voteCount}"></span>
                     </div>
                     <form th:if="${tag.positive != true}" class="badge badge-primary mx-1 my-2" method="POST"
                           th:action="@{|/trackTag/vote/up/${tag.id}|}">
-                        <button type="submit" name="submit" value="value" class="link-button">추천</button>
+
+                        <button class="link-button" name="submit" type="submit" value="value">
+                            <i class="fa-regular fa-thumbs-up"></i>&nbsp;추천
+                        </button>
                     </form>
                     <form th:if="${tag.positive == true}" class="badge badge-primary mx-1 my-2" method="POST"
                           th:action="@{|/trackTag/vote/cancel/${tag.id}|}">
-                        <button type="submit" name="submit" value="value" class="link-button">추천</button>
+                        <button class="link-button" name="submit" type="submit" value="value">
+                            <i class="fa-solid fa-thumbs-up"></i>&nbsp;추천
+                        </button>
                     </form>
                     <form th:if="${tag.positive != false}" class="badge badge-primary mx-1 my-2" method="POST"
                           th:action="@{|/trackTag/vote/down/${tag.id}|}">
-                        <button type="submit" name="submit" value="value" class="link-button">비추천</button>
+                        <button class="link-button" name="submit" type="submit" value="value">
+                            <i class="fa-regular fa-thumbs-down"></i>&nbsp;비추천
+                        </button>
                     </form>
                     <form th:if="${tag.positive == false}" class="badge badge-primary mx-1 my-2" method="POST"
                           th:action="@{|/trackTag/vote/cancel/${tag.id}|}">
-                        <button type="submit" name="submit" value="value" class="link-button">비추천</button>
+                        <button class="link-button" name="submit" type="submit" value="value">
+                            <i class="fa-solid fa-thumbs-down"></i>&nbsp;비추천
+                        </button>
                     </form>
                 </li>
             </ul>

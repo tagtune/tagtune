@@ -11,6 +11,8 @@ public interface TagBoardRepository extends JpaRepository<TagBoard, Long> {
 
     Optional<TagBoard> findById(Long id);
 
+    Optional<TagBoard> findByTagId(final Long tagId);
+
     List<TagBoard> findTop3ByOrderByPopularityDesc();
 
     List<TagBoard> findByTagBoardNameLike(String kw);

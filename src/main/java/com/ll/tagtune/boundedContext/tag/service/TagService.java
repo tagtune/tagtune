@@ -1,9 +1,11 @@
 package com.ll.tagtune.boundedContext.tag.service;
 
+import com.ll.tagtune.base.event.EventAfterCreateTag;
 import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tag.repository.TagRepository;
 import com.ll.tagtune.boundedContext.tag.repository.TagRepositoryImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class TagService {
     private final TagRepository tagRepository;
     private final TagRepositoryImpl tagRepositoryImpl;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional(readOnly = true)
     public Optional<Tag> findById(final Long id) {
@@ -66,6 +69,8 @@ public class TagService {
                 .build();
 
         tagRepository.save(tag);
+
+        publisher.publishEvent(new EventAfterCreateTag(tag));
 
         return tag;
     }
