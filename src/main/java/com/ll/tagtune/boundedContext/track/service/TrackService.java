@@ -2,7 +2,6 @@ package com.ll.tagtune.boundedContext.track.service;
 
 import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.lastfm.SearchEndpoint;
-import com.ll.tagtune.base.lastfm.entity.ApiTrackInfoResult;
 import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.album.entity.Album;
@@ -11,6 +10,7 @@ import com.ll.tagtune.boundedContext.artist.entity.Artist;
 import com.ll.tagtune.boundedContext.artist.service.ArtistService;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
+import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepository;
 import com.ll.tagtune.boundedContext.track.repository.TrackRepositoryImpl;
@@ -85,29 +85,78 @@ public class TrackService {
      * @param rawTrack 검증되지 않은 Track
      * @return Track with Details
      */
-    public Track setTrackInfo(final TrackSearchDTO rawTrack) {
-        final ApiTrackInfoResult.Track result = SearchEndpoint.getTrackInfo(
+    public Optional<Track> setTrackInfo(final TrackSearchDTO rawTrack) {
+        final Optional<TrackInfoDTO> result = SearchEndpoint.getTrackInfo(
                 rawTrack.name,
                 rawTrack.artist
-        ).track;
+        );
 
-        final Artist artist = artistService.findByArtistName(result.artist.name)
-                .orElseGet(() -> artistService.createArtist(result.artist.name));
+        if (result.isEmpty() || result.get().getArtistName() == null) return Optional.empty();
 
-        final String albumTitle = result.album != null ? result.album.title : AppConfig.getNameForNoData();
+        final Artist artist = artistService.findByArtistName(result.get().getArtistName())
+                .orElseGet(() -> artistService.createArtist(result.get().getArtistName()));
+
+        final String albumTitle = result.get().getAlbumName() != null ?
+                result.get().getAlbumName() : AppConfig.getNameForNoData();
 
         final Album album = albumService.findByNameAndArtistId(albumTitle, artist.getId())
                 .orElseGet(() -> albumService.createAlbum(albumTitle, artist));
 
-        final Track track = createTrack(result.name, artist, album);
-        track.getTags().addAll(result.toptags.tags.stream()
-                .map(rawTag -> tagService.getOrCreateTag(rawTag.name))
+        final Track track = createTrack(result.get().getTitle(), artist, album);
+        track.getTags().addAll(result.get().getTags().stream()
+                .map(tagService::getOrCreateTag)
                 .map(tag -> trackTagService.connect(track, tag))
                 .toList());
 
         trackRepository.save(track);
 
-        return track;
+        return Optional.of(track);
+    }
+
+    @Transactional(readOnly = true)
+    public RsData<Track> getTrack(final Long id) {
+        return trackRepository.findById(id)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
+    }
+
+    /**
+     * Member 정보 없이 Track 세부 페이지의 정보를 가져오는 메소드입니다.
+     *
+     * @param id
+     * @return TrackDetailDTO
+     */
+    @Transactional(readOnly = true)
+    public RsData<TrackDetailDTO> getTrackDetail(final Long id) {
+        return trackRepositoryImpl.getTrackDetail(id)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
+    }
+
+    /**
+     * Member TagVote 정보와 함께 Track 세부 페이지의 정보를 가져오는 메소드입니다.
+     *
+     * @param id
+     * @param memberId
+     * @return TrackDetailDTO w TagVote Status
+     */
+    @Transactional(readOnly = true)
+    public RsData<TrackDetailDTO> getTrackDetailWithVote(final Long id, final Long memberId) {
+        return trackRepositoryImpl.getTrackDetailWithVote(id, memberId)
+                .map(RsData::successOf)
+                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
+    }
+
+    /**
+     * Track Artist, Album, Tag 정보를 가져옵니다
+     *
+     * @param title
+     * @param artistName
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public Optional<TrackInfoDTO> getTrackInfo(final String title, final String artistName) {
+        return trackRepositoryImpl.getTrackInfo(title, artistName);
     }
 
     @Transactional(readOnly = true)

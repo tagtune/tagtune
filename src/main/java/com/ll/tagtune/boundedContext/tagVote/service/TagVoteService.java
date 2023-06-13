@@ -3,14 +3,17 @@ package com.ll.tagtune.boundedContext.tagVote.service;
 import com.ll.tagtune.base.event.EventAfterVoteTrackTag;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.member.entity.Member;
+import com.ll.tagtune.boundedContext.tagVote.dto.TagVoteCountDTO;
 import com.ll.tagtune.boundedContext.tagVote.entity.TagVote;
 import com.ll.tagtune.boundedContext.tagVote.repository.TagVoteRepository;
+import com.ll.tagtune.boundedContext.tagVote.repository.TagVoteRepositoryImpl;
 import com.ll.tagtune.boundedContext.track.entity.TrackTag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,11 +21,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TagVoteService {
     private final TagVoteRepository tagVoteRepository;
+    private final TagVoteRepositoryImpl tagVoteRepositoryImpl;
     private final ApplicationEventPublisher publisher;
 
     @Transactional(readOnly = true)
     public Optional<TagVote> findById(final Long id) {
         return tagVoteRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TagVoteCountDTO> getTagVotesCount(final Long memberId) {
+        return tagVoteRepositoryImpl.getTagVotesCount(memberId);
     }
 
     @Transactional(readOnly = true)

@@ -18,6 +18,8 @@ public class AppConfig {
     private static Integer tagPagingSize;
     @Getter
     private static String nameForNoData;
+    @Getter
+    private static Integer recommendSize;
 
     @Value("${custom.image.artistUrl}")
     public void setArtistUrl(String artistUrl) {
@@ -47,5 +49,10 @@ public class AppConfig {
     @Value("${custom.data.nodata}")
     public void setTagPagingSize(String nameForNoData) {
         AppConfig.nameForNoData = nameForNoData;
+    }
+
+    @Value("${custom.track.recommendSize}")
+    public void setRecommendSize(Integer recommendSize) {
+        AppConfig.recommendSize = recommendSize;
     }
 }

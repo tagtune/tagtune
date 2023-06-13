@@ -1,0 +1,23 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
+
+<head>
+    <title>추천 목록</title>
+</head>
+<body>
+<main class="flex flex-grow items-center justify-center" layout:fragment="main">
+    <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
+        <ul>
+            <li>
+                <a class="font-bold text-4xl" href="/recommend/trending">현재 인기 있는 음악</a>
+            </li>
+            <li>
+                <a class="font-bold text-4xl" href="/recommend/favorite">선호 태그 기반</a>
+            </li>
+            <li>
+                <a class="font-bold text-4xl" href="/recommend/personal">조회 태그 기반</a>
+            </li>
+        </ul>
+    </div>
+</main>
+</body>
+</html>

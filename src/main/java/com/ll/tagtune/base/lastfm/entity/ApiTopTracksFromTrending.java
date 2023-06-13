@@ -9,26 +9,22 @@ import java.util.List;
 
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApiTopTrackFromTag {
+public class ApiTopTracksFromTrending {
+    @JsonProperty("tracks")
+    public Tracks results;
+
     public List<TrackSearchDTO> getTracks() {
-        return result.tracks.stream()
+        return results.topTracks.stream()
                 .map(t -> TrackSearchDTO.builder()
                         .name(t.name)
                         .artist(t.artist.name)
                         .build()
-                )
-                .toList();
+                ).toList();
     }
-    @JsonProperty("tracks")
-    public Result result;
 
-    @ToString
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Result {
-
+    public static class Tracks {
         @JsonProperty("track")
-        List<Track> tracks = new ArrayList<>();
-
+        public List<Track> topTracks = new ArrayList<>();
         @JsonProperty("@attr")
         public Attr attr;
 
@@ -36,17 +32,21 @@ public class ApiTopTrackFromTag {
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Track {
             public String name;
-            public Artist artist;
+            public Long playcount;
+            public Long listeners;
             @ToString.Exclude
             public String url;
+            public Artist artist;
+
             @ToString.Exclude
             public List<Image> image = new ArrayList<>();
-            @JsonProperty("@attr")
-            public Attr attr;
 
+            @ToString
             @JsonIgnoreProperties(ignoreUnknown = true)
             public static class Artist {
                 public String name;
+                @ToString.Exclude
+                public String mbid;
                 @ToString.Exclude
                 public String url;
             }
@@ -57,21 +57,15 @@ public class ApiTopTrackFromTag {
                 public String url;
                 public String size;
             }
-
-            @JsonIgnoreProperties(ignoreUnknown = true)
-            public static class Attr {
-                public Long rank;
-            }
         }
 
         @ToString
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Attr {
-            public String tag;
-            public Long page;
-            public Long perPage;
-            public Long totalPages;
-            public Long total;
+            public String page;
+            public String perPage;
+            public String totalPages;
+            public String total;
         }
     }
 }

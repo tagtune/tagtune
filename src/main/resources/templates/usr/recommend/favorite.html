@@ -1,0 +1,44 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
+
+<head>
+    <title>선호 태그 기반</title>
+</head>
+<body>
+<main class="flex flex-grow items-center justify-center" layout:fragment="main">
+    <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
+        <div>
+            <h1 class="font-bold text-4xl">선호 태그 기반</h1>
+        </div>
+        <div>
+            <h1 class="font-bold text-xl">음악</h1>
+            <div class="flex flex-col gap-4 mt-4" th:if="${#lists.isEmpty(tracks)}">선호 태그를 선택해 주세요</div>
+            <ul class="flex flex-col gap-4 mt-4" th:if="${!#lists.isEmpty(tracks)}">
+                <li th:each="track, i: ${tracks}">
+                    <h1 class="font-bold text-xl" th:text="${i.count}"></h1>
+                    <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
+                        <input name="name" th:value="${track.title}" type="hidden">
+                        <input name="artist" th:value="${track.artistName}" type="hidden">
+                        <button class="link-button" name="submit" type="submit" value="value">
+                            <span th:text="${track.title}"></span>
+                        </button>
+                    </form>
+                    <div class="badge badge-primary mx-1 my-2">
+                        <span th:text="${track.artistName}"></span>
+                    </div>
+                    <div class="badge badge-primary mx-1 my-2">
+                        <span th:text="${track.albumName}"></span>
+                    </div>
+                    <ul th:if="${!#lists.isEmpty(track.tags)}">
+                        <li th:each="tag: ${track.tags}">
+                            <div class="badge badge-primary mx-1 my-2">
+                                <span th:text="${tag}"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</main>
+</body>
+</html>
