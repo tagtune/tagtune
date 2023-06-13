@@ -16,7 +16,8 @@
             <h1 class="font-bold text-xl">태그</h1>
             <ul th:if="${!#lists.isEmpty(trackDetail.tags)}" class="flex flex-col gap-4 mt-4">
                 <li th:each="tag: ${trackDetail.tags}">
-                    <a class="badge badge-primary mx-1 my-2" th:href="@{|/tag/${tag.id}|}">
+                    <a class="badge badge-primary mx-1 my-2"
+                       th:href="@{|/category/tag?id=${@tagBoardService.findByTagBoardName(tag.tagName).get().id}|}">
                         <span th:text="${tag.tagName}"></span>
                     </a>
                     <div class="badge badge-primary mx-1 my-2">
