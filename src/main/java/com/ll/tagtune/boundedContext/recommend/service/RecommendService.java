@@ -5,46 +5,75 @@ import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.memberFavor.entity.FavorTag;
 import com.ll.tagtune.boundedContext.memberFavor.service.FavorService;
-import com.ll.tagtune.boundedContext.tag.entity.Tag;
 import com.ll.tagtune.boundedContext.tagVote.dto.TagVoteCountDTO;
 import com.ll.tagtune.boundedContext.tagVote.service.TagVoteService;
 import com.ll.tagtune.boundedContext.track.dto.TrackInfoDTO;
+import com.ll.tagtune.boundedContext.track.service.TrackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RecommendService {
+    private final TrackService trackService;
     private final FavorService favorService;
     private final TagVoteService tagVoteService;
 
     public List<TrackInfoDTO> getFavoriteList(final Member member) {
-        List<Tag> tags = favorService.getFavorTags(member.getId())
-                .stream()
+        final List<FavorTag> tags = favorService.getFavorTags(member.getId());
+        Set<TrackSearchDTO> rawRecommends = new HashSet<>();
+        List<TrackInfoDTO> result = new CopyOnWriteArrayList<>();
+        List<TrackSearchDTO> emptyTracks = new ArrayList<>();
+
+        tags.parallelStream()
                 .map(FavorTag::getTag)
-                .toList();
+                .flatMap(tag -> SearchEndpoint.getTracksFromTag(tag.getTagName()).stream().distinct())
+                .forEach(rawRecommends::add);
 
-        Set<TrackSearchDTO> rawRecommends = new LinkedHashSet<>();
-        tags.forEach(tag -> rawRecommends.addAll(SearchEndpoint.getTracksFromTag(tag.getTagName())));
+        rawRecommends.parallelStream()
+                .forEach(trackSearchDTO -> processTrackSearchDTO(trackSearchDTO, result, emptyTracks));
 
-        return SearchEndpoint.getTrackInfos(rawRecommends.stream().toList());
+        result.addAll(SearchEndpoint.getTrackInfos(emptyTracks));
+
+        return result;
     }
 
     public List<TrackInfoDTO> getPersonalList(final Member member) {
-        final List<String> tags = tagVoteService.getTagVotesCount(member.getId())
-                .stream()
-                .map(TagVoteCountDTO::getTagName)
-                .toList();
+        final List<TagVoteCountDTO> tags = tagVoteService.getTagVotesCount(member.getId());
 
-        Set<TrackSearchDTO> rawRecommends = new LinkedHashSet<>();
-        tags.forEach(tag -> rawRecommends.addAll(SearchEndpoint.getTracksFromTag(tag)));
+        Set<TrackSearchDTO> rawRecommends = new HashSet<>();
+        List<TrackInfoDTO> result = new CopyOnWriteArrayList<>();
+        List<TrackSearchDTO> emptyTracks = new ArrayList<>();
 
-        return SearchEndpoint.getTrackInfos(rawRecommends.stream().toList());
+        tags.parallelStream()
+                .flatMap(tag -> SearchEndpoint.getTracksFromTag(tag.getTagName()).stream().distinct())
+                .forEach(rawRecommends::add);
+
+        rawRecommends.parallelStream()
+                .forEach(trackSearchDTO -> processTrackSearchDTO(trackSearchDTO, result, emptyTracks));
+
+        result.addAll(SearchEndpoint.getTrackInfos(emptyTracks));
+
+        return result;
+    }
+
+    private void processTrackSearchDTO(
+            TrackSearchDTO trackSearchDTO,
+            List<TrackInfoDTO> result,
+            List<TrackSearchDTO> emptyTracks
+    ) {
+        trackService.getTrackInfo(trackSearchDTO.getName(), trackSearchDTO.getArtist())
+                .ifPresentOrElse(
+                        result::add,
+                        () -> emptyTracks.add(trackSearchDTO)
+                );
     }
 }

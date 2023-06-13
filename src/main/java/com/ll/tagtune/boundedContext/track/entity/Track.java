@@ -29,7 +29,7 @@ public class Track {
     @ManyToOne
     private ReleaseYear releaseYear;
     @OneToMany(mappedBy = "track", cascade = {CascadeType.ALL})
-    @OrderBy("voteCount desc")
+    @OrderBy("popularity desc")
     @LazyCollection(LazyCollectionOption.EXTRA)
     @ToString.Exclude
     @Builder.Default

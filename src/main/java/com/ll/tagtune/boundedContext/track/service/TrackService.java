@@ -104,7 +104,7 @@ public class TrackService {
 
         final Track track = createTrack(result.get().getTitle(), artist, album);
         track.getTags().addAll(result.get().getTags().stream()
-                .map(rawTag -> tagService.getOrCreateTag(rawTag.getTagName()))
+                .map(tagService::getOrCreateTag)
                 .map(tag -> trackTagService.connect(track, tag))
                 .toList());
 
@@ -120,6 +120,12 @@ public class TrackService {
                 .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
     }
 
+    /**
+     * Member 정보 없이 Track 세부 페이지의 정보를 가져오는 메소드입니다.
+     *
+     * @param id
+     * @return TrackDetailDTO
+     */
     @Transactional(readOnly = true)
     public RsData<TrackDetailDTO> getTrackDetail(final Long id) {
         return trackRepositoryImpl.getTrackDetail(id)
@@ -127,10 +133,29 @@ public class TrackService {
                 .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
     }
 
+    /**
+     * Member TagVote 정보와 함께 Track 세부 페이지의 정보를 가져오는 메소드입니다.
+     *
+     * @param id
+     * @param memberId
+     * @return TrackDetailDTO w TagVote Status
+     */
     @Transactional(readOnly = true)
     public RsData<TrackDetailDTO> getTrackDetailWithVote(final Long id, final Long memberId) {
         return trackRepositoryImpl.getTrackDetailWithVote(id, memberId)
                 .map(RsData::successOf)
                 .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
+    }
+
+    /**
+     * Track Artist, Album, Tag 정보를 가져옵니다
+     *
+     * @param title
+     * @param artistName
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public Optional<TrackInfoDTO> getTrackInfo(final String title, final String artistName) {
+        return trackRepositoryImpl.getTrackInfo(title, artistName);
     }
 }
