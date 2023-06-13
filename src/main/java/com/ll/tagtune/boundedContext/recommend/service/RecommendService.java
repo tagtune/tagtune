@@ -22,8 +22,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -40,7 +45,7 @@ public class RecommendService {
         List<TrackSearchDTO> emptyTracks = new ArrayList<>();
 
         tagNames.parallelStream()
-                .flatMap(tag -> SearchEndpoint.getTracksFromTag(tag).stream().distinct())
+                .flatMap(tag -> SearchEndpoint.getTracksFromTag(tag).stream())
                 .forEach(trackSearchDTO -> processTrackSearchDTO(trackSearchDTO, result, emptyTracks));
 
         result.addAll(SearchEndpoint.getTrackInfos(emptyTracks));
@@ -67,15 +72,14 @@ public class RecommendService {
                 .toList()
         );
 
-        Map<TrackInfoDTO, Long> trackScores = new HashMap<>();
-        for (TrackInfoDTO track : rawResult) {
-            long score = 0;
-            for (FavorTag tag : tags)
-                if (track.getTags().contains(tag.getTag().getTagName()))
-                    score++;
-
-            trackScores.put(track, score);
-        }
+        Map<TrackInfoDTO, Long> trackScores = rawResult.stream()
+                .distinct()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        track -> tags.stream()
+                                .filter(tag -> track.getTags().contains(tag.getTag().getTagName()))
+                                .count()
+                ));
 
         List<TrackInfoDTO> result = trackScores.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -121,15 +125,15 @@ public class RecommendService {
                 .toList()
         );
 
-        Map<TrackInfoDTO, Long> trackScores = new HashMap<>();
-        for (TrackInfoDTO track : rawResult) {
-            long score = 0;
-            for (TagVoteCountDTO tag : tags) {
-                if (track.getTags().contains(tag.getTagName()))
-                    score += tag.getVoteCount();
-            }
-            trackScores.put(track, score);
-        }
+        Map<TrackInfoDTO, Long> trackScores = rawResult.stream()
+                .distinct()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        track -> tags.stream()
+                                .filter(tag -> track.getTags().contains(tag.getTagName()))
+                                .mapToLong(TagVoteCountDTO::getVoteCount)
+                                .sum()
+                ));
 
         List<TrackInfoDTO> result = trackScores.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -144,6 +148,7 @@ public class RecommendService {
 
         // debug
         // System.out.println("[D2BUG]: setPersonalList Update");
+
         return result;
     }
 
@@ -182,10 +187,9 @@ public class RecommendService {
      * lastfm api 의 인기 음악을 갱신합니다.
      */
     private List<TrendingTrack> getTrendingSearchData() {
-        // debug
-        // System.out.println("[D2BUG]: Trending Update");
         List<TrendingTrack> trendingTracks = TrendingTrack.of(SearchEndpoint.getTrendingList());
         trendingRepository.saveAll(trendingTracks);
+
         return trendingTracks;
     }
 
