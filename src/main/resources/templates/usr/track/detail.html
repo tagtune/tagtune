@@ -18,7 +18,7 @@
                 <li th:each="tag: ${trackDetail.tags}">
 
                     <a class="badge badge-primary mx-1 my-2"
-                       th:href="@{|/category/tag?id=${null}">
+                       th:href="@{|/category/tag?id=${tag.tagId}|}">
                         <span th:text="${tag.tagName}"></span>
                     </a>
                     <div class="badge badge-secondary mx-1 my-2">

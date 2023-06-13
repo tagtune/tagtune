@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/category")
@@ -42,7 +43,16 @@ public class TagCommentController {
 
         // 이전 요청에서 전달받은 모델 데이터를 가져옵니다.
         model.addAttribute("replies", replyResponseDTO);
+
         return "usr/category/tag";
+    }
+
+    @GetMapping("/tagId/{tagId}")
+    public String getTagBoardPage(@PathVariable Long tagId) {
+        Optional<TagBoard> oTagBoard = tagBoardService.findByTagId(tagId);
+
+        return oTagBoard.map(tagBoard -> "redirect:/category/tag?id=" + tagBoard.getId())
+                .orElseGet(() -> rq.historyBack("잘못된 접근입니다."));
     }
 
     @PreAuthorize("isAuthenticated()")

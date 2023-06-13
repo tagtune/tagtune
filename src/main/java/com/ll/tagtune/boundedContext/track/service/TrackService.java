@@ -158,25 +158,4 @@ public class TrackService {
     public Optional<TrackInfoDTO> getTrackInfo(final String title, final String artistName) {
         return trackRepositoryImpl.getTrackInfo(title, artistName);
     }
-
-    @Transactional(readOnly = true)
-    public RsData<Track> getTrack(final Long id) {
-        return trackRepository.findById(id)
-                .map(RsData::successOf)
-                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
-    }
-
-    @Transactional(readOnly = true)
-    public RsData<TrackDetailDTO> getTrackDetail(final Long id) {
-        return trackRepositoryImpl.getTrackDetail(id)
-                .map(RsData::successOf)
-                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
-    }
-
-    @Transactional(readOnly = true)
-    public RsData<TrackDetailDTO> getTrackDetailWithVote(final Long id, final Long memberId) {
-        return trackRepositoryImpl.getTrackDetailWithVote(id, memberId)
-                .map(RsData::successOf)
-                .orElseGet(() -> RsData.of("F-1", "해당하는 트랙이 없습니다."));
-    }
 }

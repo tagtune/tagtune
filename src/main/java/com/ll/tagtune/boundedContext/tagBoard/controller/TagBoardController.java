@@ -1,6 +1,5 @@
 package com.ll.tagtune.boundedContext.tagBoard.controller;
 
-import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.boundedContext.tagBoard.entity.TagBoard;
 import com.ll.tagtune.boundedContext.tagBoard.service.TagBoardService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TagBoardController {
     private final TagBoardService tagBoardService;
-    private final Rq rq;
-
     /**
      * 검색 필터링에 사용할 키워드 "kw"
      * "kw"가 없을 경우 필터링 하지 않은 모든 tagBoardList 반환

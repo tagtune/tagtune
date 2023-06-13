@@ -39,8 +39,8 @@ public class TagBoardService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<TagBoard> findByTagBoardName(String name) {
-        return tagBoardRepository.findByTagBoardName(name);
+    public Optional<TagBoard> findByTagId(final Long tagId) {
+        return tagBoardRepository.findByTagId(tagId);
     }
 
     public TagBoard create(Tag tag) {
