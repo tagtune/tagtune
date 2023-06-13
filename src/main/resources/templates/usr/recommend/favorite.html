@@ -11,6 +11,7 @@
         </div>
         <div>
             <h1 class="font-bold text-xl">음악</h1>
+            <div class="flex flex-col gap-4 mt-4" th:if="${#lists.isEmpty(tracks)}">선호 태그를 선택해 주세요</div>
             <ul class="flex flex-col gap-4 mt-4" th:if="${!#lists.isEmpty(tracks)}">
                 <li th:each="track, i: ${tracks}">
                     <h1 class="font-bold text-xl" th:text="${i.count}"></h1>
