@@ -4,6 +4,10 @@ import com.ll.tagtune.base.lastfm.SearchEndpoint;
 import com.ll.tagtune.base.lastfm.entity.TrackSearchDTO;
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
+import com.ll.tagtune.boundedContext.comment.dto.CommentResponseDTO;
+import com.ll.tagtune.boundedContext.comment.service.CommentService;
+import com.ll.tagtune.boundedContext.reply.dto.ReplyDTO;
+import com.ll.tagtune.boundedContext.reply.service.ReplyService;
 import com.ll.tagtune.boundedContext.tag.service.TagService;
 import com.ll.tagtune.boundedContext.track.dto.TrackDetailDTO;
 import com.ll.tagtune.boundedContext.track.entity.Track;
@@ -27,6 +31,8 @@ public class TrackController {
     private final TrackService trackService;
     private final TagService tagService;
     private final TrackTagService trackTagService;
+    private final CommentService commentService;
+    private final ReplyService replyService;
     private final Rq rq;
 
     @GetMapping("/search")
@@ -63,7 +69,18 @@ public class TrackController {
                 trackService.getTrackDetailWithVote(trackId, rq.getMember().getId()) :
                 trackService.getTrackDetail(trackId);
         if (rsTrack.isFail()) return rq.historyBack(rsTrack);
+
+        List<CommentResponseDTO> commentsWithReplies =
+                commentService.getCommentsWithReplies(rsTrack.getData());
+
+        List<ReplyDTO> replies = commentsWithReplies
+                .stream()
+                .flatMap(comment -> replyService.getReplies(comment.getCommentId()).getData().stream())
+                .toList();
+
         model.addAttribute("trackDetail", rsTrack.getData());
+        model.addAttribute("comments", commentsWithReplies);
+        model.addAttribute("replies", replies);
 
         return "usr/track/detail";
     }

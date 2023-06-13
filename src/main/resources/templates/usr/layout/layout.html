@@ -3,7 +3,7 @@
 <body>
 
 <header layout:fragment="header" class="sticky top-0 z-50">
-    <div class="navbar max-w-2xl mx-auto bg-base-100">
+    <div class="navbar max-w-full mx-auto bg-base-100">
         <div class="navbar-start">
             <div class="dropdown">
                 <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -32,8 +32,6 @@
                     <li><a href="/category/tagBoard"><i class="fa-solid fa-folder-open"></i> 태그 게시판</a></li>
 
                     <li th:if="${@rq.login}"><a href="/playlist/list"><i class="fa-solid fa-music"></i> 플레이리스트</a></li>
-
-                    <li th:if="${@rq.login}"><a href="/lyric"><i class="fa-solid fa-music"></i> 가사</a></li>
 
                     <div th:if="${@rq.login}" class="divider"></div>
 
