@@ -9,9 +9,9 @@
 <main layout:fragment="main" class="flex-grow flex items-center justify-center">
     <script>
         function ModifyLyric__submit(form) {
-            form.modifyContent.value == form.modifyContent.value.trim();
+            form.content.value = form.content.value.trim();
 
-            if(form.modifyContent.value==""){
+            if(form.content.value.length == 0){
                 toastWarning('댓글을 입력해주세요.');
                 form.iComment.focus();
                 return;
@@ -24,17 +24,18 @@
     <div class="max-w-2xl w-full px-4">
         <form class="flex flex-col gap-6"
               method="POST"
-              th:action="@{|/track/${trackId}/modifyLyric|}"
+              th:action="@{|/track/${trackId}/modifyLyric/${lang}|}"
               onsubmit="ModifyLyric__submit(this); return false;">
-            <div id="lyrics" class= "flex items-center justify-center">
-                <textarea name="modifyContent" class="w-80 h-[500px]" th:placeholder="${'임시 가사'}"></textarea>
-            </div>
             <input type="hidden" name="_method" value="PATCH">
+            <div id="lyrics" class= "flex items-center justify-center">
+                <textarea name="content" type="text"
+                          class="textarea textarea-accent w-[700px] h-[500px] "
+                          th:placeholder="${lyric.content}"
+                          style="resize: none;"></textarea>
+            </div>
             <div class="relative">
                 <div class="absolute inset-y-0 right-0 w-20">
-                    <button class="btn btn-primary btn-sm mt-2 w-[70px] mb-5" type="submit">
-                        저장
-                    </button>
+                    <input class="btn btn-primary btn-sm mt-2 w-[70px] mb-5" type="submit" value="저장"/>
                 </div>
             </div>
         </form>
