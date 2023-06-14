@@ -3,7 +3,7 @@
 <body>
 
 <header layout:fragment="header" class="sticky top-0 z-50">
-    <div class="navbar max-w-full mx-auto bg-base-100">
+    <div class="navbar max-w-2xl mx-auto bg-base-100">
         <div class="navbar-start">
             <div class="dropdown">
                 <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -19,9 +19,6 @@
                     <li th:if="${@rq.login}"><a href="/usr/member/me"><i class="fa-solid fa-user"></i> 내 정보</a></li>
 
                     <li th:if="${@rq.login}"><a href="/favor/list"><i class="fa-solid fa-user"></i> 선호 태그</a></li>
-
-                    <li th:if="${@rq.login}"><a href="/usr/member/personalForm"><i
-                            class="fa-solid fa-address-card"></i> 추가정보 입력</a></li>
 
                     <div th:if="${@rq.login}" class="divider"></div>
 

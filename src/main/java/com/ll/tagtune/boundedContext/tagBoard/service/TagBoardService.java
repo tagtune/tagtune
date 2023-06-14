@@ -1,7 +1,6 @@
 package com.ll.tagtune.boundedContext.tagBoard.service;
 
 import com.ll.tagtune.boundedContext.tag.entity.Tag;
-import com.ll.tagtune.boundedContext.tag.repository.TagRepository;
 import com.ll.tagtune.boundedContext.tagBoard.entity.TagBoard;
 import com.ll.tagtune.boundedContext.tagBoard.repository.TagBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TagBoardService {
     private final TagBoardRepository tagBoardRepository;
-    private final TagRepository tagRepository;
 
     @Transactional(readOnly = true)
     public List<TagBoard> findAll() {
@@ -52,5 +50,13 @@ public class TagBoardService {
         tagBoardRepository.save(tagBoard);
 
         return tagBoard;
+    }
+
+    public void updatePopularity(TagBoard tagBoard) {
+        TagBoard modifyTagBoard = tagBoard.toBuilder()
+                .popularity(tagBoard.getPopularity() + 1)
+                .build();
+
+        tagBoardRepository.save(modifyTagBoard);
     }
 }

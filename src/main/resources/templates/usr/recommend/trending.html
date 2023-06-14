@@ -7,22 +7,28 @@
 <main class="flex flex-grow items-center justify-center" layout:fragment="main">
     <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
         <div>
-            <h1 class="font-bold text-4xl">현재 인기 있는</h1>
+            <h1 class="font-bold text-3xl">지금 인기있는 노래를 들어보세요!</h1>
         </div>
         <div>
-            <h1 class="font-bold text-xl">음악</h1>
             <ul class="flex flex-col gap-4 mt-4" th:if="${!#lists.isEmpty(tracks)}">
-                <li th:each="track: ${tracks}">
-                    <h1 class="font-bold text-xl" th:text="${track.rank}"></h1>
-                    <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
-                        <input name="name" th:value="${track.title}" type="hidden">
-                        <input name="artist" th:value="${track.artist}" type="hidden">
-                        <button class="link-button" name="submit" type="submit" value="value">
-                            <span th:text="${track.title}"></span>
-                        </button>
-                    </form>
-                    <div class="badge badge-primary mx-1 my-2">
-                        <span th:text="${track.artist}"></span>
+                <li class="flex" th:each="track: ${tracks}">
+                    <div class="card flex-grow bg-base-100 shadow-2xl">
+                        <div class="card-body">
+                            <h1 class="font-bold text-xl mr-3 w-6" th:text="${track.rank}"></h1>
+                            <div class="flex">
+                                <form class="badge mx-1 my-2" method="POST"
+                                      style="background:#6EC6CA;color:#000000" th:action="@{|/track/search|}">
+                                    <input name="name" th:value="${track.title}" type="hidden">
+                                    <input name="artist" th:value="${track.artist}" type="hidden">
+                                    <button class="link-button" name="submit" type="submit" value="value">
+                                        <span th:text="${track.title}"></span>
+                                    </button>
+                                </form>
+                                <div class="badge mx-1 my-2" style="background:#6EC6CA;color:#000000">
+                                    <span th:text="${track.artist}"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </li>
             </ul>
