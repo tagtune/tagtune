@@ -12,13 +12,34 @@
             <i class="fa-solid fa-music"></i>
             <div style="display: flex ">
                 <div class="index">
-                <div th:text="${playlist.name}"></div>
-                <div th:text="${(playlist.tracks.size() == 0) ? '추가된 트랙이 없습니다.' : playlist.tracks.size()}"></div>
+                    <div th:text="${playlist.name}"></div>
+                    <ul class="flex flex-col gap-4 mt-4" th:if="${!#lists.isEmpty(playlist.tracks)}">
+                        <li th:each="track: ${playlist.tracks}">
+                            <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
+                                <input name="name" th:value="${track.name}" type="hidden">
+                                <input name="artist" th:value="${track.artist}" type="hidden">
+                                <button class="link-button" name="submit" type="submit" value="value">
+                                    <span th:text="${track.name}"></span>
+                                </button>
+                            </form>
+                            <div class="badge badge-primary mx-1 my-2">
+                                <span th:text="${track.artist}"></span>
+                            </div>
+                            <form class="badge badge-primary mx-1 my-2"
+                                  th:action="@{|/playlist/${playlist.id}/deleteTrack/${track.id}|}"
+                                  th:method="DELETE">
+                                <button class="link-button" name="submit" type="submit" value="value">
+                                    삭제
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                    <div th:if="${#lists.isEmpty(playlist.tracks)}">추가된 트랙이 없습니다</div>
                 </div>
 
                 <div style="margin-left: 400px;">
                     <div>
-                        <a th:href="@{/playlist/search}">
+                        <a th:href="@{|/playlist/${playlist.id}/search|}">
                             <button>음악 검색하기</button>
                         </a>
                     </div>
