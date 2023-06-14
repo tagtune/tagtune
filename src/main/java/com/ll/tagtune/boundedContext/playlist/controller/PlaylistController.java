@@ -121,7 +121,7 @@ public class PlaylistController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/deleteTrack/{trackId}")
-    public String addTrack(@PathVariable Long id, @PathVariable Long trackId) {
+    public String deleteTrack(@PathVariable Long id, @PathVariable Long trackId) {
         RsData<Playlist> rsPlaylist = playlistService.deleteTrack(rq.getMember().getId(), id, trackId);
         if (rsPlaylist.isFail()) return rq.historyBack(rsPlaylist);
 
