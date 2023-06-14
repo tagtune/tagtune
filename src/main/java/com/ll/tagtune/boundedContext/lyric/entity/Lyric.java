@@ -21,5 +21,5 @@ public class Lyric extends BaseEntity {
     @Column(length = 5000)
     private String content = "가사가 비어있습니다.";
     @ManyToOne
-    Track track;
+    private Track track;
 }

@@ -1,6 +1,8 @@
 package com.ll.tagtune.boundedContext.lyric.service;
 
+import com.ll.tagtune.base.appConfig.AppConfig;
 import com.ll.tagtune.base.rsData.RsData;
+import com.ll.tagtune.boundedContext.lyric.dto.LyricDTO;
 import com.ll.tagtune.boundedContext.lyric.entity.Language;
 import com.ll.tagtune.boundedContext.lyric.entity.Lyric;
 import com.ll.tagtune.boundedContext.lyric.repository.LyricRepository;
@@ -18,45 +20,69 @@ public class LyricService {
     private final LyricRepository lyricRepository;
 
     /**
+     * 가사를 DTO로 리턴합니다
+     *
+     * @param trackId
+     * @param language
+     * @return LyricDTO
+     */
+    @Transactional(readOnly = true)
+    public LyricDTO showLyricDTO(final Long trackId, final Language language) {
+        return showLyric(trackId, language)
+                .map(l -> LyricDTO.builder()
+                        .language(l.getLanguage().getName())
+                        .content(l.getContent())
+                        .title(l.getTrack().getTitle())
+                        .build())
+                .orElseGet(() -> LyricDTO.builder()
+                        .language(language.getName())
+                        .content(" ")
+                        .title(AppConfig.getNameForNoData())
+                        .build());
+    }
+
+    /**
      * 가사 조회 기능
      */
     @Transactional(readOnly = true)
-    public Optional<Lyric> showLyric(Long trackId, Language language) {
+    public Optional<Lyric> showLyric(final Long trackId, final Language language) {
         return lyricRepository.findByTrackIdAndLanguage(trackId, language);
     }
 
     /**
-     * 가사 저장 기능
+     * 가사 작성 기능
      */
-    public RsData<Lyric> saveLyric(Track track, Language language) {
+    public RsData<Lyric> writeLyric(final Track track, final String content, final Language language) {
+        if (content == null) return RsData.of("F-2", "수정하려는 내용이 잘못된 값입니다.");
+
+        return lyricRepository.findByTrackIdAndLanguage(track.getId(), language)
+                .map(lyric -> RsData.of("S-2", "성공적으로 작성했습니다!", modifyLyric(lyric, content)))
+                .orElseGet(() -> RsData.of("S-1", "성공적으로 작성했습니다!", createLyric(track, content, language)));
+    }
+
+    private Lyric createLyric(final Track track, final String content, final Language language) {
         Lyric lyric = Lyric.builder()
                 .track(track)
+                .content(content)
                 .language(language)
                 .build();
 
-        Lyric svaelyric = lyricRepository.save(lyric);
+        lyricRepository.save(lyric);
 
-        return RsData.of("S-1", "성공적으로 저장되었습니다!", svaelyric);
+        return lyric;
     }
 
     /**
      * 가사 수정 기능
      */
-    public RsData<Lyric> modifyLyric(Long trackId, String content, Language language) {
-        Optional<Lyric> oLyric = lyricRepository.findByTrackIdAndLanguage(trackId, language);
-
-        if (content == null) {
-            return RsData.of("F-2", "수정하려는 내용이 잘못된 값입니다.");
-        }
-        Lyric lyric = oLyric.get();
-
-        Lyric newLyric = lyric.toBuilder()
+    private Lyric modifyLyric(Lyric lyric, final String content) {
+        lyric = lyric.toBuilder()
                 .content(content)
                 .build();
 
-        lyricRepository.save(newLyric);
+        lyricRepository.save(lyric);
 
-        return RsData.of("S-1", "성공적으로 수정되었습니다!", newLyric);
+        return lyric;
     }
 
     public RsData<Lyric> deleteLyric(Long id) {
