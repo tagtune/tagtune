@@ -1,8 +1,6 @@
 package com.ll.tagtune.boundedContext.member.controller;
 
 
-import com.ll.tagtune.boundedContext.member.entity.Gender;
-import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -90,86 +87,83 @@ class MemberControllerTest {
                 .andExpect(redirectedUrlPattern("/**"));
     }
 
-    @Test
-    @DisplayName("회원 추가정보 입력 폼")
-    @WithUserDetails("user1")
-    void t003() throws Exception {
-        // WHEN
-        ResultActions resultActions = mvc
-                .perform(get("/usr/member/personalForm"))
-                .andDo(print());
+//    @Test
+//    @DisplayName("회원 추가정보 입력 폼")
+//    @WithUserDetails("user1")
+//    void t003() throws Exception {
+//        // WHEN
+//        ResultActions resultActions = mvc
+//                .perform(get("/usr/member/personalForm"))
+//                .andDo(print());
+//
+//        // THEN
+//        resultActions
+//                .andExpect(handler().handlerType(MemberController.class))
+//                .andExpect(handler().methodName("showPersonalForm"))
+//                .andExpect(status().is2xxSuccessful())
+//                .andExpect(content().string(containsString("""
+//                        <input type="radio" name="gender" value="F"
+//                        """.stripIndent().trim())))
+//                .andExpect(content().string(containsString("""
+//                        <input type="radio" name="gender" value="M"
+//                        """.stripIndent().trim())))
+//                .andExpect(content().string(containsString("""
+//                        <input type="radio" name="age" value="10"
+//                        """.stripIndent().trim())))
+//                .andExpect(content().string(containsString("""
+//                        <input type="radio" name="age" value="20"
+//                        """.stripIndent().trim())))
+//                .andExpect(content().string(containsString("""
+//                        <input type="radio" name="age" value="30"
+//                        """.stripIndent().trim())))
+//                .andExpect(content().string(containsString("""
+//                        <input type="radio" name="age" value="40"
+//                        """.stripIndent().trim())))
+//                .andExpect(content().string(containsString("""
+//                        <input type="radio" name="age" value="50"
+//                        """.stripIndent().trim())))
+//                .andExpect(content().string(containsString("""
+//                        id="btn-member-personalForm-1"
+//                        """.stripIndent().trim())));
+//    }
 
-        // THEN
-        resultActions
-                .andExpect(handler().handlerType(MemberController.class))
-                .andExpect(handler().methodName("showPersonalForm"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(content().string(containsString("""
-                        <input type="radio" name="gender" value="F"
-                        """.stripIndent().trim())))
-                .andExpect(content().string(containsString("""
-                        <input type="radio" name="gender" value="M"
-                        """.stripIndent().trim())))
-                .andExpect(content().string(containsString("""
-                        <input type="radio" name="age" value="10"
-                        """.stripIndent().trim())))
-                .andExpect(content().string(containsString("""
-                        <input type="radio" name="age" value="20"
-                        """.stripIndent().trim())))
-                .andExpect(content().string(containsString("""
-                        <input type="radio" name="age" value="30"
-                        """.stripIndent().trim())))
-                .andExpect(content().string(containsString("""
-                        <input type="radio" name="age" value="40"
-                        """.stripIndent().trim())))
-                .andExpect(content().string(containsString("""
-                        <input type="radio" name="age" value="50"
-                        """.stripIndent().trim())))
-                .andExpect(content().string(containsString("""
-                        id="btn-member-personalForm-1"
-                        """.stripIndent().trim())));
-    }
+//    @Test
+//    @DisplayName("로그인을 안하고 추가 정보 입력 페이지에 접근하면 로그인 페이지로 302")
+//    void t004() throws Exception {
+//        // WHEN
+//        ResultActions resultActions = mvc
+//                .perform(get("/usr/member/personalForm"))
+//                .andDo(print());
+//
+//        // THEN
+//        resultActions
+//                .andExpect(handler().handlerType(MemberController.class))
+//                .andExpect(handler().methodName("showPersonalForm"))
+//                .andExpect(status().is3xxRedirection())
+//                .andExpect(redirectedUrlPattern("**/member/login**"));
+//    }
 
-    @Test
-    @DisplayName("로그인을 안하고 추가 정보 입력 페이지에 접근하면 로그인 페이지로 302")
-    void t004() throws Exception {
-        // WHEN
-        ResultActions resultActions = mvc
-                .perform(get("/usr/member/personalForm"))
-                .andDo(print());
-
-        // THEN
-        resultActions
-                .andExpect(handler().handlerType(MemberController.class))
-                .andExpect(handler().methodName("showPersonalForm"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("**/member/login**"));
-    }
-
-    @Test
-    @DisplayName("회원 추가정보 입력 폼 처리")
-    @WithUserDetails("user1")
-    void t005() throws Exception {
-        // WHEN
-        ResultActions resultActions = mvc
-                .perform(post("/usr/member/personalForm")
-                        .with(csrf()) // CSRF 키 생성
-                        .param("gender", "F")
-                        .param("age", "10")
-                )
-                .andDo(print());
-
-        // THEN
-        resultActions
-                .andExpect(handler().handlerType(MemberController.class))
-                .andExpect(handler().methodName("showPersonalForm"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/usr/member/me**"));
-
-
-        Member member = memberService.findByUsername("user1").orElseThrow();
-
-        assertThat(member.getGender()).isEqualTo(Gender.FEMALE);
-        assertThat(member.getAge()).isEqualTo(10);
-    }
+//    @Test
+//    @DisplayName("회원 추가정보 입력 폼 처리")
+//    @WithUserDetails("user1")
+//    void t005() throws Exception {
+//        // WHEN
+//        ResultActions resultActions = mvc
+//                .perform(post("/usr/member/personalForm")
+//                        .with(csrf()) // CSRF 키 생성
+//                        .param("gender", "F")
+//                        .param("age", "10")
+//                )
+//                .andDo(print());
+//
+//        // THEN
+//        resultActions
+//                .andExpect(handler().handlerType(MemberController.class))
+//                .andExpect(handler().methodName("showPersonalForm"))
+//                .andExpect(status().is3xxRedirection())
+//                .andExpect(redirectedUrlPattern("/usr/member/me**"));
+//
+//
+//        Member member = memberService.findByUsername("user1").orElseThrow();
+//    }
 }

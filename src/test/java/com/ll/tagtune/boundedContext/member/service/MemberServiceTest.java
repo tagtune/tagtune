@@ -27,6 +27,6 @@ class MemberServiceTest {
         final String password = "1234";
 
         Member member = memberService.join(userName, password).getData();
-        assertThat(member.getProfileImage()).isEqualTo(userName);
+        assertThat(member.getUsername()).isEqualTo(userName);
     }
 }
