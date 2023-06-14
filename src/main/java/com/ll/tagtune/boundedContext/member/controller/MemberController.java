@@ -2,21 +2,18 @@ package com.ll.tagtune.boundedContext.member.controller;
 
 import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
-import com.ll.tagtune.boundedContext.member.entity.Gender;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.member.service.MemberService;
-import com.ll.tagtune.boundedContext.playlist.entity.Playlist;
-import com.ll.tagtune.boundedContext.playlist.service.PlaylistService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
@@ -60,25 +57,5 @@ public class MemberController {
     @GetMapping("/me") // 로그인 한 나의 정보 보여주는 페이지
     public String showMe(Model model) {
         return "usr/member/me";
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/personalForm")
-    public String showPersonalForm() {
-        return "usr/member/personalForm";
-    }
-
-    public record PersonalForm(@NotBlank @Size(min = 1, max = 1) String gender, @Min(1) @Max(50) Integer age) {
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/personalForm")
-    public String showPersonalForm(@Valid PersonalForm personalForm) {
-        RsData<Member> updateRsData = memberService.updateInfo(rq.getMember(), Gender.findByCode(personalForm.gender()), personalForm.age());
-        if (updateRsData.isFail()) {
-            return rq.historyBack(updateRsData);
-        }
-
-        return rq.redirectWithMsg("/usr/member/me", updateRsData);
     }
 }
