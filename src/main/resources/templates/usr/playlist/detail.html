@@ -1,74 +1,68 @@
 <html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <head>
-    <title>플레이리스트</title>
+    <title th:text="${playlist.name}"></title>
 </head>
 
 <body>
 
 <main layout:fragment="main" class="flex-grow flex items-center justify-center">
     <div class="max-w-2xl w-full px-4">
-        <h1 class="mb-4">
+        <div>
             <i class="fa-solid fa-music"></i>
-            <div style="display: flex ">
-                <div class="index">
-                    <div th:text="${playlist.name}"></div>
-                    <ul class="flex flex-col gap-4 mt-4" th:if="${!#lists.isEmpty(playlist.tracks)}">
-                        <li th:each="track: ${playlist.tracks}">
-                            <form class="badge badge-primary mx-1 my-2" method="POST" th:action="@{|/track/search|}">
-                                <input name="name" th:value="${track.name}" type="hidden">
-                                <input name="artist" th:value="${track.artist}" type="hidden">
-                                <button class="link-button" name="submit" type="submit" value="value">
-                                    <span th:text="${track.name}"></span>
-                                </button>
-                            </form>
-                            <div class="badge badge-primary mx-1 my-2">
-                                <span th:text="${track.artist}"></span>
-                            </div>
-                            <form class="badge badge-primary mx-1 my-2"
-                                  th:action="@{|/playlist/${playlist.id}/deleteTrack/${track.id}|}"
-                                  th:method="DELETE">
-                                <button class="link-button" name="submit" type="submit" value="value">
-                                    삭제
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                    <div th:if="${#lists.isEmpty(playlist.tracks)}">추가된 트랙이 없습니다</div>
-                </div>
-
-                <div style="margin-left: 400px;">
-                    <div>
-                        <a th:href="@{|/playlist/${playlist.id}/search|}">
-                            <button>음악 검색하기</button>
-                        </a>
-                    </div>
+            <h1 class="mt-2 text-4xl" th:text="${playlist.name}"></h1>
+        </div>
+        <div class="flex flex-col">
+            <div class="card flex-grow bg-base-100 shadow-2xl">
+                <div class="card-body flex">
+                    <a class="flex badge badge-primary mx-1 my-2" th:href="@{|/playlist/${playlist.id}/search|}">
+                        <span>음악 검색</span>
+                    </a>
+                    <a class="flex badge badge-primary mx-1 my-2" th:href="@{/playlist/list}">
+                        <span>목록으로</span>
+                    </a>
                 </div>
             </div>
-        </h1>
+            <div>
+                <div class="flex flex-col gap-4 mt-4" th:if="${#lists.isEmpty(playlist.tracks)}">
+                    추가된 트랙이 없습니다
+                </div>
+                <ul class="flex flex-col gap-4 mt-4" th:if="${!#lists.isEmpty(playlist.tracks)}">
+                    <li class="flex" th:each="track, i: ${playlist.tracks}">
+                        <div class="card flex-grow bg-base-100 shadow-2xl">
+                            <div class="card-body">
+                                <div>
+                                    <div>
+                                        <form class="badge mx-1 my-2" method="POST"
+                                              style="background:#6EC6CA;color:#000000"
+                                              th:action="@{|/track/search|}">
+                                            <input name="name" th:value="${track.name}" type="hidden">
+                                            <input name="artist" th:value="${track.artist}" type="hidden">
+                                            <button class="link-button" name="submit" type="submit"
+                                                    value="value">
+                                                <span th:text="${track.name}"></span>
+                                            </button>
+                                        </form>
+                                        <div class="badge mx-1 my-2" style="background:#6EC6CA;color:#000000">
+                                            <span th:text="${track.artist}"></span>
+                                        </div>
+                                        <form class="badge badge-primary mx-1 my-2"
+                                              th:action="@{|/playlist/${playlist.id}/deleteTrack/${track.id}|}"
+                                              th:method="DELETE">
+                                            <button class="link-button" name="submit" type="submit"
+                                                    value="value">
+                                                삭제
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-
-    <div class="fixed">
-        <a th:href="@{/playlist/list}">
-            <button>플레이리스트 목록으로 돌아가기</button>
-        </a>
-    </div>
-    <style>
-        .index {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .fixed {
-            position: fixed;
-            top: 10%;
-            left: 60%;
-            margin: 10px;
-        }
-
-    </style>
-
-
 </main>
 </body>
 
