@@ -2,7 +2,6 @@ package com.ll.tagtune.boundedContext.playlist.service;
 
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.member.entity.Member;
-import com.ll.tagtune.boundedContext.member.repository.MemberRepository;
 import com.ll.tagtune.boundedContext.playlist.dto.PlaylistDTO;
 import com.ll.tagtune.boundedContext.playlist.dto.PlaylistTrackDTO;
 import com.ll.tagtune.boundedContext.playlist.entity.Playlist;
@@ -21,7 +20,6 @@ import java.util.Optional;
 public class PlaylistService {
 
     private final PlaylistRepository playlistRepository;
-    private MemberRepository memberRepository;
 
     public List<Playlist> findAllByMemberId(final Long memberId) {
         return playlistRepository.findAllByMember_id(memberId);
