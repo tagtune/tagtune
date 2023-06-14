@@ -76,10 +76,9 @@ class LyricServiceTest {
         final String content = "sing a song~~~";
         final String oriContent = "가사가 비어있습니다.";
         Optional<Lyric> oLyric = lyricService.showLyric(track.getId(), Language.KOREAN);
+        assertThat(oLyric.get().getContent()).isEqualTo(oriContent);
 
         RsData<Lyric> lyricRsdata = lyricService.modifyLyric(track.getId(), content, Language.KOREAN);
-
-        assertThat(oLyric.get().getContent()).isEqualTo(oriContent);
 
         //createDate 수정 전,후가 같은지 확인
         assertThat(oLyric.get().getId()).isEqualTo(lyricRsdata.getData().getId());
