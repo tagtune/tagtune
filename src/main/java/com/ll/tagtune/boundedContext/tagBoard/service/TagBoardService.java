@@ -53,4 +53,12 @@ public class TagBoardService {
 
         return tagBoard;
     }
+
+    public void updatePopularity(TagBoard tagBoard) {
+        TagBoard modifyTagBoard = tagBoard.toBuilder()
+                .popularity(tagBoard.getPopularity() + 1)
+                .build();
+
+        tagBoardRepository.save(modifyTagBoard);
+    }
 }

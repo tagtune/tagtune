@@ -26,9 +26,10 @@ public class TrackTagController {
     public String voteUp(@PathVariable Long trackTagId) {
         RsData<TrackTag> rsTrackTag = trackTagService.getTrackTag(trackTagId);
         if (rsTrackTag.isFail()) return rq.historyBack(rsTrackTag);
+        Long trackId = rsTrackTag.getData().getTrack().getId();
         RsData<TagVote> tagVote = tagVoteService.vote(Boolean.TRUE, rq.getMember(), rsTrackTag.getData());
 
-        return rq.historyBack(tagVote);
+        return rq.redirectWithMsg("/track/" + trackId, tagVote);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -36,17 +37,21 @@ public class TrackTagController {
     public String voteDown(@PathVariable Long trackTagId) {
         RsData<TrackTag> rsTrackTag = trackTagService.getTrackTag(trackTagId);
         if (rsTrackTag.isFail()) return rq.historyBack(rsTrackTag);
+        Long trackId = rsTrackTag.getData().getTrack().getId();
         RsData<TagVote> tagVote = tagVoteService.vote(Boolean.FALSE, rq.getMember(), rsTrackTag.getData());
 
-        return rq.historyBack(tagVote);
+        return rq.redirectWithMsg("/track/" + trackId, tagVote);
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/cancel/{trackTagId}")
     public String remove(@PathVariable Long trackTagId) {
+        RsData<TrackTag> rsTrackTag = trackTagService.getTrackTag(trackTagId);
+        if (rsTrackTag.isFail()) return rq.historyBack(rsTrackTag);
+        Long trackId = rsTrackTag.getData().getTrack().getId();
         RsData<Void> result = tagVoteService.cancel(rq.getMember().getId(), trackTagId);
         if (result.isFail()) return rq.historyBack(result);
 
-        return rq.historyBack(result);
+        return rq.redirectWithMsg("/track/" + trackId, result);
     }
 }

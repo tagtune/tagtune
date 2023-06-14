@@ -35,6 +35,8 @@ public class TagCommentController {
         TagBoard tagBoard = tagBoardService.findById(id).get();
         model.addAttribute("tagBoard", tagBoard);
 
+        tagBoardService.updatePopularity(tagBoard);
+
         List<TagCommentResponseDTO> commentsDTO = tagCommentService.getCommentsWithReplies(tagBoard);
         List<TagReplyResponseDTO> replyResponseDTO = tagReplyService.getReplies(tagBoard);
 
