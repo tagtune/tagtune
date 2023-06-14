@@ -1,8 +1,12 @@
 package com.ll.tagtune.boundedContext.lyric.entity;
 
 import com.ll.tagtune.base.baseEntity.BaseEntity;
+import com.ll.tagtune.boundedContext.lyric.ut.LanguageConvertor;
 import com.ll.tagtune.boundedContext.track.entity.Track;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @ToString(callSuper = true)
 public class Lyric extends BaseEntity {
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = LanguageConvertor.class)
     private Language language;
     @Builder.Default
     @Column(length = 5000)
