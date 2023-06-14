@@ -7,6 +7,7 @@ public enum Language {
     KOREAN("Kor"),
     ENGLISH("Eng");
     private final String name;
+
     Language(String name) {
         this.name = name;
     }
