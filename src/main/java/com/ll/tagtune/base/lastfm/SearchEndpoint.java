@@ -96,13 +96,12 @@ public class SearchEndpoint {
      * @param artistName
      * @return track 세부정보
      */
-    public static Optional<TrackInfoDTO> getTrackInfo(String trackName, String artistName) {
+    public static ApiTrackInfoResult getTrackInfo(String trackName, String artistName) {
         String url = BASE_URL + "track.getInfo"
                 + setTrack(trackName)
                 + setArtist(artistName);
 
-        return getResponse(HttpMethod.GET, "", url, ApiTrackInfoResult.class)
-                .getTrackInfoDTO();
+        return getResponse(HttpMethod.GET, "", url, ApiTrackInfoResult.class);
     }
 
     /**
@@ -139,12 +138,11 @@ public class SearchEndpoint {
      * @param tagName
      * @return tag 가 등록된 track 목록
      */
-    public static List<TrackSearchDTO> getTracksFromTag(String tagName) {
+    public static ApiTopTrackFromTag getTracksFromTag(String tagName) {
         String url = BASE_URL + "tag.gettoptracks"
                 + setTag(tagName);
 
-        return getResponse(HttpMethod.GET, "", url, ApiTopTrackFromTag.class)
-                .getTracks();
+        return getResponse(HttpMethod.GET, "", url, ApiTopTrackFromTag.class);
     }
 
     /**
@@ -152,10 +150,9 @@ public class SearchEndpoint {
      *
      * @return Tracks
      */
-    public static List<TrackSearchDTO> getTrendingList() {
+    public static ApiTopTracksFromTrending getTrendingList() {
         String url = BASE_URL + "chart.gettoptracks";
 
-        return getResponse(HttpMethod.GET, "", url, ApiTopTracksFromTrending.class)
-                .getTracks();
+        return getResponse(HttpMethod.GET, "", url, ApiTopTracksFromTrending.class);
     }
 }

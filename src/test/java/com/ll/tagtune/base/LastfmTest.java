@@ -33,7 +33,7 @@ class LastfmTest {
         assertThat(searchResult.getTracks()).isNotEmpty();
 
         TrackSearchDTO target = searchResult.getTracks().stream().findFirst().orElseThrow();
-        TrackInfoDTO infoResult = SearchEndpoint.getTrackInfo(target.name, target.artist).get();
+        TrackInfoDTO infoResult = SearchEndpoint.getTrackInfo(target.name, target.artist).getTrackInfoDTO().get();
         assertThat(infoResult).isNotNull();
         // debug
         // System.out.println(infoResult);
@@ -46,7 +46,7 @@ class LastfmTest {
     @Test
     @DisplayName("Recommend From Tag Test")
     void t003() throws Exception {
-        List<TrackSearchDTO> searchResult = SearchEndpoint.getTracksFromTag("trot");
+        List<TrackSearchDTO> searchResult = SearchEndpoint.getTracksFromTag("trot").getTracks();
         // debug
         // debug searchResult.getResult().forEach(System.out::println);
         assertThat(searchResult).isNotEmpty();
@@ -55,7 +55,7 @@ class LastfmTest {
     @Test
     @DisplayName("Recommend From Trending")
     void t004() throws Exception {
-        List<TrackSearchDTO> searchResult = SearchEndpoint.getTrendingList();
+        List<TrackSearchDTO> searchResult = SearchEndpoint.getTrendingList().getTracks();
         // debug
         // debug searchResult.forEach(System.out::println);
         assertThat(searchResult).isNotEmpty();

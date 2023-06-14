@@ -45,7 +45,7 @@ public class RecommendService {
         List<TrackSearchDTO> emptyTracks = new ArrayList<>();
 
         tagNames.parallelStream()
-                .flatMap(tag -> SearchEndpoint.getTracksFromTag(tag).stream())
+                .flatMap(tag -> SearchEndpoint.getTracksFromTag(tag).getTracks().stream())
                 .forEach(trackSearchDTO -> processTrackSearchDTO(trackSearchDTO, result, emptyTracks));
 
         result.addAll(SearchEndpoint.getTrackInfos(emptyTracks));
@@ -187,7 +187,7 @@ public class RecommendService {
      * lastfm api 의 인기 음악을 갱신합니다.
      */
     private List<TrendingTrack> getTrendingSearchData() {
-        List<TrendingTrack> trendingTracks = TrendingTrack.of(SearchEndpoint.getTrendingList());
+        List<TrendingTrack> trendingTracks = TrendingTrack.of(SearchEndpoint.getTrendingList().getTracks());
         trendingRepository.saveAll(trendingTracks);
 
         return trendingTracks;
