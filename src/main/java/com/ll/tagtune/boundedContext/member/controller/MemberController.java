@@ -58,4 +58,24 @@ public class MemberController {
     public String showMe(Model model) {
         return "usr/member/me";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/personalForm")
+    public String showPersonalForm() {
+        return "usr/member/personalForm";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/personalForm")
+    public String showPersonalForm(@Valid PersonalForm personalForm) {
+        RsData<Member> updateRsData = memberService.updateInfo(rq.getMember(), personalForm.nickName);
+        if (updateRsData.isFail()) {
+            return rq.historyBack(updateRsData);
+        }
+
+        return rq.redirectWithMsg("/usr/member/me", updateRsData);
+    }
+
+    public record PersonalForm(@NotBlank @Size(min = 1, max = 10) String nickName) {
+    }
 }
