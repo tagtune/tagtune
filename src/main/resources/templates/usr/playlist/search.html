@@ -1,44 +1,98 @@
-<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="">
 
 <head>
-    <title>음악 검색 페이지</title>
+    <title>플레이리스트 트랙 추가</title>
 </head>
 
 <body>
+<main class="flex flex-grow items-center justify-center" layout:fragment="main">
+    <div class="flex flex-col max-w-2xl w-full justify-center">
+        <div class="flex max-w-2xl w-full my-4">
+            <div class="flex justify-between flex-grow">
+                <div class="px-4 flex flex-grow">
+                    <div class="form-control flex flex-grow">
+                        <div><i class="fa-solid fa-magnifying-glass"></i>
+                            원하는 음악를 검색해보세요
+                        </div>
+                        <div class="mt-4 flex">
+                            <label class="flex flex-col flex-grow">
+                                <input autofocus class="input input-bordered flex flex-grow my-1" name="artistName"
+                                       onchange="$(this).keyup();"
+                                       onkeydown="handleEnterKey(event);"
+                                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                                       placeholder="원하는 아티스트를 입력하세요" type="text">
+                                <input autofocus class="input input-bordered flex flex-grow my-1" name="trackName"
+                                       onchange="$(this).keyup();"
+                                       onkeydown="handleEnterKey(event);"
+                                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                                       placeholder="원하는 트랙을 입력하세요" type="text">
+                                <a class="btn btn-primary btn-sm mx-1 my-2 block mt-3 text-sm break-all text-blue-400"
+                                   href="#"
+                                   onclick="event.preventDefault(); performSearch();">
+                                    <span>검색</span>
+                                </a>
+                                <script>
+                                    $(`input[name="artistName"]:last`).keyup();
+                                    $(`input[name="trackName"]:last`).keyup();
 
-<main layout:fragment="main" class="flex-grow flex items-center justify-center">
-    <div class="max-w-2xl w-full px-4">
-        <h1 class="mb-4">
-            <i class="fa-solid fa-music"></i>
-            원하시는 가수와 음악을 입력해주세요.
-        </h1>
+                                    function handleEnterKey(event) {
+                                        if (event.keyCode === 13) {
+                                            event.preventDefault();
+                                            performSearch();
+                                        }
+                                    }
 
-        <style>
+                                    function performSearch() {
+                                        var artistName = $(`input[name="artistName"]:last`).val().trim().replace(/ /g, '');
+                                        var trackName = $(`input[name="trackName"]:last`).val().trim();
 
-            .form-row {
-                display: flex;
-                flex-direction: column;
-            }
-            .form-row label {
-                margin-bottom: 10px;
-            }
-        </style>
+                                        if (trackName === '') {
+                                            $(`input[name="trackName"]:last`).addClass('border-red-500');
+                                            alert('트랙 이름을 입력해주세요!');
+                                            return;
+                                        }
 
-        <div class="form-row">
-            <label>
-                <span class="label-text">가수 : </span>
-                <input type="text" name="artist" placeholder="추가하고싶은 가수" class="input input-bordered" autofocus/>
-            </label>
-            <label>
-                <span class="label-text">제목 : </span>
-                <input type="text" name="Title" placeholder="추가하고싶은 제목" class="input input-bordered" autofocus/>
-            </label>
-            <button type="submit">플레이리스트에 추가</button>
+                                        var query = 'trackName=' + trackName;
+                                        if (artistName !== '') {
+                                            query += '&artistName=' + artistName;
+                                        }
+
+                                        location.href = 'search?' + query;
+                                    }
+                                </script>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
+        <div class="max-w-2xl w-full mt-4 px-4">
+            <div>
+                <h1 class="mb-4">
+                    <i class="fa-solid fa-list"></i>
+                    검색 결과
+                </h1>
+            </div>
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${tracks != null &&!tracks.isEmpty()}">
+                <div th:each="track: ${tracks}">
+                    <form class="btn btn-primary mx-1 my-2" method="POST"
+                          th:action="@{|/playlist/${playlistId}/addTrack|}">
+                        <input name="name" th:value="${track.name}" type="hidden">
+                        <input name="artist" th:value="${track.artist}" type="hidden">
+                        <button class="link-button" name="submit" type="submit" value="value">
+                            <div class="flex flex-col">
+                                <span class="my-1" th:text="${track.name}"></span>
+                                <span class="flex justify-start my-1" th:text="${track.artist}"></span>
+                            </div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="flex flex-wrap max-w-2xl w-full" th:if="${tracks == null || tracks.isEmpty()}">
+                검색 결과가 없습니다.
+            </div>
+        </div>
     </div>
 </main>
 </body>
-
 </html>
