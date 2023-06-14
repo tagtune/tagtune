@@ -22,6 +22,11 @@ public class HomeController {
         return "/usr/home/main";
     }
 
+    @GetMapping("/usr/home/about")
+    public String showAbout() {
+        return "/usr/home/about";
+    }
+
     @GetMapping("/usr/debugSession")
     @ResponseBody
     public String showDebugSession(HttpSession session) {

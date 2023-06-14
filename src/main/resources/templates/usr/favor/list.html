@@ -40,7 +40,7 @@
             <div class="flex flex-col max-w-2xl w-full" th:if="${!favorTags.isEmpty()}">
                 <div th:each="favorTag: ${favorTags}">
                     <a class="badge badge-primary mx-1 my-2"
-                       th:href="|/usr/category/tag?id=${favorTag.tagId}|">
+                       th:href="|/category/tag?id=${favorTag.tagId}|">
                         <span th:text="${favorTag.name}"></span>
                     </a>
                     <form class="badge badge-primary mx-1 my-2" method="POST"
