@@ -10,4 +10,6 @@ public interface FavorTagRepository extends JpaRepository<FavorTag, Long> {
     List<FavorTag> findAllByMember_Id(Long memberId);
 
     Optional<FavorTag> findById(Long id);
+
+    List<FavorTag> findTop3ByMember_idOrderByIdDesc(Long memberId);
 }

@@ -44,7 +44,9 @@
             </div>
             <a class="btn btn-ghost normal-case text-xl" href="/usr/member/me">
                 <i class="fa-solid fa-user">&nbsp;</i>
-                <div th:if="${@rq.login}" th:utext="${@rq.member.getProfileImage()}"></div>
+                <div th:if="${@rq.login && @rq.member.getNickName().equals('__nodata')}">닉네임을 입력하세요.</div>
+                <div th:if="${@rq.login && !@rq.member.getNickName().equals('__nodata')}"
+                     th:utext="${@rq.member.getNickName()}"></div>
             </a>
         </div>
         <div class="navbar-center">

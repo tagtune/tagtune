@@ -26,7 +26,7 @@ public class FavorService {
   
     @Transactional(readOnly = true)
     public List<FavorTag> getFavorTags(final Long memberId) {
-        return favorTagRepository.findAllByMember_Id(memberId);
+        return favorTagRepository.findTop3ByMember_idOrderByIdDesc(memberId);
     }
 
     public FavorTag create(final Member member, final Tag tag) {

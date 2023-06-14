@@ -20,6 +20,10 @@ public class SecurityConfig {
                         formLogin -> formLogin
                                 .loginPage("/usr/member/login")
                 )
+                .oauth2Login(
+                        oauth2Login -> oauth2Login
+                                .loginPage("/usr/member/login")
+                )
                 .logout(
                         logout -> logout
                                 .logoutUrl("/usr/member/logout")

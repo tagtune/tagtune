@@ -12,11 +12,4 @@ class AppConfigTest {
     void baseUrlTest() throws Exception {
         System.out.println(AppConfig.getArtistUrl());
     }
-
-    @Test
-    @DisplayName("Spotify Secrets")
-    void spotifyClientIdTest() throws Exception {
-        System.out.println(AppConfig.getSpotifyClientId());
-        System.out.println(AppConfig.getSpotifyClientSecret());
-    }
 }
