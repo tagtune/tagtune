@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 public class TrendingTrack {
     @Id
     private Integer id;
-    private Integer rank;
+    private Integer trackRank;
     private String title;
     private String artist;
 

@@ -14,7 +14,7 @@
                 <li class="flex" th:each="track: ${tracks}">
                     <div class="card flex-grow bg-base-100 shadow-2xl">
                         <div class="card-body">
-                            <h1 class="font-bold text-xl mr-3 w-6" th:text="${track.rank}"></h1>
+                            <h1 class="font-bold text-xl mr-3 w-6" th:text="${track.trackRank}"></h1>
                             <div class="flex">
                                 <form class="badge mx-1 my-2" method="POST"
                                       style="background:#6EC6CA;color:#000000" th:action="@{|/track/search|}">
