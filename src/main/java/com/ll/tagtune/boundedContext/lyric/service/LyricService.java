@@ -53,7 +53,8 @@ public class LyricService {
      * 가사 작성 기능
      */
     public RsData<Lyric> writeLyric(final Track track, final String content, final Language language) {
-        if (content == null) return RsData.of("F-2", "수정하려는 내용이 잘못된 값입니다.");
+        if (content == null || content.isBlank())
+            return RsData.of("F-2", "수정하려는 내용이 잘못된 값입니다.");
 
         return lyricRepository.findByTrackIdAndLanguage(track.getId(), language)
                 .map(lyric -> RsData.of("S-2", "성공적으로 작성했습니다!", modifyLyric(lyric, content)))
