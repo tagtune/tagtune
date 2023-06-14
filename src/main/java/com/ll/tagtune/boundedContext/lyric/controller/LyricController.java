@@ -83,6 +83,6 @@ public class LyricController {
             lyricRsData = lyricService.modifyLyric(trackId, content, Language.ENGLISH);
         }
 
-        return rq.redirectWithMsg("/track/"+trackId+"/lyric", lyricRsData.getMsg());
+        return rq.redirectWithMsg("/track/" + trackId + "/lyric", lyricRsData.getMsg());
     }
 }

@@ -19,7 +19,7 @@ public class Lyric extends BaseEntity {
     private Language language;
     @Builder.Default
     @Column(length = 5000)
-    private String content ="가사가 비어있습니다.";
+    private String content = "가사가 비어있습니다.";
     @ManyToOne
     Track track;
 }
