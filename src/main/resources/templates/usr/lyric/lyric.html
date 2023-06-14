@@ -1,22 +1,23 @@
 <html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <head>
-    <title>가사 상세 데모 페이지</title>
+    <title>가사 상세 페이지</title>
 </head>
 
 <body>
 
 <main layout:fragment="main" class="flex-grow flex items-center justify-center">
-    <div class="max-w-2xl w-full px-4">
+    <div class="max-w-4xl w-full px-4">
         <form class="flex flex-col gap-6" method="GET">
             <div id="lyrics" class="flex items-center justify-center">
                 <div id="lyric_ko" class="w-1/2 mr-3">
                     <div class="mx-auto overflow-y-auto h-[400px]
-                        border-solid border-2 rounded-md border-purple-400"></div>
+                        border-solid border-2 rounded-md border-purple-400"
+                         th:text="${lyric_ko.content}"></div>
 
                     <div class="w-1/2">
                         <div>
-                            <a id="btn_ko" th:href="@{|/track/${trackId}/modifyLyric|}"
+                            <a id="btn_ko" th:href="@{|/track/${trackId}/modifyLyric?lang=${'kor'}|}"
                                class="btn btn-block btn-outline gap-1 mt-10">
                                 <i class="fa-solid fa-address-card text-[color:#E1306C]"></i>
                                 <span>한글 가사 수정</span>
@@ -28,48 +29,12 @@
                 <div id="lyric_en" class="w-1/2 ml-3">
                     <div id="lyric_en_depth"
                          class="mx-auto overflow-y-auto h-[400px]
-                         border-solid border-2 rounded-md border-purple-400">
-                        In the shadows he saw four eyes, lit by fire
-                        Fire
-                        He’d never done that with a lover before
-                        Before
-                        Meanwhile everyone else got lost in quiet
-                        By the river
-                        Seeking for more, of course he found better
-                        He saw them, they saw him
-                        But everyone just kept on going
-                        What he saw was different
-                        He should have gone to bed
-                        But instead he stuck around for the mood
-                        In the shadows he saw four eyes, lit by fire
-                        Fire
-                        He’d never done that with a lover before
-                        Before
-                        He was seeking for more
-                        Either early or too late, it was number seven
-                        In the shadows he saw four eyes, lit by fire
-                        Fire
-                        He’d never done that with a lover before
-                        Before
-                        Meanwhile everyone else got lost in quiet
-                        By the river
-                        Seeking for more, of course he found better
-                        He saw them, they saw him
-                        But everyone just kept on going
-                        What he saw was different
-                        He should have gone to bed
-                        But instead he stuck around for the mood
-                        In the shadows he saw four eyes, lit by fire
-                        Fire
-                        He’d never done that with a lover before
-                        Before
-                        He was seeking for more
-                        Either early or too late, it was number seven
-                    </div>
+                         border-solid border-2 rounded-md border-purple-400"
+                         th:text="${lyric_en.content}"></div>
 
-                    <div id="btn-container" class="w-1/2">
+                    <div class="w-1/2">
                         <div>
-                            <a id="btn-en-m" th:href="@{|/track/${trackId}/modifyLyric|}"
+                            <a id="btn-en-m" th:href="@{|/track/${trackId}/modifyLyric?lang=${'eng'}|}"
                                class="btn btn-block btn-outline gap-1 mt-10">
                                 <i class="fa-solid fa-address-card text-[color:#E1306C]"></i>
                                 <span>영어 가사 수정</span>
