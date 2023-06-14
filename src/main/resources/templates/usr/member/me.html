@@ -67,7 +67,8 @@
                 </div>
             </div>
         </div>
-        <button class="flex justify-end mt-2 btn btn-primary">
+        <button class="flex justify-end mt-2 btn btn-primary"
+                th:if="${@rq.member.age!=null && @rq.member.gender!=null}">
             <a href="/usr/member/personalForm">
                 <i class="fa-solid fa-address-card"></i>
                 <span>&nbsp;내 정보 수정</span>
