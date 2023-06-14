@@ -20,9 +20,6 @@
 
                     <li th:if="${@rq.login}"><a href="/favor/list"><i class="fa-solid fa-user"></i> 선호 태그</a></li>
 
-                    <li th:if="${@rq.login && (@rq.member.age == null || @rq.member.gender==null)}">
-                        <a href="/usr/member/personalForm"><i class="fa-solid fa-address-card"></i> 추가정보 입력</a></li>
-
                     <div th:if="${@rq.login}" class="divider"></div>
 
                     <li><a href="/recommend/list"><i class="fa-solid fa-music"></i> 음악 추천</a></li>
