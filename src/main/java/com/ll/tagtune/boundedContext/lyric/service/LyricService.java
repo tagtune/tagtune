@@ -33,39 +33,33 @@ public class LyricService {
     /**
      * 가사 저장 기능
      * */
-    public RsData<Lyric> saveLyric(String content, Track track, Language language){
-        if (content == null) {
-            return RsData.of("F-1", "저장하려는 내용이 잘못된 값입니다.");
-        }
-
+    public RsData<Lyric> saveLyric(Track track, Language language){
         Lyric lyric = Lyric.builder()
-                .content(content)
                 .track(track)
                 .language(language)
                 .build();
 
-        lyricRepository.save(lyric);
+        Lyric svaelyric = lyricRepository.save(lyric);
 
-        return RsData.of("S-1", "성공적으로 저장되었습니다!");
+        return RsData.of("S-1", "성공적으로 저장되었습니다!", svaelyric);
     }
 
     /**
      * 가사 수정 기능
      * */
     public RsData<Lyric> modifyLyric(Long trackId, String content, Language language){
-//        RsData<Track> trackRsData = trackService.getTrack(trackId);
-//        if (trackRsData.getData() == null) {
-//            return RsData.of("F-3", "해당되는 track이 없습니다.");
-//        }
         Optional<Lyric> oLyric = lyricRepository.findByTrackIdAndLanguage(trackId, language);
 
         if (content == null) {
             return RsData.of("F-2", "수정하려는 내용이 잘못된 값입니다.");
         }
+        Lyric lyric = oLyric.get();
 
-        Lyric newLyric = oLyric.get().toBuilder()
+        Lyric newLyric = lyric.toBuilder()
                 .content(content)
                 .build();
+
+        lyricRepository.save(newLyric);
 
         return RsData.of("S-1", "성공적으로 수정되었습니다!", newLyric);
     }
