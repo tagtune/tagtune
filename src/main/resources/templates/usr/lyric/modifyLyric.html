@@ -1,7 +1,7 @@
 <html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <head>
-    <title>가사 수정 데모 페이지</title>
+    <title>가사 수정</title>
 </head>
 
 <body>
@@ -11,8 +11,8 @@
         function ModifyLyric__submit(form) {
             form.content.value = form.content.value.trim();
 
-            if(form.content.value.length == 0){
-                toastWarning('댓글을 입력해주세요.');
+            if (form.content.value.length === 0) {
+                toastWarning('가사를 입력해주세요.');
                 form.iComment.focus();
                 return;
             }
@@ -24,13 +24,13 @@
     <div class="max-w-2xl w-full px-4">
         <form class="flex flex-col gap-6"
               method="POST"
-              th:action="@{|/track/${trackId}/modifyLyric/${lang}|}"
+              th:action="@{|/track/${trackId}/modifyLyric/${lyric.language}|}"
               onsubmit="ModifyLyric__submit(this); return false;">
             <input type="hidden" name="_method" value="PATCH">
-            <div id="lyrics" class= "flex items-center justify-center">
+            <div class="flex items-center justify-center" id="lyrics">
                 <textarea name="content" type="text"
                           class="textarea textarea-accent w-[700px] h-[500px] "
-                          th:placeholder="${lyric.content}"
+                          th:text="${lyric.content}"
                           style="resize: none;"></textarea>
             </div>
             <div class="relative">

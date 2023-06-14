@@ -13,11 +13,11 @@
                 <div id="lyric_ko" class="w-1/2 mr-3">
                     <div class="mx-auto overflow-y-auto h-[400px]
                         border-solid border-2 rounded-md border-purple-400"
-                         th:text="${lyric_ko.content}"></div>
+                         th:text="${lyric_ko==null ? ' ': lyric_ko.content}"></div>
 
                     <div class="w-1/2">
                         <div>
-                            <a id="btn_ko" th:href="@{|/track/${trackId}/modifyLyric?lang=${'kor'}|}"
+                            <a id="btn_ko" th:href="@{|/track/${trackId}/modifyLyric?lang=${'Kor'}|}"
                                class="btn btn-block btn-outline gap-1 mt-10">
                                 <i class="fa-solid fa-address-card text-[color:#E1306C]"></i>
                                 <span>한글 가사 수정</span>
@@ -30,11 +30,11 @@
                     <div id="lyric_en_depth"
                          class="mx-auto overflow-y-auto h-[400px]
                          border-solid border-2 rounded-md border-purple-400"
-                         th:text="${lyric_en.content}"></div>
+                         th:text="${lyric_en==null ? ' ': lyric_en.content}"></div>
 
                     <div class="w-1/2">
                         <div>
-                            <a id="btn-en-m" th:href="@{|/track/${trackId}/modifyLyric?lang=${'eng'}|}"
+                            <a id="btn-en-m" th:href="@{|/track/${trackId}/modifyLyric?lang=${'Eng'}|}"
                                class="btn btn-block btn-outline gap-1 mt-10">
                                 <i class="fa-solid fa-address-card text-[color:#E1306C]"></i>
                                 <span>영어 가사 수정</span>
