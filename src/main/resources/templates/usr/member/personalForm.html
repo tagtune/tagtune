@@ -112,9 +112,8 @@
                     </div>
                 </div>
             </div>
-
-            <button id="btn-member-personalForm-1"
-                    class="btn btn-primary">
+            <button class="btn btn-primary"
+                    id="btn-member-personalForm-1" th:if="${@rq.member.age==null && @rq.member.gender==null}">
                 <i class="fa-solid fa-address-card"></i>
                 <span>&nbsp;추가정보 등록</span>
             </button>
