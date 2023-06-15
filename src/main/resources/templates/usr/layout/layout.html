@@ -20,6 +20,10 @@
 
                     <li th:if="${@rq.login}"><a href="/favor/list"><i class="fa-solid fa-user"></i> 선호 태그</a></li>
 
+                    <li th:if="${@rq.login && @rq.member.getNickName() == '__nodata'}"><a
+                            href="/usr/member/personalForm">
+                        <i class="fa-solid fa-user"></i> 닉네임 입력</a></li>
+
                     <div th:if="${@rq.login}" class="divider"></div>
 
                     <li><a href="/recommend/list"><i class="fa-solid fa-music"></i> 음악 추천</a></li>
@@ -42,11 +46,15 @@
                     </li>
                 </ul>
             </div>
-            <a class="btn btn-ghost normal-case text-xl" href="/usr/member/me">
+            <a class="btn btn-ghost normal-case text-xl"
+               href="/usr/member/personalForm" th:if="${@rq.login && @rq.member.getNickName().equals('__nodata')}">
                 <i class="fa-solid fa-user">&nbsp;</i>
-                <div th:if="${@rq.login && @rq.member.getNickName().equals('__nodata')}">닉네임을 입력하세요.</div>
-                <div th:if="${@rq.login && !@rq.member.getNickName().equals('__nodata')}"
-                     th:utext="${@rq.member.getNickName()}"></div>
+                <span>닉네임을 입력하세요.</span>
+            </a>
+            <a class="btn btn-ghost normal-case text-xl"
+               href="/usr/member/me" th:if="${@rq.login && !@rq.member.getNickName().equals('__nodata')}">
+                <i class="fa-solid fa-user">&nbsp;</i>
+                <span th:text="${@rq.member.getNickName()}"></span>
             </a>
         </div>
         <div class="navbar-center">

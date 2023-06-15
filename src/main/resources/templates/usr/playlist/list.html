@@ -8,45 +8,39 @@
 
 <main layout:fragment="main" class="flex-grow flex items-center justify-center">
     <div class="max-w-2xl w-full px-4">
-        <h1 class="mb-4">
-            <i class="fa-solid fa-music"></i>
-            <div th:utext="${@rq.member.getUsername() + '의 플레이리스트'}"></div>
-        </h1>
+        <div class="flex flex-grow justify-between mb-4">
+            <h1 class="flex text-2xl">
+                <i class="fa-solid fa-music"></i>
+                <span th:utext="${@rq.member.getNickName() + '의 플레이리스트'}"></span>
+            </h1>
+            <div class="flex">
+                <a class="btn btn-primary" href="/playlist/playlistForm" th:if="${@rq.login}">
+                    <i class="fa-solid fa-music"></i>&nbsp;플레이리스트 생성하기
+                </a>
+            </div>
+        </div>
 
         <th:block th:each="playlist : ${playlists}">
-            <div class="flex">
-                <div style="margin-right: 60px;">
-                    <div>
-                        <form th:action="@{|/playlist/detail/${playlist.id}|}" method="GET">
-
-                            <button th:text="${playlist.name}"></button>
-
-                        </form>
+            <div class="card flex-grow bg-base-100 my-2 shadow-2xl">
+                <div class="card-body">
+                    <div class="flex justify-between">
+                        <div>
+                            <div class="badge badge-primary mx-1 my-2">
+                                <a th:href="@{|/playlist/detail/${playlist.id}|}"
+                                   th:text="${playlist.name}"></a>
+                            </div>
+                        </div>
+                        <div>
+                            <form class="badge badge-secondary mx-1 my-2" method="POST"
+                                  th:action="@{|/playlist/${playlist.id}|}">
+                                <input name="_method" type="hidden" value="DELETE">
+                                <button type="submit">삭제</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-
-                <div>
-                    <form th:action="@{|/playlist/${playlist.id}|}" method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit">삭제</button>
-                    </form>
                 </div>
             </div>
         </th:block>
-
-
-        <style>
-            .container {
-                display: flex;
-                justify-content: flex-end;
-            }
-        </style>
-
-        <div class="container">
-            <button th:if="${@rq.login}"><a href="/playlist/playlistForm"><i class="fa-solid fa-music"></i> 플레이리스트 생성하기</a>
-            </button>
-        </div>
-
     </div>
 </main>
 </body>
