@@ -10,7 +10,7 @@
             // iComment 이(가) 올바른지 체크
             form.iComment.value = form.iComment.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
 
-            if (form.iComment.value == "") {
+            if (form.iComment.value === "") {
                 toastWarning('댓글을 입력해주세요.');
                 form.iComment.focus();
                 return;
@@ -23,7 +23,7 @@
             // iComment 이(가) 올바른지 체크
             form.modifyComment.value = form.modifyComment.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
 
-            if (form.modifyComment.value == "") {
+            if (form.modifyComment.value === "") {
                 toastWarning('댓글을 입력해주세요.');
                 form.modifyComment.focus();
                 return;
@@ -33,9 +33,9 @@
         }
 
         function SaveReply__submit(form) {
-            form.iReply.value == form.iReply.value.trim();
+            form.iReply.value === form.iReply.value.trim();
 
-            if (form.iReply.value == "") {
+            if (form.iReply.value === "") {
                 toastWarning('덧글을 입력해주세요.');
                 form.iReply.focus();
                 return;
@@ -45,9 +45,9 @@
         }
 
         function ModifyReply__submit(form) {
-            form.modifyReply.value == form.modifyReply.value.trim();
+            form.modifyReply.value === form.modifyReply.value.trim();
 
-            if (form.modifyReply.value == "") {
+            if (form.modifyReply.value === "") {
                 toastWarning('덧글을 입력해주세요.');
                 form.modifyReply.focus();
                 return;
@@ -88,6 +88,20 @@
                 content.style.display = "none";
             }
         }
+
+        function addTag__submit(form) {
+
+            // iTag 이(가) 올바른지 체크
+            form.iTag.value = form.iTag.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+            console.log(form.iTag.value);
+            if (form.iTag.value === "") {
+                toastWarning('태그를 입력해주세요.');
+                form.iTag.focus();
+                return;
+            }
+
+            form.submit();
+        }
     </script>
     <div class="flex flex-col max-w-2xl w-full px-4 justify-center">
         <div>
@@ -106,6 +120,17 @@
         <div class="divider"></div>
         <div>
             <h1 class="font-bold text-xl">태그 목록</h1>
+            <div th:if="${@rq.isLogin()}">
+                <div class="divider"></div>
+                <h1 class="font-bold text-xl">태그 추가</h1>
+                <form class="flex flex-grow mb-4" method="POST" onsubmit="addTag__submit(this); return false;"
+                      th:action="@{|/track/${trackId}/tag|}">
+                    <input class="input input-bordered flex flex-grow my-1" name="iTag"
+                           placeholder="원하는 태그를 추가하세요" type="text">
+                    <input class="btn btn-primary btn-sm mt-2 mb-5"
+                           style="float:left;" type="submit" value="태그 등록">
+                </form>
+            </div>
             <div class="divider"></div>
             <div class="flex flex-col text-center" th:if="${#lists.isEmpty(trackDetail.tags)}">
                 <span>태그가 없습니다.</span>
@@ -191,7 +216,7 @@
                                                 </button>
                                                 <form hidden method="POST"
                                                       th:action=
-                                                        "@{|/track/${comment.trackId}/comment/${comment.commentId}|}">
+                                                              "@{|/track/${comment.trackId}/comment/${comment.commentId}|}">
                                                     <input name="_method" type="hidden" value="PATCH">
                                                 </form>
                                             </div>
@@ -205,7 +230,7 @@
                                                 </button>
                                                 <form hidden method="POST"
                                                       th:action=
-                                                        "@{|/track/${comment.trackId}/comment/${comment.commentId}|}">
+                                                              "@{|/track/${comment.trackId}/comment/${comment.commentId}|}">
                                                     <input name="_method" type="hidden" value="PATCH">
                                                 </form>
                                             </div>
@@ -252,7 +277,7 @@
                                                                     </button>
                                                                     <form hidden method="POST"
                                                                           th:action=
-                                                                            "@{|/track/${comment.trackId}/comment/${reply.id}|}">
+                                                                                  "@{|/track/${comment.trackId}/comment/${reply.id}|}">
                                                                         <input name="_method" type="hidden"
                                                                                value="DELETE">
                                                                     </form>
