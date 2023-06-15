@@ -19,12 +19,12 @@ public class HomeController {
     public String showMain() {
         if (rq.isLogout()) return "redirect:/usr/member/login";
 
-        return "/usr/home/main";
+        return "usr/home/main";
     }
 
     @GetMapping("/usr/home/about")
     public String showAbout() {
-        return "/usr/home/about";
+        return "usr/home/about";
     }
 
     @GetMapping("/usr/debugSession")
@@ -36,10 +36,10 @@ public class HomeController {
         while (attributeNames.hasMoreElements()) {
             String attributeName = attributeNames.nextElement();
             Object attributeValue = session.getAttribute(attributeName);
-            sb.append(String.format("%s: %s\n", attributeName, attributeValue));
+            sb.append(attributeName + ": " + attributeValue + "\n");
         }
 
-        return sb.toString().replaceAll("\n", "<br>");
+        return sb.toString().replace("\n", "<br>");
     }
 
     @GetMapping("/usr/historyBackTest")
