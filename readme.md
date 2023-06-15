@@ -1,4 +1,4 @@
-# Tagune
+# TagTune
 
 태그 기반 음악 추천 웹 서비스
 
