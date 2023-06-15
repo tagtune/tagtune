@@ -167,6 +167,7 @@
                     <!-- Parent comment-->
                     <ul class="flex flex-col max-w-2xl w-full gap-4" th:if="${!#lists.isEmpty(comments)}">
                         <li class="mb-2" th:each="comment: ${comments}">
+                            <div class="divider"></div>
                             <th:block class="flex flex-col ms-5 max-w-2xl w-full">
                                 <div class="max-w-2xl w-full">
                                     <div class="flex justify-between">
@@ -181,7 +182,7 @@
                                         <div class="flex">
                                             <!--                                            댓글수정-->
                                             <div>
-                                                <button class="btn btn-primary btn-sm mt-2 w-[40px] mb-5"
+                                                <button class="btn btn-primary btn-sm mt-2 mx-1 w-[40px] mb-5"
                                                         onclick="modifyComment(this.getAttribute('commentId'))"
                                                         th:commentId="${comment.commentId}"
                                                         th:id="dBtn_+${comment.commentId}"
@@ -195,7 +196,7 @@
                                                 </form>
                                             </div>
                                             <div>
-                                                <button class="btn btn-primary btn-sm mt-2 w-[40px] mb-5"
+                                                <button class="btn btn-primary btn-sm mt-2 mx-1 w-[40px] mb-5"
                                                         onclick="$(this).next().submit();"
                                                         th:attr="data-comment-id=${comment.commentId}"
                                                         th:id="dBtn_+${comment.commentId}"
@@ -236,9 +237,7 @@
                                                 <div class="flex flex-col">
                                                     <div class="flex justify-between">
                                                         <div class="flex items-center ms-5">
-                                                            <img alt="..."
-                                                                 class="rounded-circle h-4 w-4"
-                                                                 src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
+                                                            <i class="fa-solid fa-reply fa-rotate-180"></i>
                                                             <p class="ml-2" th:text="${reply.member.username}"></p>
                                                             <p class="ml-4" th:text="${reply.content}"></p>
                                                         </div>
@@ -249,7 +248,7 @@
                                                                             onclick="$(this).next().submit();"
                                                                             th:id="drBtn_+${reply.id}"
                                                                             th:if="${@rq.member.id == reply.member.id}">
-                                                                        <span class="">덧글 삭제</span>
+                                                                        <span class="text-[12px]">덧글 삭제</span>
                                                                     </button>
                                                                     <form hidden method="POST"
                                                                           th:action=
@@ -265,7 +264,7 @@
                                                                             th:id="mrBtn_+${reply.id}"
                                                                             th:if="${@rq.member.id == reply.member.id}"
                                                                             th:replyId="${reply.id}">
-                                                                        <span class="">덧글 수정</span>
+                                                                        <span class="text-[12px]">덧글 수정</span>
                                                                     </button>
                                                                 </div>
                                                             </div>

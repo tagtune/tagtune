@@ -1,0 +1,54 @@
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>닉네임 입력</title>
+</head>
+
+<body>
+
+<main class="flex-grow flex items-center justify-center" layout:fragment="main">
+    <script>
+        function PersonalForm__submit(form) {
+
+            form.nickName.value = form.nickName.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.nickName.value.length === 0) {
+                toastWarning('닉네임을 입력해주세요.');
+                form.nickName.focus();
+                return;
+            }
+
+            if (form.nickName.value.length > 10) {
+                toastWarning('닉네임은 10자 이하로 설정해주세요.');
+                form.nickName.focus();
+                return;
+            }
+
+            form.submit(); // 폼 발송
+        }
+    </script>
+
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-solid fa-address-card"></i>
+            닉네임을 등록해주세요.
+        </h1>
+
+        <form class="flex flex-col gap-6" method="POST" onsubmit="PersonalForm__submit(this); return false;" th:action>
+            <div class="form-control">
+                <input autofocus class="input input-bordered" name="nickName" onchange="$(this).keyup();" onkeyup="$(this).next().children(':last-child').text(this.value.trim());"
+                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                       placeholder="닉네임"
+                       type="text"/>
+            </div>
+            <button class="btn btn-primary"
+                    id="btn-member-personalForm-1">
+                <i class="fa-solid fa-address-card"></i>
+                <span>&nbsp;닉네임 등록</span>
+            </button>
+        </form>
+    </div>
+</main>
+</body>
+
+</html>
