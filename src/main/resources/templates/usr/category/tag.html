@@ -155,9 +155,9 @@
                                         <div class="flex max-w-2xl w-full" th:text="${comment.content}">
                                         </div>
                                     </div>
-                                    <div class="flex ml-7 mt-4" th:each="reply: ${replies}">
-                                        <div class="flex justify-between"
-                                             th:if="${reply.getParent().getId()} == ${comment.getCommentId()}">
+                                    <div class="flex ml-7 mt-4"
+                                         th:each="reply: ${replies}" th:if="${reply.getParent().getId()} == ${comment.getCommentId()}">
+                                        <div class="flex justify-between">
                                             <div>
                                                 <div class="flex">
                                                     <i class="fa-solid fa-reply fa-rotate-180"></i>
