@@ -112,7 +112,7 @@ public class TrackService {
 
         final Track track = createTrack(result.get().getTitle(), artist, album);
 
-        track.getTags().addAll(result.get().getTags().stream()
+        track.getTrackTags().addAll(result.get().getTags().stream()
                 .map(tagService::getOrCreateTag)
                 .map(tag -> trackTagService.connect(track, tag))
                 .toList());

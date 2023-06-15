@@ -3,16 +3,16 @@ package com.ll.tagtune.boundedContext.playlist.entity;
 import com.ll.tagtune.base.baseEntity.BaseEntity;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.track.entity.Track;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,7 +27,12 @@ public class Playlist extends BaseEntity {
      * 한 멤버가 여러개의 플레이리스트를 가질 수 있다.
      */
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
     @OneToMany
-    private List<Track> tracks;
+    @OrderBy("id desc")
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @ToString.Exclude
+    @Builder.Default
+    private List<Track> tracks = new ArrayList<>();
 }

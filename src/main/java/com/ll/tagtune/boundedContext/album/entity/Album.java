@@ -17,6 +17,7 @@ public class Album {
     @Column(nullable = false)
     private String name;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Artist artist;
     private String image;
 }

@@ -21,6 +21,7 @@ public class TrackInfoSnapshot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
     @Convert(converter = RecommendTypeConvertor.class)
     private RecommendType recommendType;

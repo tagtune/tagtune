@@ -51,7 +51,7 @@ class TrackServiceTest {
 
         assertThat(oTrack.get().getAlbum().getName()).isNotNull();
 
-        List<TrackTag> tags = oTrack.get().getTags();
+        List<TrackTag> tags = oTrack.get().getTrackTags();
         // debug
         // tags.forEach(System.out::println);
         assertThat(tags).isNotEmpty();
