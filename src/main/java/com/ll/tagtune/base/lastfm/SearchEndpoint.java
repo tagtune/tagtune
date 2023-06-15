@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 import java.util.Optional;
@@ -112,6 +113,8 @@ public class SearchEndpoint {
      */
     public static List<TrackInfoDTO> getTrackInfos(final List<TrackSearchDTO> searchDTOs) {
         Mono<List<ApiTrackInfoResult>> result = Flux.range(0, searchDTOs.size())
+                .parallel()
+                .runOn(Schedulers.parallel())
                 .flatMap(i -> createWebClient()
                         .method(HttpMethod.GET)
                         .uri(BASE_URL + "track.getInfo"
@@ -121,6 +124,7 @@ public class SearchEndpoint {
                         .retrieve()
                         .bodyToMono(ApiTrackInfoResult.class)
                 )
+                .sequential()
                 .collectList();
 
         // 결과를 반환받음
