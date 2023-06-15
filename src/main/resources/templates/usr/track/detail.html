@@ -201,7 +201,12 @@
                                                  class="rounded-circle"
                                                  src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
                                             <div class="flex justify-center items-center ml-5"
-                                                 th:text="${comment.memberName}"></div>
+                                                 th:if="${comment.memberNickName != '__nodata'}"
+                                                 th:text="${comment.memberNickName}"></div>
+                                            <div class="flex justify-center items-center ml-5"
+                                                 th:if="${comment.memberNickName == '__nodata'}">
+                                                익명
+                                            </div>
                                         </div>
                                         <!--                                            댓글 삭제, 수정, 작성, 확인-->
                                         <div class="flex">
@@ -263,7 +268,11 @@
                                                     <div class="flex justify-between">
                                                         <div class="flex items-center ms-5">
                                                             <i class="fa-solid fa-reply fa-rotate-180"></i>
-                                                            <p class="ml-2" th:text="${reply.member.username}"></p>
+                                                            <p class="ml-2"
+                                                               th:if="${reply.member.nickName != '__nodata'}"
+                                                               th:text="${reply.member.nickName}"></p>
+                                                            <p class="ml-2"
+                                                               th:if="${reply.member.nickName == '__nodata'}">익명</p>
                                                             <p class="ml-4" th:text="${reply.content}"></p>
                                                         </div>
                                                         <div class="flex">

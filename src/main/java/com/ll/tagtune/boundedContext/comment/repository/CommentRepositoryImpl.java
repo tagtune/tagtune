@@ -23,6 +23,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                                 comment.content,
                                 comment.member.id,
                                 comment.member.username,
+                                comment.member.nickName,
                                 comment.replies.size(),
                                 comment.track.id
                         )

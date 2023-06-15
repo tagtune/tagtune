@@ -9,6 +9,7 @@ public class TagReplyResponseDTO {
     private String content;
     private Long memberId;
     private String memberName;
+    private String memberNickName;
     private TagComment parent;
 
     public TagReplyResponseDTO(
@@ -16,12 +17,14 @@ public class TagReplyResponseDTO {
             String content,
             Long memberId,
             String memberName,
+            String memberNickName,
             TagComment parent
     ) {
         this.replyId = replyId;
         this.content = content;
         this.memberId = memberId;
         this.memberName = memberName;
+        this.memberNickName = memberNickName;
         this.parent = parent;
     }
 
