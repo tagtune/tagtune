@@ -42,7 +42,6 @@ public class TrackController {
             Model model
     ) {
         if (!trackName.isBlank()) {
-            if (artistName.isBlank()) rq.historyBack("트랙 제목을 입력해야합니다.");
             List<TrackSearchDTO> rawTracks = (artistName.isBlank() ?
                     SearchEndpoint.searchTrack(trackName) :
                     SearchEndpoint.searchTrack(trackName, artistName))
