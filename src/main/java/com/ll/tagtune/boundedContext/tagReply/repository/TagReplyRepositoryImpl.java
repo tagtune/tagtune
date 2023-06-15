@@ -22,6 +22,7 @@ public class TagReplyRepositoryImpl implements TagReplyRepositoryCustom {
                                 tagReply.content,
                                 tagReply.member.id,
                                 tagReply.member.username,
+                                tagReply.member.nickName,
                                 tagReply.parent
                         )
                 )

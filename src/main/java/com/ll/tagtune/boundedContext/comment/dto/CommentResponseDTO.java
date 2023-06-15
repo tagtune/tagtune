@@ -12,6 +12,7 @@ public class CommentResponseDTO {
     private String content;
     private Long memberId;
     private String memberName;
+    private String memberNickName;
     private Integer replyCnt;
     private Long trackId;
     private List<Reply> replies;
@@ -22,6 +23,7 @@ public class CommentResponseDTO {
             String content,
             Long memberId,
             String memberName,
+            String memberNickName,
             Integer replyCnt,
             Long trackId
     ) {
@@ -30,6 +32,7 @@ public class CommentResponseDTO {
         this.content = getDeleteStatus() ? "삭제된 댓글입니다." : content;
         this.memberId = getDeleteStatus() ? -1 : memberId;
         this.memberName = getDeleteStatus() ? "" : memberName;
+        this.memberNickName = getDeleteStatus() ? "" : memberNickName;
         this.replyCnt = replyCnt;
         this.trackId = trackId;
     }

@@ -117,9 +117,7 @@
         </div>
         <a class="btn btn-primary btn-sm mt-2 w-[90px] w-14 h-14"
            th:href="@{|/track/${trackId}/lyric|}">가사 보기</a>
-        <div class="divider"></div>
         <div>
-            <h1 class="font-bold text-xl">태그 목록</h1>
             <div th:if="${@rq.isLogin()}">
                 <div class="divider"></div>
                 <h1 class="font-bold text-xl">태그 추가</h1>
@@ -127,10 +125,12 @@
                       th:action="@{|/track/${trackId}/tag|}">
                     <input class="input input-bordered flex flex-grow my-1" name="iTag"
                            placeholder="원하는 태그를 추가하세요" type="text">
-                    <input class="btn btn-primary btn-sm mt-2 mb-5"
+                    <input class="btn btn-primary btn-sm mt-2 mb-5 ml-2"
                            style="float:left;" type="submit" value="태그 등록">
                 </form>
             </div>
+            <div class="divider"></div>
+            <h1 class="font-bold text-xl">태그 목록</h1>
             <div class="divider"></div>
             <div class="flex flex-col text-center" th:if="${#lists.isEmpty(trackDetail.tags)}">
                 <span>태그가 없습니다.</span>
@@ -201,7 +201,12 @@
                                                  class="rounded-circle"
                                                  src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
                                             <div class="flex justify-center items-center ml-5"
-                                                 th:text="${comment.memberName}"></div>
+                                                 th:if="${comment.memberNickName != '__nodata'}"
+                                                 th:text="${comment.memberNickName}"></div>
+                                            <div class="flex justify-center items-center ml-5"
+                                                 th:if="${comment.memberNickName == '__nodata'}">
+                                                익명
+                                            </div>
                                         </div>
                                         <!--                                            댓글 삭제, 수정, 작성, 확인-->
                                         <div class="flex">
@@ -263,7 +268,11 @@
                                                     <div class="flex justify-between">
                                                         <div class="flex items-center ms-5">
                                                             <i class="fa-solid fa-reply fa-rotate-180"></i>
-                                                            <p class="ml-2" th:text="${reply.member.username}"></p>
+                                                            <p class="ml-2"
+                                                               th:if="${reply.member.nickName != '__nodata'}"
+                                                               th:text="${reply.member.nickName}"></p>
+                                                            <p class="ml-2"
+                                                               th:if="${reply.member.nickName == '__nodata'}">익명</p>
                                                             <p class="ml-4" th:text="${reply.content}"></p>
                                                         </div>
                                                         <div class="flex">

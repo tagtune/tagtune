@@ -9,6 +9,7 @@ public class TagCommentResponseDTO {
     private String content;
     private Long memberId;
     private String memberName;
+    private String memberNickName;
     private Integer replyCnt;
     private Long TagBoardId;
 
@@ -18,6 +19,7 @@ public class TagCommentResponseDTO {
             String content,
             Long memberId,
             String memberName,
+            String memberNickName,
             Integer replyCnt,
             Long tagBoardId
     ) {
@@ -26,6 +28,7 @@ public class TagCommentResponseDTO {
         this.content = getDeleteStatus() ? "삭제된 댓글입니다." : content;
         this.memberId = getDeleteStatus() ? -1 : memberId;
         this.memberName = getDeleteStatus() ? "" : memberName;
+        this.memberNickName = getDeleteStatus() ? "" : memberNickName;
         this.replyCnt = replyCnt;
         this.TagBoardId = tagBoardId;
     }

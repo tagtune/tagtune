@@ -27,8 +27,9 @@
                             이름
                         </div>
                         <div class="mt-2">
-                            <span class="badge badge-primary"
+                            <span class="badge badge-primary" th:if="${@rq.member.nickName != '__nodata'}"
                                   th:utext="${@rq.member.getNickName()}"></span>
+                            <span class="badge badge-primary" th:if="${@rq.member.nickName == '__nodata'}">익명</span>
                         </div>
                     </div>
 
@@ -45,6 +46,10 @@
                 </div>
             </div>
         </div>
+        <a class="btn btn-primary mt-3" href="/usr/member/personalForm" th:if="${@rq.member.nickName != '__nodata'}">
+            <i class="fa-solid fa-address-card"></i>
+            <span>&nbsp;닉네임 변경</span>
+        </a>
     </div>
 </main>
 </body>

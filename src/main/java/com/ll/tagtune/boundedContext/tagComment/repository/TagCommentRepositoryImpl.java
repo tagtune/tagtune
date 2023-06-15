@@ -23,6 +23,7 @@ public class TagCommentRepositoryImpl implements TagCommentRepositoryCustom {
                                 tagComment.content,
                                 tagComment.member.id,
                                 tagComment.member.username,
+                                tagComment.member.nickName,
                                 tagComment.tagReplies.size(),
                                 tagComment.tagBoard.id
                         )

@@ -99,7 +99,12 @@
                                                  class="rounded-circle"
                                                  src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"/>
                                             <div class="flex justify-center items-center ml-5"
-                                                 th:text="${comment.memberName}"></div>
+                                                 th:if="${comment.memberNickName != '__nodata'}"
+                                                 th:text="${comment.memberNickName}"></div>
+                                            <div class="flex justify-center items-center ml-5"
+                                                 th:if="${comment.memberNickName == '__nodata'}"
+                                            >익명
+                                            </div>
                                         </div>
                                         <!--                                            댓글 삭제, 수정, 작성, 확인-->
                                         <div class="flex">
@@ -150,13 +155,18 @@
                                         <div class="flex max-w-2xl w-full" th:text="${comment.content}">
                                         </div>
                                     </div>
-                                    <div class="flex ml-7 mt-4" th:each="reply: ${replies}">
-                                        <div class="flex justify-between"
-                                             th:if="${reply.getParent().getId()} == ${comment.getCommentId()}">
+                                    <div class="flex ml-7 mt-4"
+                                         th:each="reply: ${replies}" th:if="${reply.getParent().getId()} == ${comment.getCommentId()}">
+                                        <div class="flex justify-between">
                                             <div>
                                                 <div class="flex">
                                                     <i class="fa-solid fa-reply fa-rotate-180"></i>
-                                                    <div class="ml-2 flex-shrink-0" th:text="${reply.getMemberName()}">
+                                                    <div class="ml-2 flex-shrink-0"
+                                                         th:if="${reply.memberNickName != '__nodata'}"
+                                                         th:text="${reply.memberNickName}">
+                                                    </div>
+                                                    <div class="ml-2 flex-shrink-0"
+                                                         th:if="${reply.memberNickName == '__nodata'}">익명
                                                     </div>
                                                 </div>
                                                 <div>
