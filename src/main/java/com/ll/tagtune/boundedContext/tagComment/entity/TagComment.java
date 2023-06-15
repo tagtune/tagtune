@@ -26,8 +26,10 @@ public class TagComment extends BaseEntity {
     private Boolean deleteStatus = false;
     private String content;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private TagBoard tagBoard;
     @OneToMany(mappedBy = "parent", cascade = {CascadeType.ALL})
     @OrderBy("createDate desc")

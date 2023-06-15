@@ -96,7 +96,7 @@ public class TrackRepositoryImpl implements TrackRepositoryCustom {
                 .from(track)
                 .join(track.artist, artist)
                 .join(track.album, album)
-                .join(track.tags, trackTag)
+                .join(track.trackTags, trackTag)
                 .join(trackTag.tag, tag)
                 .where(track.title.eq(title).and(artist.artistName.eq(artistName)))
                 .fetchFirst()

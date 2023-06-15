@@ -22,10 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,6 +37,13 @@ public class RecommendService {
     private final TrendingRepository trendingRepository;
     private final TrackInfoSnapshotRepository trackInfoSnapshotRepository;
 
+    /**
+     * Tag 의 이름으로 Lastfm tag.toptrack 를 병렬로 호출 합니다.
+     * 검색 결과에 Track 에 있는지 조회하고, 없다면 Lastfm track.search 를 병렬로 호출합니다.
+     *
+     * @param tagNames
+     * @return List<TrackInfoDTO> Track 과 Tag 정보를 담고 있습니다.
+     */
     private List<TrackInfoDTO> getTrackInfos(final List<String> tagNames) {
         List<TrackInfoDTO> result = new CopyOnWriteArrayList<>();
         List<TrackSearchDTO> emptyTracks = new ArrayList<>();
@@ -52,6 +56,13 @@ public class RecommendService {
         return result;
     }
 
+    /**
+     * Track 엔티티에 해당 Track 의 상세정보가 있는지 name 과 artist 로 조회하고 분류합니다.
+     *
+     * @param trackSearchDTO Track 테이블에 존재하는지 조회할 데이터입니다.
+     * @param result         존재 한다면 result 에 추가합니다.
+     * @param emptyTracks    없다면 emptyTrack 에 추가합니다. Lastfm track.search 를 호출해야 하는 목록입니다.
+     */
     private void processTrackSearchDTO(
             TrackSearchDTO trackSearchDTO,
             List<TrackInfoDTO> result,
@@ -64,8 +75,19 @@ public class RecommendService {
                 );
     }
 
-    private List<TrackInfoDTO> setFavoriteList(final Member member, TrackInfoSnapshot snapshot) {
-        final List<FavorTag> tags = favorService.getFavorTags(member.getId());
+    /**
+     * Member 의 FavorTag 기반 추천을 생성합니다.
+     * FavorTag 중 가장 최근 3개를 통해 검색합니다.
+     * 검색 한 결과에 대해 해당 Track 의 Tag 가 FavorTag 와 일치하는지 확인합니다.
+     * 일치하는 Tag 하나당 1점을 부여하고, 이 점수를 통해 정렬하여 리턴합니다.
+     * 검색 결과는 snapshot 을 통해 저장됩니다.
+     * 1 시간에 한번 추천받을 수 있습니다.
+     *
+     * @param tags     FavorTag 중 최근 추가한 3개
+     * @param snapshot
+     * @return FavorTag 기반 추천 결과
+     */
+    private List<TrackInfoDTO> setFavoriteList(final List<FavorTag> tags, TrackInfoSnapshot snapshot) {
         List<TrackInfoDTO> rawResult = getTrackInfos(tags.stream()
                 .map(FavorTag::getTag)
                 .map(Tag::getTagName)
@@ -105,6 +127,9 @@ public class RecommendService {
      * @return List<TrackInfoDTO>
      */
     public List<TrackInfoDTO> getFavoriteList(final Member member) {
+        final List<FavorTag> tags = favorService.getFavorTagsTop3(member.getId());
+        if (tags.isEmpty()) return Collections.emptyList();
+
         TrackInfoSnapshot result =
                 trackInfoSnapshotRepository.findByMember_IdAndRecommendType(member.getId(), RecommendType.FAVORITE)
                         .orElseGet(() -> TrackInfoSnapshot.builder()
@@ -113,13 +138,24 @@ public class RecommendService {
                                 .build()
                         );
 
-        if (result.isExpired()) return setFavoriteList(member, result);
+        if (result.isExpired()) return setFavoriteList(tags, result);
 
         return TrackInfosUt.deserialize(result.getTrackInfoListJson());
     }
 
-    private List<TrackInfoDTO> setPersonalList(final Member member, TrackInfoSnapshot snapshot) {
-        final List<TagVoteCountDTO> tags = tagVoteService.getTagVotesCount(member.getId());
+    /**
+     * Member 의 TagVote 기반 추천을 생성합니다.
+     * TagVote 중 Positive 투표가 가장 많은 태그 3개를 통해 검색합니다.
+     * 검색 한 결과에 대해 해당 Track 의 Tag 가 TagVote 의 Tag 와 일치하는지 확인합니다.
+     * 일치하는 Tag 에 Positive 개수만큼 점수를 부여하고, 이 점수를 통해 정렬하여 리턴합니다.
+     * 검색 결과는 snapshot 을 통해 저장됩니다.
+     * 1 시간에 한번 추천받을 수 있습니다.
+     *
+     * @param tags     TagVote 를 TagName 으로 Grouping By 한 결과
+     * @param snapshot
+     * @return TagVote 기반 추천 결과
+     */
+    private List<TrackInfoDTO> setPersonalList(final List<TagVoteCountDTO> tags, TrackInfoSnapshot snapshot) {
         List<TrackInfoDTO> rawResult = getTrackInfos(tags.stream()
                 .map(TagVoteCountDTO::getTagName)
                 .toList()
@@ -159,6 +195,9 @@ public class RecommendService {
      * @return List<TrackInfoDTO>
      */
     public List<TrackInfoDTO> getPersonalList(final Member member) {
+        final List<TagVoteCountDTO> tags = tagVoteService.getTagVotesCount(member.getId());
+        if (tags.isEmpty()) return Collections.emptyList();
+
         TrackInfoSnapshot result =
                 trackInfoSnapshotRepository.findByMember_IdAndRecommendType(member.getId(), RecommendType.PERSONAL)
                         .orElseGet(() -> TrackInfoSnapshot.builder()
@@ -167,7 +206,7 @@ public class RecommendService {
                                 .build()
                         );
 
-        if (result.isExpired()) return setPersonalList(member, result);
+        if (result.isExpired()) return setPersonalList(tags, result);
 
         return TrackInfosUt.deserialize(result.getTrackInfoListJson());
     }

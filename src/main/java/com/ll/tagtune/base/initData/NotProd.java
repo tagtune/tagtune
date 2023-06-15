@@ -113,7 +113,7 @@ public class NotProd {
                         .mapToObj(i -> favorService.create(members[0], tags[i]))
                         .toArray(FavorTag[]::new);
 
-                TagVote[] tagVotes = tracks[0].getTags().stream()
+                TagVote[] tagVotes = tracks[0].getTrackTags().stream()
                         .map(tag -> tagVoteService.vote(true, members[0], tag))
                         .filter(RsData::isSuccess)
                         .map(RsData::getData)

@@ -107,7 +107,7 @@ public class PlaylistController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/addTrack")
     public String addTrack(@PathVariable Long id, TrackSearchDTO trackSearchDTO) {
-        if (trackSearchDTO.name.isBlank() || trackSearchDTO.artist.isBlank())
+        if (trackSearchDTO.getName().isBlank() || trackSearchDTO.getArtist().isBlank())
             return rq.historyBack("잘못된 데이터입니다.");
 
         final Optional<Track> oTrack = trackService.setTrackInfo(trackSearchDTO);

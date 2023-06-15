@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * track 의 title, Artist, Album 를 저장 하는 DTO 입니다.
+ * track 의 title, Artist, Album, Tags 를 저장 하는 DTO 입니다.
  */
 @Data
 @Builder

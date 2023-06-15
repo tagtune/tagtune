@@ -21,6 +21,7 @@ public class TrackInfoSnapshot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
     @Convert(converter = RecommendTypeConvertor.class)
     private RecommendType recommendType;
@@ -31,6 +32,9 @@ public class TrackInfoSnapshot {
     private String trackInfoListJson;
 
     public boolean isExpired() {
-        return getModifyDate() == null || getModifyDate().plusHours(1).isBefore(LocalDateTime.now());
+        return getModifyDate() == null ||
+                getModifyDate().plusHours(1).isBefore(LocalDateTime.now()) ||
+                trackInfoListJson == null ||
+                trackInfoListJson.isBlank();
     }
 }

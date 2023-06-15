@@ -42,7 +42,6 @@ public class TrackController {
             Model model
     ) {
         if (!trackName.isBlank()) {
-            if (artistName.isBlank()) rq.historyBack("트랙 제목을 입력해야합니다.");
             List<TrackSearchDTO> rawTracks = (artistName.isBlank() ?
                     SearchEndpoint.searchTrack(trackName) :
                     SearchEndpoint.searchTrack(trackName, artistName))
@@ -55,7 +54,8 @@ public class TrackController {
 
     @PostMapping("/search")
     public String searchResult(TrackSearchDTO searchDTO) {
-        if (searchDTO.name.isBlank() || searchDTO.artist.isBlank()) return rq.historyBack("잘못된 접근입니다.");
+        if (searchDTO.getName().isBlank() || searchDTO.getArtist().isBlank())
+            return rq.historyBack("잘못된 접근입니다.");
 
         final Optional<Track> oTrack = trackService.setTrackInfo(searchDTO);
 
@@ -85,16 +85,16 @@ public class TrackController {
         return "usr/track/detail";
     }
 
-    private record TagForm(@NotBlank String tagName) {
-    }
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{trackId}/tag")
     public String addTag(@PathVariable Long trackId, @Valid TagForm tagForm) {
         RsData<Track> rsTrack = trackService.getTrack(trackId);
-        if (rsTrack.isFail()) return rq.historyBack(rsTrack);
-        trackTagService.connect(rsTrack.getData(), tagService.getOrCreateTag(tagForm.tagName));
+        if (rsTrack.isFail()) return rq.redirectWithMsg("/track/" + trackId, rsTrack);
+        trackTagService.connect(rsTrack.getData(), tagService.getOrCreateTag(tagForm.iTag));
 
-        return "usr/track/detail";
+        return rq.redirectWithMsg("/track/" + trackId, "태그 추가에 성공했습니다.");
+    }
+
+    private record TagForm(@NotBlank String iTag) {
     }
 }

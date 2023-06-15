@@ -92,8 +92,8 @@ public class TrackService {
      */
     public Optional<Track> setTrackInfo(final TrackSearchDTO rawTrack) {
         final Optional<TrackInfoDTO> result = SearchEndpoint.getTrackInfo(
-                rawTrack.name,
-                rawTrack.artist
+                rawTrack.getName(),
+                rawTrack.getArtist()
         ).getTrackInfoDTO();
 
         if (result.isEmpty() || result.get().getArtistName() == null) return Optional.empty();
@@ -112,7 +112,7 @@ public class TrackService {
 
         final Track track = createTrack(result.get().getTitle(), artist, album);
 
-        track.getTags().addAll(result.get().getTags().stream()
+        track.getTrackTags().addAll(result.get().getTags().stream()
                 .map(tagService::getOrCreateTag)
                 .map(tag -> trackTagService.connect(track, tag))
                 .toList());

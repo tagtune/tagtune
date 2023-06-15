@@ -2,7 +2,6 @@ package com.ll.tagtune.boundedContext.track.entity;
 
 import com.ll.tagtune.boundedContext.album.entity.Album;
 import com.ll.tagtune.boundedContext.artist.entity.Artist;
-import com.ll.tagtune.boundedContext.releaseYear.entity.ReleaseYear;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
@@ -21,17 +20,18 @@ public class Track {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String title;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Artist artist;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Album album;
-    @ManyToOne
-    private ReleaseYear releaseYear;
     @OneToMany(mappedBy = "track", cascade = {CascadeType.ALL})
     @OrderBy("popularity desc")
     @LazyCollection(LazyCollectionOption.EXTRA)
     @ToString.Exclude
     @Builder.Default
-    private List<TrackTag> tags = new ArrayList<>();
+    private List<TrackTag> trackTags = new ArrayList<>();
 }

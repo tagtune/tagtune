@@ -21,8 +21,10 @@ public class TrackTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Track track;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Tag tag;
     @OneToMany(mappedBy = "trackTag", cascade = {CascadeType.ALL})
     @LazyCollection(LazyCollectionOption.EXTRA)

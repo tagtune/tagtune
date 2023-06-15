@@ -37,7 +37,7 @@ class TrackServiceTest {
         ApiTrackSearchResult trackSearchResult = SearchEndpoint.searchTrack(tgtTitle);
 
         assertThat(trackSearchResult.getTracks()).isNotEmpty();
-        trackSearchResult.getTracks().forEach(track -> assertThat(track.name.toLowerCase()).contains(tgtTitle));
+        trackSearchResult.getTracks().forEach(track -> assertThat(track.getName().toLowerCase()).contains(tgtTitle));
     }
 
     @Test
@@ -51,7 +51,7 @@ class TrackServiceTest {
 
         assertThat(oTrack.get().getAlbum().getName()).isNotNull();
 
-        List<TrackTag> tags = oTrack.get().getTags();
+        List<TrackTag> tags = oTrack.get().getTrackTags();
         // debug
         // tags.forEach(System.out::println);
         assertThat(tags).isNotEmpty();

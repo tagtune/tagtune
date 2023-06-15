@@ -4,10 +4,7 @@ import com.ll.tagtune.base.baseEntity.BaseEntity;
 import com.ll.tagtune.boundedContext.member.entity.Member;
 import com.ll.tagtune.boundedContext.reply.entity.Reply;
 import com.ll.tagtune.boundedContext.track.entity.Track;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,8 +26,10 @@ public class Comment extends BaseEntity {
     private Boolean deleteStatus = false;
     private String content;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Track track;
     @OneToMany(mappedBy = "parent")
     @OrderBy("createDate desc")

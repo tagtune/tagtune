@@ -26,7 +26,7 @@ class LastfmTest {
         final String artist = "Nirvana";
 
         ApiTrackSearchResult searchResult = SearchEndpoint.searchTrack(title, artist);
-        searchResult.getTracks().forEach(t -> assertThat(t.name.toLowerCase()).contains(title));
+        searchResult.getTracks().forEach(t -> assertThat(t.getName().toLowerCase()).contains(title));
         // debug
         // result.getResult().forEach(System.out::println);
     }
@@ -38,13 +38,16 @@ class LastfmTest {
         assertThat(searchResult.getTracks()).isNotEmpty();
 
         TrackSearchDTO target = searchResult.getTracks().stream().findFirst().orElseThrow();
-        TrackInfoDTO infoResult = SearchEndpoint.getTrackInfo(target.name, target.artist).getTrackInfoDTO().get();
+        TrackInfoDTO infoResult = SearchEndpoint
+                .getTrackInfo(target.getName(), target.getArtist())
+                .getTrackInfoDTO()
+                .get();
         assertThat(infoResult).isNotNull();
         // debug
         // System.out.println(infoResult);
 
-        assertThat(infoResult.getTitle()).isEqualTo(target.name);
-        assertThat(infoResult.getArtistName()).isEqualTo(target.artist);
+        assertThat(infoResult.getTitle()).isEqualTo(target.getName());
+        assertThat(infoResult.getArtistName()).isEqualTo(target.getArtist());
         assertThat(infoResult.getTags()).isNotEmpty();
     }
 
@@ -64,6 +67,6 @@ class LastfmTest {
         // debug
         // debug searchResult.forEach(System.out::println);
         assertThat(searchResult).isNotEmpty();
-        searchResult.forEach(track -> assertThat(track.name).isNotBlank());
+        searchResult.forEach(track -> assertThat(track.getName()).isNotBlank());
     }
 }
