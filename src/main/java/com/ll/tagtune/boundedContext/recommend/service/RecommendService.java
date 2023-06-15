@@ -127,7 +127,7 @@ public class RecommendService {
      * @return List<TrackInfoDTO>
      */
     public List<TrackInfoDTO> getFavoriteList(final Member member) {
-        final List<FavorTag> tags = favorService.getFavorTags(member.getId());
+        final List<FavorTag> tags = favorService.getFavorTagsTop3(member.getId());
         if (tags.isEmpty()) return Collections.emptyList();
 
         TrackInfoSnapshot result =
