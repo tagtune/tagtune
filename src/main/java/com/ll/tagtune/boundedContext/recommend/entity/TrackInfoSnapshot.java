@@ -31,6 +31,9 @@ public class TrackInfoSnapshot {
     private String trackInfoListJson;
 
     public boolean isExpired() {
-        return getModifyDate() == null || getModifyDate().plusHours(1).isBefore(LocalDateTime.now());
+        return getModifyDate() == null ||
+                getModifyDate().plusHours(1).isBefore(LocalDateTime.now()) ||
+                trackInfoListJson == null ||
+                trackInfoListJson.isBlank();
     }
 }

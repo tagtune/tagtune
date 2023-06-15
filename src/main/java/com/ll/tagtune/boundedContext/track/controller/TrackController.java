@@ -55,7 +55,8 @@ public class TrackController {
 
     @PostMapping("/search")
     public String searchResult(TrackSearchDTO searchDTO) {
-        if (searchDTO.name.isBlank() || searchDTO.artist.isBlank()) return rq.historyBack("잘못된 접근입니다.");
+        if (searchDTO.getName().isBlank() || searchDTO.getArtist().isBlank())
+            return rq.historyBack("잘못된 접근입니다.");
 
         final Optional<Track> oTrack = trackService.setTrackInfo(searchDTO);
 

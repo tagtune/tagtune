@@ -92,8 +92,8 @@ public class TrackService {
      */
     public Optional<Track> setTrackInfo(final TrackSearchDTO rawTrack) {
         final Optional<TrackInfoDTO> result = SearchEndpoint.getTrackInfo(
-                rawTrack.name,
-                rawTrack.artist
+                rawTrack.getName(),
+                rawTrack.getArtist()
         ).getTrackInfoDTO();
 
         if (result.isEmpty() || result.get().getArtistName() == null) return Optional.empty();
