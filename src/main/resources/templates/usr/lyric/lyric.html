@@ -11,8 +11,9 @@
         <form class="flex flex-col gap-6" method="GET">
             <div id="lyrics" class="flex items-center justify-center">
                 <div id="lyric_ko" class="w-1/2 mr-3">
-                    <div class="mx-auto overflow-y-auto h-[400px]
+                    <div class="mx-auto overflow-y-auto h-[400px] text-[13px]
                         border-solid border-2 rounded-md border-purple-400"
+                         style="white-space:pre;word-wrap: break-word;"
                          th:text="${lyric_ko==null ? ' ': lyric_ko.content}"></div>
 
                     <div class="w-1/2">
@@ -28,8 +29,9 @@
 
                 <div id="lyric_en" class="w-1/2 ml-3">
                     <div id="lyric_en_depth"
-                         class="mx-auto overflow-y-auto h-[400px]
+                         class="mx-auto overflow-y-auto h-[400px] text-[13px]
                          border-solid border-2 rounded-md border-purple-400"
+                         style="white-space:pre; word-wrap: break-word;"
                          th:text="${lyric_en==null ? ' ': lyric_en.content}"></div>
 
                     <div class="w-1/2">
