@@ -22,10 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -86,12 +83,11 @@ public class RecommendService {
      * 검색 결과는 snapshot 을 통해 저장됩니다.
      * 1 시간에 한번 추천받을 수 있습니다.
      *
-     * @param member
+     * @param tags     FavorTag 중 최근 추가한 3개
      * @param snapshot
      * @return FavorTag 기반 추천 결과
      */
-    private List<TrackInfoDTO> setFavoriteList(final Member member, TrackInfoSnapshot snapshot) {
-        final List<FavorTag> tags = favorService.getFavorTags(member.getId());
+    private List<TrackInfoDTO> setFavoriteList(final List<FavorTag> tags, TrackInfoSnapshot snapshot) {
         List<TrackInfoDTO> rawResult = getTrackInfos(tags.stream()
                 .map(FavorTag::getTag)
                 .map(Tag::getTagName)
@@ -131,6 +127,9 @@ public class RecommendService {
      * @return List<TrackInfoDTO>
      */
     public List<TrackInfoDTO> getFavoriteList(final Member member) {
+        final List<FavorTag> tags = favorService.getFavorTags(member.getId());
+        if (tags.isEmpty()) return Collections.emptyList();
+
         TrackInfoSnapshot result =
                 trackInfoSnapshotRepository.findByMember_IdAndRecommendType(member.getId(), RecommendType.FAVORITE)
                         .orElseGet(() -> TrackInfoSnapshot.builder()
@@ -139,7 +138,7 @@ public class RecommendService {
                                 .build()
                         );
 
-        if (result.isExpired()) return setFavoriteList(member, result);
+        if (result.isExpired()) return setFavoriteList(tags, result);
 
         return TrackInfosUt.deserialize(result.getTrackInfoListJson());
     }
@@ -152,12 +151,11 @@ public class RecommendService {
      * 검색 결과는 snapshot 을 통해 저장됩니다.
      * 1 시간에 한번 추천받을 수 있습니다.
      *
-     * @param member
+     * @param tags     TagVote 를 TagName 으로 Grouping By 한 결과
      * @param snapshot
      * @return TagVote 기반 추천 결과
      */
-    private List<TrackInfoDTO> setPersonalList(final Member member, TrackInfoSnapshot snapshot) {
-        final List<TagVoteCountDTO> tags = tagVoteService.getTagVotesCount(member.getId());
+    private List<TrackInfoDTO> setPersonalList(final List<TagVoteCountDTO> tags, TrackInfoSnapshot snapshot) {
         List<TrackInfoDTO> rawResult = getTrackInfos(tags.stream()
                 .map(TagVoteCountDTO::getTagName)
                 .toList()
@@ -197,6 +195,9 @@ public class RecommendService {
      * @return List<TrackInfoDTO>
      */
     public List<TrackInfoDTO> getPersonalList(final Member member) {
+        final List<TagVoteCountDTO> tags = tagVoteService.getTagVotesCount(member.getId());
+        if (tags.isEmpty()) return Collections.emptyList();
+
         TrackInfoSnapshot result =
                 trackInfoSnapshotRepository.findByMember_IdAndRecommendType(member.getId(), RecommendType.PERSONAL)
                         .orElseGet(() -> TrackInfoSnapshot.builder()
@@ -205,7 +206,7 @@ public class RecommendService {
                                 .build()
                         );
 
-        if (result.isExpired()) return setPersonalList(member, result);
+        if (result.isExpired()) return setPersonalList(tags, result);
 
         return TrackInfosUt.deserialize(result.getTrackInfoListJson());
     }
