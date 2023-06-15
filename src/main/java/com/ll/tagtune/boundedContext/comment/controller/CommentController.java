@@ -4,7 +4,6 @@ import com.ll.tagtune.base.rq.Rq;
 import com.ll.tagtune.base.rsData.RsData;
 import com.ll.tagtune.boundedContext.comment.entity.Comment;
 import com.ll.tagtune.boundedContext.comment.service.CommentService;
-import com.ll.tagtune.boundedContext.reply.service.ReplyService;
 import com.ll.tagtune.boundedContext.track.service.TrackService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,34 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-//@RequestMapping("/track/comment")
 @RequiredArgsConstructor
 public class CommentController {
     private final Rq rq;
     private final CommentService commentService;
     private final TrackService trackService;
-    private final ReplyService replyService;
 
-//    @PreAuthorize("isAuthenticated()")
-//    @GetMapping("/track/{trackId}/comment")
-//    public String showComment(@PathVariable Long trackId,
-//                              @RequestParam(value = "commentId", defaultValue = "") Long commentId,
-//                              Model model) {
-//        Track track = trackService.getTrack(trackId);
-//
-//        List<CommentResponseDTO> commentsDTO = commentService.getCommentsWithReplies(track);
-//        model.addAttribute("comments", commentsDTO);
-//        model.addAttribute("track", track);
-//
-//        // 이전 요청에서 전달받은 모델 데이터를 가져옵니다.
-//        if (commentId != null) {
-//            RsData<List<Reply>> replyRsdata =
-//                    replyService.getReply(commentService.findById(commentId));
-//            model.addAttribute("replies", replyRsdata.getData());
-//        }
-//
-//        return "usr/comment/commentPage";
-//    }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/track/{trackId}/comment")
     public String saveComment(@PathVariable Long trackId, String iComment) {
@@ -68,7 +45,7 @@ public class CommentController {
     public String deleteComment(@PathVariable Long trackId, @PathVariable Long commentId) {
         RsData<Void> deleteCmtRsData = commentService.deleteComment(commentId, rq.getMember().getId());
 
-        return rq.redirectWithMsg("/track/" + trackId + "/comment", deleteCmtRsData);
+        return rq.redirectWithMsg("/track/" + trackId, deleteCmtRsData);
     }
 
     @PreAuthorize("isAuthenticated()")
